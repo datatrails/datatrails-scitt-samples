@@ -1,4 +1,5 @@
-""" Module for creating a SCITT signed statement"""
+
+""" Module for creating a SCITT signed statement """
 
 import hashlib
 import json
@@ -44,7 +45,7 @@ def open_statement(statement_file: str) -> str:
     NOTE: the statment is expected to be in json format.
     """
     with open(statement_file, encoding='UTF-8') as file:
-        statement = file.read()
+        statement = json.loads(file.read())
 
         # convert the statement to a cose sign1 payload
         payload = json.dumps(statement, ensure_ascii=False)
