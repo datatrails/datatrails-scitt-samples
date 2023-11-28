@@ -31,16 +31,10 @@ In the samples we assume the statement is a json document, e.g:
 
 To create a signed statement we can use a venv.
 
-If virtual environment is not installed, install it with the following:
+Create a new venv:
 
 ```
-pip install virtualenv
-```
-
-Now create a new venv:
-
-```
-virtualenv venv
+python -m  venv
 ```
 
 Now activate the new venv:
@@ -74,16 +68,11 @@ deactivate
 
 To verify a countersigned receipt issued from datatrails we can use a venv.
 
-If virtual environment is not installed, install it with the following:
+
+Create a new venv:
 
 ```
-pip install virtualenv
-```
-
-Now create a new venv:
-
-```
-virtualenv venv
+python -m  venv
 ```
 
 Now activate the new venv:
