@@ -1,5 +1,5 @@
-![Logo](https://github.com/datatrails/datatrails-scitt-samples/blob/main/DataTrails_Horizontal_Logo_Black.png)
-
+![Logo](https://github.com/datatrails/datatrails-scitt-samples/blob/main/DataTrails_Horizontal_Logo_Black.png#gh-light-mode-only)
+![Logo](https://github.com/datatrails/datatrails-scitt-samples/blob/main/DataTrails_Horizontal_Logo_White.png#gh-dark-mode-only)
 
 # datatrails-scitt-samples
 
