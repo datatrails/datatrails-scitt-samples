@@ -44,3 +44,9 @@ python scitt/create_signed_statement.py --signing-key-file scitt-signing-key.pem
     --feed testfeed \
     --issuer testissuer
 ```
+
+Now we have the signed statement we can deactivate the venv:
+
+```
+deactivate
+```
