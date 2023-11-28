@@ -1,4 +1,3 @@
-
 """ Module for creating a SCITT signed statement """
 
 import hashlib
@@ -42,7 +41,7 @@ def open_signing_key(key_file: str) -> SigningKey:
 def open_statement(statement_file: str) -> str:
     """
     opens the statement from the statement file.
-    NOTE: the statment is expected to be in json format.
+    NOTE: the statement is expected to be in json format.
     """
     with open(statement_file, encoding='UTF-8') as file:
         statement = json.loads(file.read())
@@ -54,12 +53,15 @@ def open_statement(statement_file: str) -> str:
 
 
 def create_signed_statement(
-    signing_key: SigningKey, payload: str, feed: str, issuer: str
-) -> bytes:
+    signing_key: SigningKey, 
+    payload: str, 
+    feed: str, 
+    issuer: str,
+    output: str
+    ) -> bytes:
     """
     creates a signed statement, given the signing_key, payload, feed and issuer
     """
-
     verifying_key = signing_key.verifying_key
 
     # pub key is the x and y parts concatenated
@@ -113,8 +115,8 @@ def create_signed_statement(
     # base64 encode the cbor message
     b64_encoded_msg = b64encode(cbor_encoded_msg)
 
-    return b64_encoded_msg
-
+    with open(output, "wb") as fh:
+        fh.write(b64_encoded_msg)
 
 def main():
     """Creates a signed statement"""
@@ -151,17 +153,22 @@ def main():
         help="issuer who owns the signing key.",
     )
 
+    # output
+    parser.add_argument(
+        "--output",
+        type=str,
+        help="filename for the signed statement",
+        default="signed-statement.cbor"
+    )
+
     args = parser.parse_args()
 
     signing_key = open_signing_key(args.signing_key_file)
     payload = open_statement(args.statement_file)
 
     signed_statement = create_signed_statement(
-        signing_key, payload, args.feed, args.issuer
+        signing_key, payload, args.feed, args.issuer, args.output
     )
-
-    print(signed_statement)
-
 
 if __name__ == "__main__":
     main()

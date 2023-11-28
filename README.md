@@ -1,101 +1,110 @@
-![Logo](https://github.com/datatrails/datatrails-scitt-samples/blob/main/DataTrails_Horizontal_Logo_Black.png#gh-light-mode-only)
-![Logo](https://github.com/datatrails/datatrails-scitt-samples/blob/main/DataTrails_Horizontal_Logo_White.png#gh-dark-mode-only)
+![Logo](https://raw.githubusercontent.com/datatrails/datatrails-scitt-samples/main/DataTrails_Horizontal_Logo_Black.png)
+![Logo](https://raw.githubusercontent.com/datatrails/datatrails-scitt-samples/main/DataTrails_Horizontal_Logo_White.png)
 
-# datatrails-scitt-samples
+# DataTrails SCITT Examples
 
-The files in this repository can be used to demonstrate how the DataTrails SCITT API works. To do this please download one or more of these files, then follow
+The files in this repository can be used to demonstrate how the DataTrails SCITT API works.
 
-the getting started docs.
+## Copy the Samples
 
-## Generating a signing key
+```shell
+git clone https://github.com/datatrails/datatrails-scitt-samples.git
+
+cd datatrails-scitt-samples
+```
+
+## Generating a Signing Key
 
 In the samples we assume the signed key is an ecdsa p256 key:
 
-```
+```shell
 openssl ecparam -name prime256v1 -genkey -out scitt-signing-key.pem
 ```
 
-## Generating a statement
+## Generating a Statement
 
 In the samples we assume the statement is a json document, e.g:
 
-```
+```shell
+cat > statement.json <<EOF
 {
     "author": "fred",
     "title": "my biography",
     "reviews": "mixed"
 }
+EOF
 ```
 
-## Creating a signed statement
+## Creating a Signed Statement
 
 To create a signed statement we can use a venv.
 
 Create a new venv:
 
-```
+```shell
 python -m  venv
 ```
 
 Now activate the new venv:
 
-```
+```shell
 source venv/bin/activate
 ```
 
 Now ensure all the requirements are installed:
 
-```
+```shell
 pip install -r requirements.txt
 ```
 
 Finally we have an environment we can run the create signed statement script in:
 
-```
-python scitt/create_signed_statement.py --signing-key-file scitt-signing-key.pem \
-    --statement-file scitt-statement.json \
+```bash
+python scitt/create_signed_statement.py \
+    --signing-key-file scitt-signing-key.pem \
+    --statement-file statement.json \
     --feed testfeed \
-    --issuer testissuer
+    --issuer testissuer \
+    --output signed.cbor
 ```
 
 Now we have the signed statement we can deactivate the venv:
 
-```
+```shell
 deactivate
 ```
 
 ## Verifying a SCITT counter signed receipt
 
-To verify a countersigned receipt issued from datatrails we can use a venv.
-
+To verify a countersigned receipt issued from DataTrails we can use a venv.
 
 Create a new venv:
 
-```
+```shell
 python -m  venv
 ```
 
 Now activate the new venv:
 
-```
+```shell
 source venv/bin/activate
 ```
 
 Now ensure all the requirements are installed:
 
-```
+```shell
 pip install -r requirements.txt
 ```
 
 Finally we have an environment we can run the verify counter signed receipt signature script in:
 
-```
+```shell
 python scitt/verify_receipt_signature.py \
     --scitt-receipt.txt 
 ```
 
 Now we have verified the receipt signature we can deactivate the venv:
 
-```
+```shell
 deactivate
 ```
