@@ -172,7 +172,7 @@ def main():
     args = parser.parse_args()
 
     signing_key = open_signing_key(args.signing_key_file)
-    payload = open_payload(args.payload)
+    payload = open_payload(args.payload_file)
 
     signed_statement = create_signed_statement(
         signing_key, payload, args.feed, args.issuer
