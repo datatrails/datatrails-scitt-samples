@@ -42,7 +42,7 @@ To create a signed statement we can use a venv.
 Create a new venv:
 
 ```shell
-python -m  venv
+python -m  venv venv
 ```
 
 Now activate the new venv:
@@ -54,6 +54,7 @@ source venv/bin/activate
 Now ensure all the requirements are installed:
 
 ```shell
+pip install --upgrade pip && \
 pip install -r requirements.txt
 ```
 
@@ -64,8 +65,7 @@ python scitt/create_signed_statement.py \
     --signing-key-file scitt-signing-key.pem \
     --statement-file statement.json \
     --feed testfeed \
-    --issuer testissuer \
-    --output signed.cbor
+    --issuer sysnation.dev \
     --output-file signed-statement.cbor
 ```
 

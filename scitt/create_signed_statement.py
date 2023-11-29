@@ -54,11 +54,7 @@ def open_statement(statement_file: str) -> str:
 
 
 def create_signed_statement(
-    signing_key: SigningKey,
-    payload: str,
-    feed: str,
-    issuer: str,
-    output: str
+    signing_key: SigningKey, payload: str, feed: str, issuer: str
 ) -> bytes:
     """
     creates a signed statement, given the signing_key, payload, feed and issuer
@@ -169,7 +165,7 @@ def main():
     payload = open_statement(args.statement_file)
 
     signed_statement = create_signed_statement(
-        signing_key, payload, args.feed, args.issuer, args.output
+        signing_key, payload, args.feed, args.issuer
     )
 
     with open(args.output_file, "w", encoding="UTF-8") as output_file:
