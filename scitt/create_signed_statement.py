@@ -54,12 +54,12 @@ def open_statement(statement_file: str) -> str:
 
 
 def create_signed_statement(
-    signing_key: SigningKey, 
-    payload: str, 
-    feed: str, 
+    signing_key: SigningKey,
+    payload: str,
+    feed: str,
     issuer: str,
     output: str
-    ) -> bytes:
+) -> bytes:
     """
     creates a signed statement, given the signing_key, payload, feed and issuer
     """
@@ -118,8 +118,7 @@ def create_signed_statement(
     # base64 encode the cbor message
     b64_encoded_msg = b64encode(cbor_encoded_msg)
 
-    with open(output, "wb") as fh:
-        fh.write(b64_encoded_msg)
+    return b64_encoded_msg
 
 def main():
     """Creates a signed statement"""
@@ -175,6 +174,7 @@ def main():
 
     with open(args.output_file, "w", encoding="UTF-8") as output_file:
         output_file.write(signed_statement.decode("utf-8"))
+
 
 if __name__ == "__main__":
     main()
