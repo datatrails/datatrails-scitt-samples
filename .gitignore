@@ -1,4 +1,5 @@
 venv/*
-scitt-signing-key.pem
 statement.json
 signed-statement.cbor
+my-signing-key.pem
+scitt/artifacts/_manifest/*

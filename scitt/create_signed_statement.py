@@ -39,12 +39,12 @@ def open_signing_key(key_file: str) -> SigningKey:
         return signing_key
 
 
-def open_statement(statement_file: str) -> str:
+def open_statement(payload: str) -> str:
     """
     opens the statement from the statement file.
     NOTE: the statement is expected to be in json format.
     """
-    with open(statement_file, encoding="UTF-8") as file:
+    with open(payload, encoding="UTF-8") as file:
         statement = json.loads(file.read())
 
         # convert the statement to a cose sign1 payload
@@ -130,19 +130,28 @@ def main():
         default="scitt-signing-key.pem",
     )
 
-    # statement file
+    # payload (a reference to the file that will become the payload of the SCITT Statement)
     parser.add_argument(
-        "--statement-file",
+        "--payload",
         type=str,
-        help="filepath to the stored statement, in json format.",
+        help="filepath to the content that will become the payload of the SCITT Statement (currently limited to json format).",
         default="scitt-statement.json",
     )
+
+    # content-type
+    parser.add_argument(
+        "--content-type",
+        type=str,
+        help="The iana.org media type for the payload",
+        default="scitt-statement.json",
+    )
+
 
     # feed
     parser.add_argument(
         "--feed",
         type=str,
-        help="feed to correlate statements made about an artefact.",
+        help="feed to correlate statements made about an artifact.",
     )
 
     # issuer
@@ -163,7 +172,7 @@ def main():
     args = parser.parse_args()
 
     signing_key = open_signing_key(args.signing_key_file)
-    payload = open_statement(args.statement_file)
+    payload = open_statement(args.payload)
 
     signed_statement = create_signed_statement(
         signing_key, payload, args.feed, args.issuer

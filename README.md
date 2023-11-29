@@ -63,8 +63,8 @@ Finally we have an environment we can run the create signed statement script in:
 ```shell
 python scitt/create_signed_statement.py \
     --signing-key-file scitt-signing-key.pem \
-    --statement-file statement.json \
-    --feed testfeed \
+    --payload statement.json \
+    --feed my-product-name \
     --issuer sysnation.dev \
     --output-file signed-statement.cbor
 ```
