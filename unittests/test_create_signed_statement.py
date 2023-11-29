@@ -3,12 +3,11 @@ Pairwise unit tests for creating a signed statement
 """
 
 import unittest
-import hashlib
 import json
 
 from base64 import b64decode
 
-from ecdsa import SigningKey
+from ecdsa import SigningKey, NIST256p
 
 from pycose.messages import Sign1Message
 from pycose.keys.curves import P256
@@ -24,7 +23,7 @@ from scitt.create_signed_statement import (
     HEADER_LABEL_CNF_COSE_KEY,
 )
 
-from .constants import KNOWN_SIGNING_KEY_PEM, KNOWN_STATEMENT
+from .constants import KNOWN_STATEMENT
 
 
 class TestCreateSignedStatement(unittest.TestCase):
@@ -39,7 +38,7 @@ class TestCreateSignedStatement(unittest.TestCase):
         """
 
         # create the signed statement
-        signing_key = SigningKey.from_pem(KNOWN_SIGNING_KEY_PEM, hashlib.sha256)
+        signing_key = SigningKey.generate(curve=NIST256p)
 
         payload = json.dumps(KNOWN_STATEMENT)
 

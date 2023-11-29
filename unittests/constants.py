@@ -2,17 +2,6 @@
 Unit Test Data Constants
 """
 
-KNOWN_SIGNING_KEY_PEM = """
------BEGIN EC PARAMETERS-----
-BggqhkjOPQMBBw==
------END EC PARAMETERS-----
------BEGIN EC PRIVATE KEY-----
-MHcCAQEEIO4OFzMRlzQVeegPndJB22Na0NRaQvDL8BWJwQ2LAh02oAoGCCqGSM49
-AwEHoUQDQgAEjiIe5rk6o52xGXvuwZy5V3Gc941MBEdlIS+XRmZ9Sc8TW7H/ieRg
-cOEooFog/7MIsWOgw7OvCZptq/wZhoJlIw==
------END EC PRIVATE KEY-----
-"""
-
 KNOWN_STATEMENT = {"author": "fred", "title": "my biography", "reviews": "mixed"}
 
 # pylint: disable=line-too-long
