@@ -1,1 +1,3 @@
 venv/*
+scitt-signing-key.pem
+statement.json
