@@ -152,6 +152,14 @@ def main():
         help="issuer who owns the signing key.",
     )
 
+    # output file
+    parser.add_argument(
+        "--output-file",
+        type=str,
+        help="name of the output file to store the signed statement.",
+        default="signed-statement.txt",
+    )
+
     args = parser.parse_args()
 
     signing_key = open_signing_key(args.signing_key_file)
@@ -161,7 +169,8 @@ def main():
         signing_key, payload, args.feed, args.issuer
     )
 
-    print(signed_statement)
+    with open(args.output_file, "w", encoding="UTF-8") as output_file:
+        output_file.write(signed_statement.decode("utf-8"))
 
 
 if __name__ == "__main__":
