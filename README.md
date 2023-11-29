@@ -82,7 +82,7 @@ To verify a countersigned receipt issued from DataTrails we can use a venv.
 Create a new venv:
 
 ```shell
-python -m  venv
+python -m  venv venv
 ```
 
 Now activate the new venv:
@@ -101,7 +101,7 @@ Finally we have an environment we can run the verify counter signed receipt sign
 
 ```shell
 python scitt/verify_receipt_signature.py \
-    --scitt-receipt.txt 
+    --receipt-file signed-statement.cbor
 ```
 
 Now we have verified the receipt signature we can deactivate the venv:
