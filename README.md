@@ -60,7 +60,7 @@ pip install -r requirements.txt
 
 Finally we have an environment we can run the create signed statement script in:
 
-```bash
+```shell
 python scitt/create_signed_statement.py \
     --signing-key-file scitt-signing-key.pem \
     --statement-file statement.json \
