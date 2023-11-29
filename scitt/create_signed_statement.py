@@ -116,6 +116,7 @@ def create_signed_statement(
 
     return b64_encoded_msg
 
+
 def main():
     """Creates a signed statement"""
 
