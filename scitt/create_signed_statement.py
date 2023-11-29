@@ -1,4 +1,3 @@
-
 """ Module for creating a SCITT signed statement """
 
 import hashlib
@@ -6,6 +5,7 @@ import json
 import argparse
 
 from base64 import b64encode
+from typing import Optional
 
 from pycose.messages import Sign1Message
 from pycose.headers import Algorithm, KID, ContentType
@@ -16,7 +16,7 @@ from pycose.keys.keytype import KtyEC2
 from pycose.keys.keyops import SignOp, VerifyOp
 from pycose.keys import CoseKey
 
-from ecdsa import SigningKey
+from ecdsa import SigningKey, VerifyingKey
 
 
 HEADER_LABEL_CWT = 13
@@ -34,7 +34,7 @@ def open_signing_key(key_file: str) -> SigningKey:
     opens the signing key from the key file.
     NOTE: the signing key is expected to be a P-256 ecdsa key in PEM format.
     """
-    with open(key_file, encoding='UTF-8') as file:
+    with open(key_file, encoding="UTF-8") as file:
         signing_key = SigningKey.from_pem(file.read(), hashlib.sha256)
         return signing_key
 
@@ -44,7 +44,7 @@ def open_statement(statement_file: str) -> str:
     opens the statement from the statement file.
     NOTE: the statment is expected to be in json format.
     """
-    with open(statement_file, encoding='UTF-8') as file:
+    with open(statement_file, encoding="UTF-8") as file:
         statement = json.loads(file.read())
 
         # convert the statement to a cose sign1 payload
@@ -60,7 +60,8 @@ def create_signed_statement(
     creates a signed statement, given the signing_key, payload, feed and issuer
     """
 
-    verifying_key = signing_key.verifying_key
+    verifying_key: Optional[VerifyingKey] = signing_key.verifying_key
+    assert verifying_key is not None
 
     # pub key is the x and y parts concatenated
     xy_parts = verifying_key.to_string()
@@ -108,7 +109,7 @@ def create_signed_statement(
 
     # sign and cbor encode the cose sign1 message.
     # NOTE: the encode() function performs the signing automatically
-    cbor_encoded_msg = msg.encode()
+    cbor_encoded_msg = msg.encode([None])
 
     # base64 encode the cbor message
     b64_encoded_msg = b64encode(cbor_encoded_msg)
