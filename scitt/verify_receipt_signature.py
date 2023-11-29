@@ -37,6 +37,7 @@ def get_didweb_pubkey(didurl: str, kid: bytes) -> dict:
     """
 
     # check the didurl is a valid did web url
+    # pylint: disable=line-too-long
     pattern = r"did:web:(?P<host>[a-zA-Z0-9/.\-_]+)(?:%3A(?P<port>[0-9]+))?(:*)(?P<path>[a-zA-Z0-9/.:\-_]*)"
     match = re.match(pattern, didurl)
 
@@ -72,7 +73,6 @@ def get_didweb_pubkey(didurl: str, kid: bytes) -> dict:
 
     # now search the verification methods for the correct public key
     for verification_method in did_document["verificationMethod"]:
-
         if verification_method["publicKeyJwk"]["kid"] != kid.decode("utf-8"):
             continue
 
@@ -92,7 +92,7 @@ def get_didweb_pubkey(didurl: str, kid: bytes) -> dict:
     raise ValueError(f"no key with kid: {kid} in verification methods of did document")
 
 
-def verify_receipt(receipt: bytes) -> bool:
+def verify_receipt(receipt: str) -> bool:
     """
     verifies the counter signed receipt signature
     """
