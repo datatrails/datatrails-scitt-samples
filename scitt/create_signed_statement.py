@@ -39,16 +39,16 @@ def open_signing_key(key_file: str) -> SigningKey:
         return signing_key
 
 
-def open_statement(statement_file: str) -> str:
+def open_payload(payload_file: str) -> str:
     """
-    opens the statement from the statement file.
-    NOTE: the statment is expected to be in json format.
+    opens the payload from the payload file.
+    NOTE: the payload is expected to be in json format.
     """
-    with open(statement_file, encoding="UTF-8") as file:
-        statement = json.loads(file.read())
+    with open(payload_file, encoding="UTF-8") as file:
+        payload = json.loads(file.read())
 
-        # convert the statement to a cose sign1 payload
-        payload = json.dumps(statement, ensure_ascii=False)
+        # convert the payload to a cose sign1 payload
+        payload = json.dumps(payload, ensure_ascii=False)
 
         return payload
 
@@ -91,10 +91,10 @@ def create_signed_statement(
         },
     }
 
-    # create the sign1 message using the protected header and payload
-    msg = Sign1Message(phdr=protected_header, payload=payload.encode("utf-8"))
+    # create the statement as a sign1 message using the protected header and payload
+    statement = Sign1Message(phdr=protected_header, payload=payload.encode("utf-8"))
 
-    # create the cose_key to sign the message using the signing key
+    # create the cose_key to sign the statement using the signing key
     cose_key = {
         KpKty: KtyEC2,
         EC2KpCurve: P256,
@@ -105,16 +105,16 @@ def create_signed_statement(
     }
 
     cose_key = CoseKey.from_dict(cose_key)
-    msg.key = cose_key
+    statement.key = cose_key
 
-    # sign and cbor encode the cose sign1 message.
+    # sign and cbor encode the statement.
     # NOTE: the encode() function performs the signing automatically
-    cbor_encoded_msg = msg.encode([None])
+    signed_statement = statement.encode([None])
 
-    # base64 encode the cbor message
-    b64_encoded_msg = b64encode(cbor_encoded_msg)
+    # base64 encode the signed statement
+    signed_statement_b64 = b64encode(signed_statement)
 
-    return b64_encoded_msg
+    return signed_statement_b64
 
 
 def main():
@@ -130,19 +130,28 @@ def main():
         default="scitt-signing-key.pem",
     )
 
-    # statement file
+    # payload-file (a reference to the file that will become the payload of the SCITT Statement)
     parser.add_argument(
-        "--statement-file",
+        "--payload-file",
         type=str,
-        help="filepath to the stored statement, in json format.",
-        default="scitt-statement.json",
+        help="filepath to the content that will become the payload of the SCITT Statement "
+        "(currently limited to json format).",
+        default="scitt-payload.json",
+    )
+
+    # content-type
+    parser.add_argument(
+        "--content-type",
+        type=str,
+        help="The iana.org media type for the payload",
+        default="application/json",
     )
 
     # feed
     parser.add_argument(
         "--feed",
         type=str,
-        help="feed to correlate statements made about an artefact.",
+        help="feed to correlate statements made about an artifact.",
     )
 
     # issuer
@@ -163,7 +172,7 @@ def main():
     args = parser.parse_args()
 
     signing_key = open_signing_key(args.signing_key_file)
-    payload = open_statement(args.statement_file)
+    payload = open_payload(args.payload_file)
 
     signed_statement = create_signed_statement(
         signing_key, payload, args.feed, args.issuer
