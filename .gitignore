@@ -1,6 +1,6 @@
 venv/*
 payload.json
-signed-statement.text
+signed-statement.txt
 scitt-signing-key.pem
 scitt-receipt.txt
 scitt/artifacts/_manifest/*
