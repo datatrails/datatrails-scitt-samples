@@ -10,7 +10,7 @@ def check_operation_id(
     operation_id: str
 )-> str:
 
-    return subprocess.check_output("curl -s -H @$HOME/.datatrails/bearer-token.txt https://app.datatrails.ai/archivist/v1/publicscitt/operations/"+operation_id, shell=True).decode()
+    return subprocess.check_output("curl -s -H @$HOME/.datatrails/bearer-token.txt https://app.datatrails.ai/archivist/v1/publicscitt/operations/"+operation_id, shell = True).decode()
 
 
 def main():
