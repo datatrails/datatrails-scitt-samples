@@ -21,12 +21,12 @@ In the samples we assume the signed key is an ecdsa p256 key:
 openssl ecparam -name prime256v1 -genkey -out scitt-signing-key.pem
 ```
 
-## Generating a Statement
+## Generating a Payload
 
 In the samples we assume the statement is a json document, e.g:
 
 ```shell
-cat > statement.json <<EOF
+cat > payload.json <<EOF
 {
     "author": "fred",
     "title": "my biography",
@@ -63,10 +63,10 @@ Finally we have an environment we can run the create signed statement script in:
 ```shell
 python scitt/create_signed_statement.py \
     --signing-key-file scitt-signing-key.pem \
-    --payload statement.json \
+    --payload payload.json \
     --feed my-product-name \
-    --issuer sysnation.dev \
-    --output-file signed-statement.cbor
+    --issuer issuer-owning-signing-key \
+    --output-file signed-statement.text
 ```
 
 Now we have the signed statement we can deactivate the venv:
@@ -101,7 +101,7 @@ Finally we have an environment we can run the verify counter signed receipt sign
 
 ```shell
 python scitt/verify_receipt_signature.py \
-    --receipt-file signed-statement.cbor
+    --receipt-file scitt-receipt.txt
 ```
 
 Now we have verified the receipt signature we can deactivate the venv:
