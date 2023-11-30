@@ -5,10 +5,11 @@ import subprocess
 import argparse
 import time
 
+
 def check_operation_id(
-  operation_id: str
+    operation_id: str
 )-> str:
-  return subprocess.check_output("curl -s -H @$HOME/.datatrails/bearer-token.txt https://app.datatrails.ai/archivist/v1/publicscitt/operations/"+operation_id, shell=True).decode()
+    return subprocess.check_output("curl -s -H @$HOME/.datatrails/bearer-token.txt https://app.datatrails.ai/archivist/v1/publicscitt/operations/"+operation_id, shell=True).decode()
 
 
 def main():
@@ -27,17 +28,17 @@ def main():
 
     # Check the operation status until the status=succeeded
     while True:
-      retval=check_operation_id(args.operation_id)
-      if retval=="Jwt is expired":
-        print(retval)
-        return
+        retval=check_operation_id(args.operation_id)
+        if retval=="Jwt is expired":
+            print(retval)
+            return
 
-      response = json.loads(check_operation_id(args.operation_id))
-      if "status" in response and response["status"] == "succeeded":
-        print(response["entryID"])
-        break
-      else:
-        time.sleep(1)
+        response = json.loads(check_operation_id(args.operation_id))
+        if "status" in response and response["status"] == "succeeded":
+            print(response["entryID"])
+            break
+        else:
+            time.sleep(1)
 
 
 if __name__ == "__main__":
