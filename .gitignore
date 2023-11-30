@@ -1,5 +1,6 @@
 venv/*
-statement.json
-signed-statement.cbor
-my-signing-key.pem
+payload.json
+signed-statement.text
+scitt-signing-key.pem
+scitt-receipt.txt
 scitt/artifacts/_manifest/*

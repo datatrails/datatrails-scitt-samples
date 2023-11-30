@@ -166,7 +166,7 @@ def main():
         "--output-file",
         type=str,
         help="name of the output file to store the signed statement.",
-        default="signed-statement.cbor",
+        default="signed-statement.txt",
     )
 
     args = parser.parse_args()
