@@ -66,6 +66,7 @@ python scitt/create_signed_statement.py \
     --feed testfeed \
     --issuer testissuer \
     --output signed.cbor
+    --output-file signed-statement.cbor
 ```
 
 Now we have the signed statement we can deactivate the venv:
