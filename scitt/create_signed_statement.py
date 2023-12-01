@@ -19,13 +19,22 @@ from pycose.keys import CoseKey
 from ecdsa import SigningKey, VerifyingKey
 
 
-HEADER_LABEL_CWT = 13
+# Feed header label comes from version 2 of the scitt architecture document
+# https://www.ietf.org/archive/id/draft-birkholz-scitt-architecture-02.html#name-envelope-and-claim-format
 HEADER_LABEL_FEED = 392
 
+# CWT header label comes from version 4 of the scitt architecture document
+# https://www.ietf.org/archive/id/draft-ietf-scitt-architecture-04.html#name-issuer-identity
+HEADER_LABEL_CWT = 13
+
+# Various CWT header labels come from:
+# https://www.rfc-editor.org/rfc/rfc8392.html#section-3.1
 HEADER_LABEL_CWT_ISSUER = 1
 HEADER_LABEL_CWT_SUBJECT = 2
-HEADER_LABEL_CWT_CNF = 8
 
+# CWT CNF header labels come from:
+# https://datatracker.ietf.org/doc/html/rfc8747#name-confirmation-claim
+HEADER_LABEL_CWT_CNF = 8
 HEADER_LABEL_CNF_COSE_KEY = 1
 
 
@@ -54,7 +63,11 @@ def open_payload(payload_file: str) -> str:
 
 
 def create_signed_statement(
-    signing_key: SigningKey, payload: str, feed: str, issuer: str
+    signing_key: SigningKey,
+    payload: str,
+    feed: str,
+    issuer: str,
+    content_type: str,
 ) -> bytes:
     """
     creates a signed statement, given the signing_key, payload, feed and issuer
@@ -75,7 +88,7 @@ def create_signed_statement(
     protected_header = {
         Algorithm: Es256,
         KID: b"testkey",
-        ContentType: "application/json",
+        ContentType: content_type,
         HEADER_LABEL_FEED: feed,
         HEADER_LABEL_CWT: {
             HEADER_LABEL_CWT_ISSUER: issuer,
@@ -175,7 +188,11 @@ def main():
     payload = open_payload(args.payload_file)
 
     signed_statement = create_signed_statement(
-        signing_key, payload, args.feed, args.issuer
+        signing_key,
+        payload,
+        args.feed,
+        args.issuer,
+        args.content_type,
     )
 
     with open(args.output_file, "w", encoding="UTF-8") as output_file:
