@@ -1,10 +1,9 @@
 """ Module for checking when a statement has been anchored in the append-only ledger """
 
-import json
 import subprocess
 import argparse
-import time
-
+from json import loads as json_loads
+from time import sleep as time_sleep
 
 def check_operation_id(
     operation_id: str
@@ -28,19 +27,21 @@ def main():
     args = parser.parse_args()
 
     # Check the operation status until the status=succeeded
-    while True:
+    # Wait a max of 120 seconds
+    i = 0
+    while i < 120 :
         retval=check_operation_id(args.operation_id)
         if retval=="Jwt is expired":
             print(retval)
             return
 
-        response = json.loads(check_operation_id(args.operation_id))
+        response = json_loads(check_operation_id(args.operation_id))
         if "status" in response and response["status"] == "succeeded":
             print(response["entryID"])
             break
-        else:
-            time.sleep(1)
 
+        time_sleep(1)
+        i+=1
 
 if __name__ == "__main__":
     main()
