@@ -18,7 +18,7 @@ def main():
 
     parser = argparse.ArgumentParser(description="Create a signed statement.")
 
-    # signing key file
+    # operation id
     parser.add_argument(
         "--operation-id",
         type=str,
