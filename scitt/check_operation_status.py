@@ -5,11 +5,12 @@ import argparse
 from json import loads as json_loads
 from time import sleep as time_sleep
 
+
 def check_operation_id(
     operation_id: str
 )-> str:
 
-    return subprocess.check_output("curl -s -H @$HOME/.datatrails/bearer-token.txt https://app.datatrails.ai/archivist/v1/publicscitt/operations/"+operation_id, shell = True).decode()
+    return subprocess.check_output("curl -s -H @$HOME/.datatrails/bearer-token.txt https://app.datatrails.ai/archivist/v1/publicscitt/operations/" + operation_id, shell=True).decode()
 
 
 def main():
@@ -42,6 +43,7 @@ def main():
 
         time_sleep(1)
         i+=1
+
 
 if __name__ == "__main__":
     main()
