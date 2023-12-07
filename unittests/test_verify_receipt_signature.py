@@ -4,9 +4,9 @@ Known Answer Test (KAT) unit tests for verifying a receipt
 
 import unittest
 
-from scitt.verify_receipt_signature import verify_receipt
+from scitt.verify_receipt_signature import verify_receipt, open_receipt
 
-from .constants import KNOWN_RECEIPT
+from .constants import KNOWN_RECEIPT_FILE
 
 
 class TestVerifyRecieptSignature(unittest.TestCase):
@@ -18,7 +18,8 @@ class TestVerifyRecieptSignature(unittest.TestCase):
         """
         tests we can verify the signature of a known receipt.
         """
+        receipt = open_receipt(KNOWN_RECEIPT_FILE)
 
-        verified = verify_receipt(KNOWN_RECEIPT)
+        verified = verify_receipt(receipt)
 
         self.assertTrue(verified)
