@@ -1,7 +1,6 @@
 """ Module for verifying the counter signed receipt signature """
 
 import re
-from base64 import b64decode
 import argparse
 
 import requests
@@ -19,12 +18,12 @@ from pycose.headers import KID
 HEADER_LABEL_DID = 391
 
 
-def open_receipt(receipt_file: str) -> str:
+def open_receipt(receipt_file: str) -> bytes:
     """
     opens the receipt from the receipt file.
-    NOTE: the receipt is expected to be in base64 encoding.
+    NOTE: the receipt is expected to be in cbor encoding.
     """
-    with open(receipt_file, encoding="UTF-8") as file:
+    with open(receipt_file, "rb") as file:
         receipt = file.read()
         return receipt
 
@@ -92,16 +91,13 @@ def get_didweb_pubkey(didurl: str, kid: bytes) -> dict:
     raise ValueError(f"no key with kid: {kid} in verification methods of did document")
 
 
-def verify_receipt(receipt: str) -> bool:
+def verify_receipt(receipt: bytes) -> bool:
     """
     verifies the counter signed receipt signature
     """
 
-    # base64 decode the receipt into a cose sign1 message
-    b64decoded_message = b64decode(receipt)
-
     # decode the cbor encoded cose sign1 message
-    message = Sign1Message.decode(b64decoded_message)
+    message = Sign1Message.decode(receipt)
 
     # get the verification key from didweb
     kid: bytes = message.phdr[KID]
@@ -121,14 +117,16 @@ def verify_receipt(receipt: str) -> bool:
 def main():
     """Verifies a counter signed receipt signature"""
 
-    parser = argparse.ArgumentParser(description="Create a signed statement.")
+    parser = argparse.ArgumentParser(
+        description="Verify a counter signed receipt signature."
+    )
 
     # signing key file
     parser.add_argument(
         "--receipt-file",
         type=str,
-        help="filepath to the stored receipt, in base64 format.",
-        default="scitt-receipt.txt",
+        help="filepath to the stored receipt, in cbor format.",
+        default="scitt-receipt.cbor",
     )
 
     args = parser.parse_args()

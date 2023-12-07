@@ -4,7 +4,6 @@ import hashlib
 import json
 import argparse
 
-from base64 import b64encode
 from typing import Optional
 
 from pycose.messages import Sign1Message
@@ -52,6 +51,7 @@ def open_payload(payload_file: str) -> str:
     """
     opens the payload from the payload file.
     NOTE: the payload is expected to be in json format.
+          however, any payload of type bytes is allowed.
     """
     with open(payload_file, encoding="UTF-8") as file:
         payload = json.loads(file.read())
@@ -124,10 +124,7 @@ def create_signed_statement(
     # NOTE: the encode() function performs the signing automatically
     signed_statement = statement.encode([None])
 
-    # base64 encode the signed statement
-    signed_statement_b64 = b64encode(signed_statement)
-
-    return signed_statement_b64
+    return signed_statement
 
 
 def main():
@@ -179,7 +176,7 @@ def main():
         "--output-file",
         type=str,
         help="name of the output file to store the signed statement.",
-        default="signed-statement.txt",
+        default="signed-statement.cbor",
     )
 
     args = parser.parse_args()
@@ -195,8 +192,8 @@ def main():
         args.content_type,
     )
 
-    with open(args.output_file, "w", encoding="UTF-8") as output_file:
-        output_file.write(signed_statement.decode("utf-8"))
+    with open(args.output_file, "wb") as output_file:
+        output_file.write(signed_statement)
 
 
 if __name__ == "__main__":
