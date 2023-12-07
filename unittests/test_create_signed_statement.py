@@ -5,8 +5,6 @@ Pairwise unit tests for creating a signed statement
 import unittest
 import json
 
-from base64 import b64decode
-
 from ecdsa import SigningKey, NIST256p
 
 from pycose.messages import Sign1Message
