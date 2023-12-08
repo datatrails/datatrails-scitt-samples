@@ -1,9 +1,11 @@
 """ Module for checking when a statement has been anchored in the append-only ledger """
 
-import subprocess
+import os
 import argparse
-from json import loads as json_loads
+
 from time import sleep as time_sleep
+
+import requests
 
 
 # all timeouts and durations are in seconds
@@ -12,22 +14,36 @@ POLL_TIMEOUT = 360
 POLL_INTERVAL = 10
 
 
-def get_operation_status(operation_id: str) -> str:
+def get_token_from_file(token_file_name: str) -> dict:
+    """
+    gets the token from a file,
+    assume the contents of the file is the
+    whole authorization header: `Authorization: Bearer {token}`
+    """
+    with open(token_file_name, mode="r", encoding="utf-8") as token_file:
+        auth_header = token_file.read().strip()
+        header, value = auth_header.split(": ")
+        print(f"header:{header}")
+        print(f"value:{value}")
+        return {header: value}
+
+
+def get_operation_status(operation_id: str, headers: dict) -> dict:
     """
     gets the operation status from the datatrails API for retrieving operation status
     """
 
-    # pylint: disable=fixme
-    # TODO: use requests.get, with the request timeout.
-    return subprocess.check_output(
-        # pylint: disable=line-too-long
-        "curl -s -H @$HOME/.datatrails/bearer-token.txt https://app.datatrails.ai/archivist/v1/publicscitt/operations/"
-        + operation_id,
-        shell=True,
-    ).decode()
+    url = (
+        f"https://app.datatrails.ai/archivist/v1/publicscitt/operations/{operation_id}"
+    )
+
+    response = requests.get(url, timeout=30, headers=headers)
+    response.raise_for_status()
+
+    return response.json()
 
 
-def poll_operation_status(operation_id: str) -> str:
+def poll_operation_status(operation_id: str, headers: dict) -> str:
     """
     polls for the operation status to be 'succeeded'.
     """
@@ -35,13 +51,12 @@ def poll_operation_status(operation_id: str) -> str:
     poll_attempts: int = int(POLL_TIMEOUT / POLL_INTERVAL)
 
     for _ in range(poll_attempts):
-        operation_status = get_operation_status(operation_id)
+        operation_status = get_operation_status(operation_id, headers)
 
         # pylint: disable=fixme
         # TODO: ensure get_operation_status handles error cases from the rest request
-        response = json_loads(operation_status)
-        if "status" in response and response["status"] == "succeeded":
-            return response["entryID"]
+        if "status" in operation_status and operation_status["status"] == "succeeded":
+            return operation_status["entryID"]
 
         time_sleep(POLL_INTERVAL)
 
@@ -62,9 +77,27 @@ def main():
         help="the operation-id from a registered statement",
     )
 
+    # get default token file name
+    home = os.environ.get("HOME")
+    if home is None:
+        default_token_file_name: str = ".datatrails/bearer-token.txt"
+    else:
+        default_token_file_name: str = home + "/.datatrails/bearer-token.txt"
+
+    # token file name
+    parser.add_argument(
+        "--token-file-name",
+        type=str,
+        help="filename containing the token in the format"
+        "of an auth header: `Authorization: Bearer {token}",
+        default=default_token_file_name,
+    )
+
     args = parser.parse_args()
 
-    entry_id = poll_operation_status(args.operation_id)
+    headers = get_token_from_file(args.token_file_name)
+
+    entry_id = poll_operation_status(args.operation_id, headers)
     print(entry_id)
 
 
