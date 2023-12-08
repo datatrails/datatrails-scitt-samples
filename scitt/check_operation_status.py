@@ -23,8 +23,6 @@ def get_token_from_file(token_file_name: str) -> dict:
     with open(token_file_name, mode="r", encoding="utf-8") as token_file:
         auth_header = token_file.read().strip()
         header, value = auth_header.split(": ")
-        print(f"header:{header}")
-        print(f"value:{value}")
         return {header: value}
 
 
