@@ -5,8 +5,6 @@ Pairwise unit tests for creating a signed statement
 import unittest
 import json
 
-from base64 import b64decode
-
 from ecdsa import SigningKey, NIST256p
 
 from pycose.messages import Sign1Message
@@ -52,11 +50,8 @@ class TestCreateSignedStatement(unittest.TestCase):
 
         # verify the signed statement
 
-        # base64 decode the signed statement into a cose sign1 message
-        b64decoded_message = b64decode(signed_statement)
-
         # decode the cbor encoded cose sign1 message
-        message = Sign1Message.decode(b64decoded_message)
+        message = Sign1Message.decode(signed_statement)
 
         # get the verification key from cwt cnf
         cwt = message.phdr[HEADER_LABEL_CWT]
