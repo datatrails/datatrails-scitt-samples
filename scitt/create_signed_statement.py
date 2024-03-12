@@ -140,6 +140,38 @@ def main():
         default="scitt-signing-key.pem",
     )
 
+    # If we are stuck with RS256 ( don't think we are now), then we can't do this without backend changes.
+    #
+    # Ideally we would have a single option that took the acs response 'as is' and
+    # 1. picked out the digest that was signed, this becomes the payload
+    # 2. decoded the signatureCertificate, and extracted the public key
+    # 3. called an alternate implementation of create_signed_statement which
+    # 3.a) takes the payload as is
+    # 3.b) puts the public key material in the CNF claim
+    # 3.c) sets the algorithm to PS256. Also we need to actually figure out how to get PS256 from ACS
+
+    # azure code signing service response file
+    parser.add_argument(
+        "--acs-sign-response-file",
+        type=str,
+        help="filepath to the stored, json formated, response from the azure code signing service",
+        default="scitt-acs-sign-response.json",
+    )
+
+    # alternately, we can provide the signature and cert as seperate things
+    parser.add_argument(
+        "--acs-sig-file",
+        type=str,
+        help="filepath to the stored, base64 encoded signed payload",
+        default="scitt-acs-sig.json",
+    )
+    parser.add_argument(
+        "--acs-signature-cert-file",
+        type=str,
+        help="filepath to the stored, base64 encoded signed payload",
+        default="scitt-acs-signed.json",
+    )
+
     # payload-file (a reference to the file that will become the payload of the SCITT Statement)
     parser.add_argument(
         "--payload-file",
