@@ -143,7 +143,7 @@ def main():
     parser.add_argument(
         "--detached-hash-type",
         type=str,
-        help='When the a payload-type="detached", an optional detached-hash may be set to assist in payload verification. detached-hash-type identifies the hashing algorithm used'
+        help='When the payload-type="detached", an optional detached-hash may be set to assist in payload verification. detached-hash-type identifies the hashing algorithm used'
     )
 
     # issuer
