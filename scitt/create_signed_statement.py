@@ -136,7 +136,7 @@ def main():
     parser.add_argument(
         "--detached-hash",
         type=str,
-        help='The hash value to assist in payload verification when the a payload-type="detached"'
+        help='The hash value to assist in payload verification when the payload-type="detached"'
     )
 
     # detached-hash-type
