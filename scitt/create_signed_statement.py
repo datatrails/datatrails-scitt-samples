@@ -18,13 +18,9 @@ from pycose.keys import CoseKey
 from ecdsa import SigningKey, VerifyingKey
 
 
-# Feed header label comes from version 2 of the scitt architecture document
-# https://www.ietf.org/archive/id/draft-birkholz-scitt-architecture-02.html#name-envelope-and-claim-format
-HEADER_LABEL_FEED = 392
-
 # CWT header label comes from version 4 of the scitt architecture document
-# https://www.ietf.org/archive/id/draft-ietf-scitt-architecture-04.html#name-issuer-identity
-HEADER_LABEL_CWT = 13
+# https://www.ietf.org/archive/id/draft-ietf-scitt-architecture-07.html##name-signed-statements
+HEADER_LABEL_CWT = 15
 
 # Various CWT header labels come from:
 # https://www.rfc-editor.org/rfc/rfc8392.html#section-3.1
@@ -53,24 +49,20 @@ def open_payload(payload_file: str) -> str:
     NOTE: the payload is expected to be in json format.
           however, any payload of type bytes is allowed.
     """
-    with open(payload_file, encoding="UTF-8") as file:
-        payload = json.loads(file.read())
-
-        # convert the payload to a cose sign1 payload
-        payload = json.dumps(payload, ensure_ascii=False)
-
+    with open(payload_file, mode='rb') as file:
+        payload = file.read()
         return payload
 
 
 def create_signed_statement(
     signing_key: SigningKey,
     payload: str,
-    feed: str,
+    subject: str,
     issuer: str,
     content_type: str,
 ) -> bytes:
     """
-    creates a signed statement, given the signing_key, payload, feed and issuer
+    creates a signed statement, given the signing_key, payload, subject and issuer
     """
 
     verifying_key: Optional[VerifyingKey] = signing_key.verifying_key
@@ -89,10 +81,9 @@ def create_signed_statement(
         Algorithm: Es256,
         KID: b"testkey",
         ContentType: content_type,
-        HEADER_LABEL_FEED: feed,
         HEADER_LABEL_CWT: {
             HEADER_LABEL_CWT_ISSUER: issuer,
-            HEADER_LABEL_CWT_SUBJECT: feed,
+            HEADER_LABEL_CWT_SUBJECT: subject,
             HEADER_LABEL_CWT_CNF: {
                 HEADER_LABEL_CNF_COSE_KEY: {
                     KpKty: KtyEC2,
@@ -105,7 +96,7 @@ def create_signed_statement(
     }
 
     # create the statement as a sign1 message using the protected header and payload
-    statement = Sign1Message(phdr=protected_header, payload=payload.encode("utf-8"))
+    statement = Sign1Message(phdr=protected_header, payload=payload)
 
     # create the cose_key to sign the statement using the signing key
     cose_key = {
@@ -132,51 +123,89 @@ def main():
 
     parser = argparse.ArgumentParser(description="Create a signed statement.")
 
-    # signing key file
-    parser.add_argument(
-        "--signing-key-file",
-        type=str,
-        help="filepath to the stored ecdsa P-256 signing key, in pem format.",
-        default="scitt-signing-key.pem",
-    )
-
-    # payload-file (a reference to the file that will become the payload of the SCITT Statement)
-    parser.add_argument(
-        "--payload-file",
-        type=str,
-        help="filepath to the content that will become the payload of the SCITT Statement "
-        "(currently limited to json format).",
-        default="scitt-payload.json",
-    )
-
     # content-type
     parser.add_argument(
+        "-t",
         "--content-type",
         type=str,
-        help="The iana.org media type for the payload",
+        help="The iana.org media type for the statement.",
         default="application/json",
     )
 
-    # feed
+    # detached-hash
     parser.add_argument(
-        "--feed",
+        "--detached-hash",
         type=str,
-        help="feed to correlate statements made about an artifact.",
+        help='The hash value to assist in payload verification when the a payload-type="detached"'
+    )
+
+    # detached-hash-type
+    parser.add_argument(
+        "--detached-hash-type",
+        type=str,
+        help='When the a payload-type="detached", an optional detached-hash may be set to assist in payload verification. detached-hash-type identifies the hashing algorithm used'
     )
 
     # issuer
     parser.add_argument(
         "--issuer",
+        required=True,
         type=str,
-        help="issuer who owns the signing key.",
+        help="Owner of the signing key",
+    )
+
+    # location-hint
+    parser.add_argument(
+        "-l",
+        "--location-hint",
+        type=str,
+        help="An optional URI the statement is stored"
+    )
+
+    # signing key
+    parser.add_argument(
+        "-k",
+        "--signing-key-file",
+        type=str,
+        required=True,
+        help="filepath to the stored ecdsa P-256 signing key, in pem format.",
+        default="key.pem",
+    )
+
+    # statement-file
+    parser.add_argument(
+        "-f",
+        "--statement-file",
+        required=True,
+        type=str,
+        help="filepath to the content that will become the payload of the SCITT Signed Statement ",
+        default="statement.json",
+    )
+
+    # subject
+    parser.add_argument(
+        "-s", "--subject",
+        required=True,
+        type=str,
+        help="Unique identifier, owned by the Issuer, for the Artifact the statement references",
     )
 
     # output file
     parser.add_argument(
+        "-o",
         "--output-file",
         type=str,
-        help="name of the output file to store the signed statement.",
+        help="name of the output file for the signed statement",
         default="signed-statement.cbor",
+    )
+
+    # statement-type
+    parser.add_argument(
+        "--payload-type",
+        type=str,
+        choices=['attached','detached','hash+sha256','hash+sha512'],
+        help="Signed Statements may attach the statement within the payload as attached, detached (nil), or sign a hash of the statement: (attached | detached | hash+[algo])",
+        default="hash+sha512",
     )
 
     args = parser.parse_args()
@@ -187,7 +216,7 @@ def main():
     signed_statement = create_signed_statement(
         signing_key,
         payload,
-        args.feed,
+        args.subject,
         args.issuer,
         args.content_type,
     )
