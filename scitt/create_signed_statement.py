@@ -162,6 +162,15 @@ def main():
         help="An optional URI the statement is stored"
     )
 
+    # statement-type
+    parser.add_argument(
+        "--payload-type",
+        type=str,
+        choices=['attached','detached','hash+sha256','hash+sha512'],
+        help='Signed Statements may attach the statement within the payload as attached, detached (nil), or sign a hash of the statement: (attached | detached | hash+[algo "hash+sha256" | "hash+sha512"])',
+        default="hash+sha512",
+    )
+
     # signing key
     parser.add_argument(
         "-k",
@@ -197,15 +206,6 @@ def main():
         type=str,
         help="name of the output file for the signed statement",
         default="signed-statement.cbor",
-    )
-
-    # statement-type
-    parser.add_argument(
-        "--payload-type",
-        type=str,
-        choices=['attached','detached','hash+sha256','hash+sha512'],
-        help="Signed Statements may attach the statement within the payload as attached, detached (nil), or sign a hash of the statement: (attached | detached | hash+[algo])",
-        default="hash+sha512",
     )
 
     args = parser.parse_args()
