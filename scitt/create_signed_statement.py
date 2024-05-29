@@ -121,7 +121,7 @@ def create_signed_statement(
 def main():
     """Creates a signed statement"""
 
-    parser = argparse.ArgumentParser(description="Create a signed statement.")
+    parser = argparse.ArgumentParser(description="Create a signed statement")
 
     # content-type
     parser.add_argument(
@@ -129,7 +129,7 @@ def main():
         "--content-type",
         type=str,
         help="The iana.org media type for the statement.",
-        default="application/json",
+        default="application/json"
     )
 
     # detached-hash
@@ -139,11 +139,11 @@ def main():
         help='The hash value to assist in payload verification when the payload-type="detached"'
     )
 
-    # detached-hash-type
+    # detached-hash-algorithm
     parser.add_argument(
-        "--detached-hash-type",
+        "--detached-hash-algorithm",
         type=str,
-        help='When the payload-type="detached", an optional detached-hash may be set to assist in payload verification. detached-hash-type identifies the hashing algorithm used'
+        help='When the payload-type="detached", an optional detached-hash may be set to assist in payload verification. detached-hash-algorithm identifies the hashing algorithm used'
     )
 
     # issuer
@@ -166,9 +166,9 @@ def main():
     parser.add_argument(
         "--payload-type",
         type=str,
-        choices=['attached','detached','hash+sha256','hash+sha512'],
-        help='Signed Statements may attach the statement within the payload as attached, detached (nil), or sign a hash of the statement: (attached | detached | hash+[algo "hash+sha256" | "hash+sha512"])',
-        default="hash+sha512",
+        choices=['attached','detached','hash+sha-256','hash+sha-512'],
+        help='Signed Statements may attach the statement within the payload as attached, detached (nil), or sign a hash of the statement: (attached | detached | hash+[algo "hash+sha-256" | "hash+sha-512"])',
+        default="hash+sha-512",
     )
 
     # signing key
@@ -177,7 +177,7 @@ def main():
         "--signing-key-file",
         type=str,
         required=True,
-        help="filepath to the stored ecdsa P-256 signing key, in pem format.",
+        help="filepath to the stored ecdsa P-256 signing key, in pem format",
         default="key.pem",
     )
 
