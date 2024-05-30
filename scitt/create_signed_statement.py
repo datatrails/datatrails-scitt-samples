@@ -136,14 +136,14 @@ def main():
     parser.add_argument(
         "--detached-hash",
         type=str,
-        help='The hash value to assist in payload verification when the payload-type="detached"'
+        help='The hash value to assist in payload verification when the payload-type="hash"'
     )
 
     # detached-hash-algorithm
     parser.add_argument(
         "--detached-hash-algorithm",
         type=str,
-        help='When the payload-type="detached", an optional detached-hash may be set to assist in payload verification. detached-hash-algorithm identifies the hashing algorithm used'
+        help='When the payload-type="hash", the optional detached-hash must be set to assist in payload verification. detached-hash-algorithm identifies the hashing algorithm used'
     )
 
     # issuer
