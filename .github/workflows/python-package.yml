@@ -45,6 +45,9 @@ jobs:
     - uses: pypa/gh-action-pip-audit@v1.0.8
       if: ${{ matrix.os == 'ubuntu-latest' }}
       with:
+        # GHSA-wj6h-64fc-37mp - python-ecdsa will not be fixed by maintainers
+        ignore-vulns: |
+          GHSA-wj6h-64fc-37mp
         inputs: requirements.txt
 
 

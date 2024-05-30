@@ -14,6 +14,7 @@ class TestVerifyRecieptSignature(unittest.TestCase):
     Tests verification of a known receipt.
     """
 
+    @unittest.skip("Requires didweb which is broken")
     def test_verify_kat_receipt(self):
         """
         tests we can verify the signature of a known receipt.
