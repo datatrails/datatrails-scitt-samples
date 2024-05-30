@@ -4,5 +4,5 @@
 # DataTrails SCITT Examples
 
 The files in this repository can be used to demonstrate how the DataTrails SCITT API works.
-
+ 
 For usage, please see [Quickstart: SCITT Statements (Preview)](https://docs.datatrails.ai/developers/developer-patterns/scitt-api/)
