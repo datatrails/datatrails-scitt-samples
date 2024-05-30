@@ -166,9 +166,9 @@ def main():
     parser.add_argument(
         "--payload-type",
         type=str,
-        choices=['attached','detached','hash+sha-256','hash+sha-512'],
-        help='Signed Statements may attach the statement within the payload as attached, detached (nil), or sign a hash of the statement: (attached | detached | hash+[algo "hash+sha-256" | "hash+sha-512"])',
-        default="hash+sha-512",
+        choices=['attached','detached','hash'],
+        help='Signed Statements may reference a statement within the payload as attached (inline), detached (nil), or set the payload to a hash of the statement: (attached | detached | hash ). When set, detached-hash and detached-hash-algorithm are required',
+        default="hash",
     )
 
     # signing key
