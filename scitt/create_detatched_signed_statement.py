@@ -5,6 +5,8 @@ import argparse
 
 from typing import Optional
 
+from hashlib import sha256
+
 from pycose.messages import Sign1Message
 from pycose.headers import Algorithm, KID, ContentType
 from pycose.algorithms import Es256
@@ -14,7 +16,6 @@ from pycose.keys.keytype import KtyEC2
 from pycose.keys.keyops import SignOp, VerifyOp
 from pycose.keys import CoseKey
 
-from hashlib import sha256
 from ecdsa import SigningKey, VerifyingKey
 
 
@@ -103,7 +104,7 @@ def create_signed_statement(
                 },
             },
         },
-        HEADER_LABEL_PAYLOAD_HASH_ALGORITHM: -16, # for sha256
+        HEADER_LABEL_PAYLOAD_HASH_ALGORITHM: -16,  # for sha256
         HEADER_LABEL_LOCATION_HINT: location_hint,
     }
 
