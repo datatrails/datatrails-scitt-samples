@@ -60,7 +60,7 @@ class TestCreateHashedSignedStatement(unittest.TestCase):
         # and the correct headers are set
         payload_hash = sha256(payload.encode("utf-8")).digest()
         self.assertEqual(payload_hash, message.payload)
-        self.assertEqual(-16, message.phdr[HEADER_LABEL_PAYLOAD_HASH_ALGORITHM] ) # -16 for sha256
+        self.assertEqual(-16, message.phdr[HEADER_LABEL_PAYLOAD_HASH_ALGORITHM])  # -16 for sha256
         self.assertEqual(location_hint, message.phdr[HEADER_LABEL_LOCATION])
 
         # get the verification key from cwt cnf
