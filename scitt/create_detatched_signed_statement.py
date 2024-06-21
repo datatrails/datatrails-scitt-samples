@@ -69,7 +69,7 @@ def create_signed_statement(
     feed: str,
     issuer: str,
     content_type: str,
-    location_hint: str,
+    location: str,
 ) -> bytes:
     """
     creates a signed statement, given the signing_key, payload, subject and issuer
