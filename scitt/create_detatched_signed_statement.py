@@ -47,7 +47,8 @@ HEADER_LABEL_LOCATION_HINT = 999
 def open_signing_key(key_file: str) -> SigningKey:
     """
     opens the signing key from the key file.
-    NOTE: the signing key is expected to be a P-256 ecdsa key in PEM format.
+    NOTE: the signing key is expected to be a P-256 ecdsa key in PEM format. 
+    While this sample script uses P-256 ecdsa, DataTrails supports any format supported through [go-cose](https://github.com/veraison/go-cose/blob/main/algorithm.go)
     """
     with open(key_file, encoding="UTF-8") as file:
         signing_key = SigningKey.from_pem(file.read(), hashlib.sha256)
