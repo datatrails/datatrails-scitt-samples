@@ -72,7 +72,7 @@ def create_signed_statement(
     location_hint: str,
 ) -> bytes:
     """
-    creates a signed statement, given the signing_key, payload, feed and issuer
+    creates a signed statement, given the signing_key, payload, subject and issuer
     """
 
     # NOTE: for the sample an ecdsa P256 key is used
