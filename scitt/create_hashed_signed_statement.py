@@ -106,7 +106,7 @@ def create_signed_statement(
             },
         },
         HEADER_LABEL_PAYLOAD_HASH_ALGORITHM: -16,  # for sha256
-        HEADER_LABEL_LOCATION_HINT: location_hint,
+        HEADER_LABEL_LOCATION: location,
     }
 
     # now create a sha256 hash of the payload
@@ -154,7 +154,7 @@ def main():
     parser.add_argument(
         "--payload-file",
         type=str,
-        help="filepath to the content that will become the payload of the SCITT Statement "
+        help="filepath to the content that will be hashed and placed into the payload of the SCITT Statement.",
         default="scitt-payload.json",
     )
 
