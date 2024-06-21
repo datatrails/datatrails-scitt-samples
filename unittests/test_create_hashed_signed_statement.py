@@ -5,8 +5,8 @@ Pairwise unit tests for creating a signed statement with a hashed payload
 import unittest
 import json
 
-from ecdsa import SigningKey, NIST256p
 from hashlib import sha256
+from ecdsa import SigningKey, NIST256p
 
 from pycose.messages import Sign1Message
 from pycose.keys.curves import P256
