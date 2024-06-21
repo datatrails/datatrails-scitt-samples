@@ -48,7 +48,8 @@ def open_signing_key(key_file: str) -> SigningKey:
     """
     opens the signing key from the key file.
     NOTE: the signing key is expected to be a P-256 ecdsa key in PEM format.
-    While this sample script uses P-256 ecdsa, DataTrails supports any format supported through [go-cose](https://github.com/veraison/go-cose/blob/main/algorithm.go)
+    While this sample script uses P-256 ecdsa, DataTrails supports any format
+    supported through [go-cose](https://github.com/veraison/go-cose/blob/main/algorithm.go)
     """
     with open(key_file, encoding="UTF-8") as file:
         signing_key = SigningKey.from_pem(file.read(), hashlib.sha256)
@@ -154,7 +155,7 @@ def main():
     parser.add_argument(
         "--payload-file",
         type=str,
-        help="filepath to the content that will be hashed and placed into the payload of the SCITT Statement.",
+        help="filepath to the content that will be hashed into the payload of the SCITT Statement.",
         default="scitt-payload.json",
     )
 
