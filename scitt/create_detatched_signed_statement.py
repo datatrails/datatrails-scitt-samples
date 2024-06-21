@@ -155,7 +155,6 @@ def main():
         "--payload-file",
         type=str,
         help="filepath to the content that will become the payload of the SCITT Statement "
-        "(currently limited to json format).",
         default="scitt-payload.json",
     )
 
