@@ -44,13 +44,13 @@ class TestCreateHashedSignedStatement(unittest.TestCase):
 
         payload = json.dumps(KNOWN_STATEMENT)
 
-        feed = "testfeed"
+        subject = "testsubject"
         issuer = "testissuer"
         content_type = "application/json"
         location_hint = "example-location"
 
         signed_statement = create_signed_statement(
-            signing_key, payload, feed, issuer, content_type, location_hint
+            signing_key, payload, subject, issuer, content_type, location_hint
         )
 
         # decode the cbor encoded cose sign1 message
