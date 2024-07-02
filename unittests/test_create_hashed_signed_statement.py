@@ -33,7 +33,7 @@ class TestCreateHashedSignedStatement(unittest.TestCase):
     and then verifying the signature of that statement
     """
 
-    def test_sign_and_verifiy_statement(self):
+    def test_sign_and_verify_statement(self):
         """
         tests we can create a signed statement given a known key and statement.
         tests we can also verifiy that signed statement.
