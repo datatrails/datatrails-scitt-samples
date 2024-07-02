@@ -19,10 +19,6 @@ from pycose.keys import CoseKey
 from ecdsa import SigningKey, VerifyingKey
 
 
-# Feed header label comes from version 2 of the scitt architecture document
-# https://www.ietf.org/archive/id/draft-birkholz-scitt-architecture-02.html#name-envelope-and-claim-format
-HEADER_LABEL_FEED = 392
-
 # CWT header label comes from version 4 of the scitt architecture document
 # https://www.ietf.org/archive/id/draft-ietf-scitt-architecture-04.html#name-issuer-identity
 HEADER_LABEL_CWT = 13
@@ -67,7 +63,7 @@ def open_payload(payload_file: str) -> str:
 def create_signed_statement(
     signing_key: SigningKey,
     payload: str,
-    feed: str,
+    subject: str,
     issuer: str,
     content_type: str,
     location: str,
@@ -93,10 +89,9 @@ def create_signed_statement(
         Algorithm: Es256,
         KID: b"testkey",
         ContentType: content_type,
-        HEADER_LABEL_FEED: feed,
         HEADER_LABEL_CWT: {
             HEADER_LABEL_CWT_ISSUER: issuer,
-            HEADER_LABEL_CWT_SUBJECT: feed,
+            HEADER_LABEL_CWT_SUBJECT: subject,
             HEADER_LABEL_CWT_CNF: {
                 HEADER_LABEL_CNF_COSE_KEY: {
                     KpKty: KtyEC2,
@@ -167,11 +162,11 @@ def main():
         default="application/json",
     )
 
-    # feed
+    # subject
     parser.add_argument(
-        "--feed",
+        "--subject",
         type=str,
-        help="feed to correlate statements made about an artifact.",
+        help="subject to correlate statements made about an artifact.",
     )
 
     # issuer
@@ -204,7 +199,7 @@ def main():
     signed_statement = create_signed_statement(
         signing_key,
         payload,
-        args.feed,
+        args.subject,
         args.issuer,
         args.content_type,
         args.location_hint,
