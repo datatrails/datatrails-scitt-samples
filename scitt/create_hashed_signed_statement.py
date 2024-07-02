@@ -60,7 +60,7 @@ def open_payload(payload_file: str) -> str:
         return file.read()
 
 
-def create_signed_statement(
+def create_hashed_signed_statement(
     signing_key: SigningKey,
     payload: str,
     subject: str,
@@ -69,7 +69,8 @@ def create_signed_statement(
     location: str,
 ) -> bytes:
     """
-    creates a signed statement, given the signing_key, payload, subject and issuer
+    creates a hashed signed statement, given the signing_key, payload, subject and issuer
+    the payload will be hashed and the hash added to the payload field.
     """
 
     # NOTE: for the sample an ecdsa P256 key is used
@@ -196,7 +197,7 @@ def main():
     signing_key = open_signing_key(args.signing_key_file)
     payload = open_payload(args.payload_file)
 
-    signed_statement = create_signed_statement(
+    signed_statement = create_hashed_signed_statement(
         signing_key,
         payload,
         args.subject,

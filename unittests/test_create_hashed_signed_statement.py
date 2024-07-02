@@ -16,7 +16,7 @@ from pycose.keys.keyops import VerifyOp
 from pycose.keys import CoseKey
 
 from scitt.create_hashed_signed_statement import (
-    create_signed_statement,
+    create_hashed_signed_statement,
     HEADER_LABEL_CWT,
     HEADER_LABEL_CWT_CNF,
     HEADER_LABEL_CNF_COSE_KEY,
@@ -49,7 +49,7 @@ class TestCreateHashedSignedStatement(unittest.TestCase):
         content_type = "application/json"
         location_hint = "example-location"
 
-        signed_statement = create_signed_statement(
+        signed_statement = create_hashed_signed_statement(
             signing_key, payload, subject, issuer, content_type, location_hint
         )
 
