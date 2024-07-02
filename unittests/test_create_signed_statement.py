@@ -40,12 +40,12 @@ class TestCreateSignedStatement(unittest.TestCase):
 
         payload = json.dumps(KNOWN_STATEMENT)
 
-        feed = "testfeed"
+        subject = "testsubject"
         issuer = "testissuer"
         content_type = "application/json"
 
         signed_statement = create_signed_statement(
-            signing_key, payload, feed, issuer, content_type
+            signing_key, payload, subject, issuer, content_type
         )
 
         # verify the signed statement
