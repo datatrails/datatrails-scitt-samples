@@ -100,10 +100,10 @@ def verify_receipt(receipt: bytes) -> bool:
     # decode the cbor encoded cose sign1 message
     try:
         message = Sign1Message.decode(receipt)
-    except: 
+    except:
         print("failed to decode cose sign1 receipt", file=sys.stderr)
         return False
-    
+
     # get the verification key from didweb
     kid: bytes = message.phdr[KID]
     didurl = message.phdr[HEADER_LABEL_DID]
