@@ -31,6 +31,7 @@ def get_base64_statement(event_json: bytes) -> str:
 
     return base64_signed_statement
 
+
 def decode_base64_statement(base64_statement: str) -> bytes:
     """
     decodes the base64 encoded signed statement
@@ -38,6 +39,7 @@ def decode_base64_statement(base64_statement: str) -> bytes:
     """
     signed_statement = base64.b64decode(base64_statement)
     return signed_statement
+
 
 def decode_statement(receipt: bytes):
     """
