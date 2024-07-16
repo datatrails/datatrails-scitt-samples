@@ -2,9 +2,9 @@
 
 import re
 import argparse
+import sys
 
 import requests
-import sys
 
 from jwcrypto import jwk
 
@@ -100,7 +100,7 @@ def verify_receipt(receipt: bytes) -> bool:
     # decode the cbor encoded cose sign1 message
     try:
         message = Sign1Message.decode(receipt)
-    except:
+    except ValueError:
         print("failed to decode cose sign1 receipt", file=sys.stderr)
         return False
 
