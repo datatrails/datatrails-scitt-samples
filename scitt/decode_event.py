@@ -53,10 +53,10 @@ def decode_statement(receipt: bytes):
 
 
 def main():
-    """Verifies a counter signed receipt signature"""
+    """Decodes an underlying scitt datatrails event back into the original payload"""
 
     parser = argparse.ArgumentParser(
-        description="Verify a counter signed receipt signature."
+        description="Decodes an underlying scitt datatrails event back into the original payload."
     )
 
     # signing key file
