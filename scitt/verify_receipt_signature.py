@@ -2,6 +2,7 @@
 
 import re
 import argparse
+import sys
 
 import requests
 
@@ -97,7 +98,11 @@ def verify_receipt(receipt: bytes) -> bool:
     """
 
     # decode the cbor encoded cose sign1 message
-    message = Sign1Message.decode(receipt)
+    try:
+        message = Sign1Message.decode(receipt)
+    except (ValueError, AttributeError):
+        print("failed to decode cose sign1 receipt", file=sys.stderr)
+        return False
 
     # get the verification key from didweb
     kid: bytes = message.phdr[KID]
@@ -135,7 +140,10 @@ def main():
 
     verified = verify_receipt(receipt)
 
-    print(verified)
+    if verified:
+        print("signature verification succeeded")
+    else:
+        print("signature verification failed")
 
 
 if __name__ == "__main__":
