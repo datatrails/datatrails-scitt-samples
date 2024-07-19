@@ -116,7 +116,7 @@ def main():
     args = parser.parse_args()
 
     logger = logging.getLogger("check operation status")
-    logging.basicConfig(encoding="utf-8", level=logging.getLevelName(args.log_level))
+    logging.basicConfig(level=logging.getLevelName(args.log_level))
 
     headers = get_token_from_file(args.token_file_name)
 
