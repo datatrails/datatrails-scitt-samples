@@ -2,6 +2,7 @@
 
 import os
 import argparse
+import logging
 
 from time import sleep as time_sleep
 
@@ -41,20 +42,32 @@ def get_operation_status(operation_id: str, headers: dict) -> dict:
     return response.json()
 
 
-def poll_operation_status(operation_id: str, headers: dict) -> str:
+def poll_operation_status(
+    operation_id: str, headers: dict, logger: logging.Logger
+) -> str:
     """
     polls for the operation status to be 'succeeded'.
     """
 
     poll_attempts: int = int(POLL_TIMEOUT / POLL_INTERVAL)
 
-    for _ in range(poll_attempts):
-        operation_status = get_operation_status(operation_id, headers)
+    logger.info("starting to poll for operation status 'succeeded'")
 
-        # pylint: disable=fixme
-        # TODO: ensure get_operation_status handles error cases from the rest request
-        if "status" in operation_status and operation_status["status"] == "succeeded":
-            return operation_status["entryID"]
+    for _ in range(poll_attempts):
+
+        try:
+            operation_status = get_operation_status(operation_id, headers)
+
+            # pylint: disable=fixme
+            # TODO: ensure get_operation_status handles error cases from the rest request
+            if (
+                "status" in operation_status
+                and operation_status["status"] == "succeeded"
+            ):
+                return operation_status["entryID"]
+
+        except requests.HTTPError as e:
+            logger.debug(f"failed getting operation status, error: {e}")
 
         time_sleep(POLL_INTERVAL)
 
@@ -91,11 +104,22 @@ def main():
         default=default_token_file_name,
     )
 
+    # log level
+    parser.add_argument(
+        "--log-level",
+        type=str,
+        help="log level. for any polling errors use DEBUG, defaults to INFO",
+        default="INFO",
+    )
+
     args = parser.parse_args()
+
+    logger = logging.getLogger("check operation status")
+    logging.basicConfig(encoding="utf-8", level=logging.getLevelName(args.log_level))
 
     headers = get_token_from_file(args.token_file_name)
 
-    entry_id = poll_operation_status(args.operation_id, headers)
+    entry_id = poll_operation_status(args.operation_id, headers, logger)
     print(entry_id)
 
 
