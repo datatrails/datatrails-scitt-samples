@@ -2,6 +2,8 @@
 
 import os
 import argparse
+import logging
+import sys
 
 from time import sleep as time_sleep
 
@@ -10,7 +12,7 @@ import requests
 
 # all timeouts and durations are in seconds
 REQUEST_TIMEOUT = 30
-POLL_TIMEOUT = 360
+POLL_TIMEOUT = 60
 POLL_INTERVAL = 10
 
 
@@ -41,24 +43,36 @@ def get_operation_status(operation_id: str, headers: dict) -> dict:
     return response.json()
 
 
-def poll_operation_status(operation_id: str, headers: dict) -> str:
+def poll_operation_status(
+    operation_id: str, headers: dict, logger: logging.Logger
+) -> str:
     """
     polls for the operation status to be 'succeeded'.
     """
 
     poll_attempts: int = int(POLL_TIMEOUT / POLL_INTERVAL)
 
-    for _ in range(poll_attempts):
-        operation_status = get_operation_status(operation_id, headers)
+    logger.info("starting to poll for operation status 'succeeded'")
 
-        # pylint: disable=fixme
-        # TODO: ensure get_operation_status handles error cases from the rest request
-        if "status" in operation_status and operation_status["status"] == "succeeded":
-            return operation_status["entryID"]
+    for _ in range(poll_attempts):
+
+        try:
+            operation_status = get_operation_status(operation_id, headers)
+
+            # pylint: disable=fixme
+            # TODO: ensure get_operation_status handles error cases from the rest request
+            if (
+                "status" in operation_status
+                and operation_status["status"] == "succeeded"
+            ):
+                return operation_status["entryID"]
+
+        except requests.HTTPError as e:
+            logger.debug("failed getting operation status, error: %s", e)
 
         time_sleep(POLL_INTERVAL)
 
-    raise TimeoutError("signed statement not registered within polling duration.")
+    raise TimeoutError("signed statement not registered within polling duration")
 
 
 def main():
@@ -91,12 +105,27 @@ def main():
         default=default_token_file_name,
     )
 
+    # log level
+    parser.add_argument(
+        "--log-level",
+        type=str,
+        help="log level. for any individual poll errors use DEBUG, defaults to WARNING",
+        default="WARNING",
+    )
+
     args = parser.parse_args()
+
+    logger = logging.getLogger("check operation status")
+    logging.basicConfig(level=logging.getLevelName(args.log_level))
 
     headers = get_token_from_file(args.token_file_name)
 
-    entry_id = poll_operation_status(args.operation_id, headers)
-    print(entry_id)
+    try:
+        entry_id = poll_operation_status(args.operation_id, headers, logger)
+        print(entry_id)
+    except TimeoutError as e:
+        print(e, file=sys.stderr)
+        sys.exit(1)
 
 
 if __name__ == "__main__":
