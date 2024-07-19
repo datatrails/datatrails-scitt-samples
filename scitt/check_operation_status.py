@@ -69,7 +69,7 @@ def poll_operation_status(
                 return operation_status["entryID"]
 
         except requests.HTTPError as e:
-            logger.debug(f"failed getting operation status, error: {e}")
+            logger.debug("failed getting operation status, error: %s", e)
 
         time_sleep(POLL_INTERVAL)
 
