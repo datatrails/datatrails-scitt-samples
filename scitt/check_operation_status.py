@@ -108,8 +108,8 @@ def main():
     parser.add_argument(
         "--log-level",
         type=str,
-        help="log level. for any polling errors use DEBUG, defaults to INFO",
-        default="INFO",
+        help="log level. for any individual poll errors use DEBUG, defaults to WARNING",
+        default="WARNING",
     )
 
     args = parser.parse_args()
