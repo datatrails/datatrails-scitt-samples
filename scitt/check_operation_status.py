@@ -3,7 +3,6 @@
 import os
 import argparse
 import logging
-import traceback
 import sys
 
 from time import sleep as time_sleep
