@@ -3,6 +3,8 @@
 import os
 import argparse
 import logging
+import traceback
+import sys
 
 from time import sleep as time_sleep
 
@@ -11,7 +13,7 @@ import requests
 
 # all timeouts and durations are in seconds
 REQUEST_TIMEOUT = 30
-POLL_TIMEOUT = 360
+POLL_TIMEOUT = 20
 POLL_INTERVAL = 10
 
 
@@ -119,9 +121,12 @@ def main():
 
     headers = get_token_from_file(args.token_file_name)
 
-    entry_id = poll_operation_status(args.operation_id, headers, logger)
-    print(entry_id)
-
+    try:
+        entry_id = poll_operation_status(args.operation_id, headers, logger)
+        print(entry_id)
+    except TimeoutError as e:
+        print(e, file=sys.stderr)
+        sys.exit(1)
 
 if __name__ == "__main__":
     main()
