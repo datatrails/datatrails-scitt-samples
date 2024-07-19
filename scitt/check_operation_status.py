@@ -13,7 +13,7 @@ import requests
 
 # all timeouts and durations are in seconds
 REQUEST_TIMEOUT = 30
-POLL_TIMEOUT = 20
+POLL_TIMEOUT = 60
 POLL_INTERVAL = 10
 
 
@@ -73,7 +73,7 @@ def poll_operation_status(
 
         time_sleep(POLL_INTERVAL)
 
-    raise TimeoutError("signed statement not registered within polling duration.")
+    raise TimeoutError("signed statement not registered within polling duration")
 
 
 def main():
