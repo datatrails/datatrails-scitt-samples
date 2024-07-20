@@ -175,7 +175,7 @@ def attach_receipt(
 
     # Add receipt to the unprotected header and re-encode
     message.uhdr["receipts"] = [response.content]
-    ts = Sign1Message.encode(message, sign=False)
+    ts = message.encode(sign=False)
 
     # Write out the updated Transparent Statement
     with open(transparent_statement_file_path, "wb") as file:
