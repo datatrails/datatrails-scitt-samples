@@ -31,9 +31,7 @@ POLL_TIMEOUT = 60
 POLL_INTERVAL = 10
 
 
-def get_dt_auth_header(
-    logger: logging.Logger
-) -> str:
+def get_dt_auth_header(logger: logging.Logger) -> str:
     """
     Get DataTrails bearer token from OIDC credentials in env
     """
@@ -42,18 +40,20 @@ def get_dt_auth_header(
     client_secret = os.environ.get("DATATRAILS_CLIENT_SECRET")
 
     if client_id is None or client_secret is None:
-        logger.error("Please configure your DataTrails credentials in the shell environment")
+        logger.error(
+            "Please configure your DataTrails credentials in the shell environment"
+        )
         sys.exit(1)
 
     # Get token from the auth endpoint
     response = requests.post(
         "https://app.datatrails.ai/archivist/iam/v1/appidp/token",
         data={
-            'grant_type': 'client_credentials',
-            'client_id': client_id,
-            'client_secret': client_secret
+            "grant_type": "client_credentials",
+            "client_id": client_id,
+            "client_secret": client_secret,
         },
-        timeout=REQUEST_TIMEOUT
+        timeout=REQUEST_TIMEOUT,
     )
     if response.status_code != 200:
         logger.error("FAILED to acquire bearer token")
@@ -66,24 +66,22 @@ def get_dt_auth_header(
 
 
 def submit_statement(
-    statement_file_path: str,
-    headers: dict,
-    logger: logging.Logger
+    statement_file_path: str, headers: dict, logger: logging.Logger
 ) -> str:
     """
     Given a Signed Statement CBOR file on disk, register it on the DataTrails
     Transparency Service over the SCITT interface
     """
     # Read the binary data from the file
-    with open(statement_file_path, 'rb') as data_file:
+    with open(statement_file_path, "rb") as data_file:
         data = data_file.read()
 
     # Make the POST request
     response = requests.post(
-        'https://app.datatrails.ai/archivist/v1/publicscitt/entries',
+        "https://app.datatrails.ai/archivist/v1/publicscitt/entries",
         headers=headers,
         data=data,
-        timeout=REQUEST_TIMEOUT
+        timeout=REQUEST_TIMEOUT,
     )
     if response.status_code != 200:
         logger.error("FAILED to submit statement")
@@ -100,28 +98,22 @@ def submit_statement(
     return res["operationID"]
 
 
-def get_operation_status(
-    operation_id: str,
-    headers: dict
-) -> dict:
+def get_operation_status(operation_id: str, headers: dict) -> dict:
     """
     Gets the status of a long-running registration operation
     """
     response = requests.get(
         f"https://app.datatrails.ai/archivist/v1/publicscitt/operations/{operation_id}",
         headers=headers,
-        timeout=REQUEST_TIMEOUT)
+        timeout=REQUEST_TIMEOUT,
+    )
 
     response.raise_for_status()
 
     return response.json()
 
 
-def wait_for_entry_id(
-    operation_id: str,
-    headers: dict,
-    logger: logging.Logger
-) -> str:
+def wait_for_entry_id(operation_id: str, headers: dict, logger: logging.Logger) -> str:
     """
     Polls for the operation status to be 'succeeded'.
     """
@@ -156,7 +148,7 @@ def attach_receipt(
     signed_statement_filepath: str,
     transparent_statement_file_path: str,
     headers: dict,
-    logger: logging.Logger
+    logger: logging.Logger,
 ):
     """
     Given a Signed Statement and a corresponding Entry ID, fetch a Receipt from
@@ -164,9 +156,9 @@ def attach_receipt(
     """
     # Get the receipt
     response = requests.get(
-        f'https://app.datatrails.ai/archivist/v1/publicscitt/entries/{entry_id}/receipt',
+        f"https://app.datatrails.ai/archivist/v1/publicscitt/entries/{entry_id}/receipt",
         headers=headers,
-        timeout=REQUEST_TIMEOUT
+        timeout=REQUEST_TIMEOUT,
     )
     if response.status_code != 200:
         logger.error("FAILED to get receipt")
@@ -176,17 +168,17 @@ def attach_receipt(
     logger.debug(response.content)
 
     # Open up the signed statement
-    with open(signed_statement_filepath, 'rb') as data_file:
+    with open(signed_statement_filepath, "rb") as data_file:
         data = data_file.read()
         message = Sign1Message.decode(data)
         logger.debug(message)
 
     # Add receipt to the unprotected header and re-encode
-    message.uhdr['receipts'] = [response.content]
+    message.uhdr["receipts"] = [response.content]
     ts = Sign1Message.encode(message, sign=False)
 
     # Write out the updated Transparent Statement
-    with open(transparent_statement_file_path, 'wb') as file:
+    with open(transparent_statement_file_path, "wb") as file:
         file.write(ts)
         logger.info("File saved successfully")
 
@@ -226,17 +218,15 @@ def main():
     logging.basicConfig(level=logging.getLevelName(args.log_level))
 
     # Get auth
-    auth_headers = {
-        'Authorization': get_dt_auth_header(logger)
-    }
+    auth_headers = {"Authorization": get_dt_auth_header(logger)}
 
     # Submit Signed Statement to DataTrails
     op_id = submit_statement(args.signed_statement_file, auth_headers, logger)
-    logging.info('Successfully submitted with Operation ID %s', op_id)
+    logging.info("Successfully submitted with Operation ID %s", op_id)
 
     # If the client wants the Transparent Statement, wait for it
-    if args.output_file != "" :
-        logging.info('Now waiting for registration to complete')
+    if args.output_file != "":
+        logging.info("Now waiting for registration to complete")
 
         # Wait for the registration to complete
         try:
@@ -245,15 +235,11 @@ def main():
             logger.error(e)
             sys.exit(1)
 
-        logger.info('Fully Registered with Entry ID %s', entry_id)
+        logger.info("Fully Registered with Entry ID %s", entry_id)
 
         # Attach the receipt
         attach_receipt(
-            entry_id,
-            args.signed_statement_file,
-            args.output_file,
-            auth_headers,
-            logger
+            entry_id, args.signed_statement_file, args.output_file, auth_headers, logger
         )
 
 
