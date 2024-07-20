@@ -5,3 +5,5 @@ scitt-signing-key.pem
 scitt-receipt.txt
 scitt/artifacts/_manifest/*
 my-signing-key.pem
+signed-statement.cbor
+transparent-statement.cbor
