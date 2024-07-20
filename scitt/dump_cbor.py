@@ -4,6 +4,7 @@ import argparse
 from pprint import pprint
 from pycose.messages import Sign1Message
 
+
 def main():
     """Dumps content of a supposed CBOR file"""
 
@@ -29,6 +30,7 @@ def main():
         pprint(message.uhdr)
         print("\npayload: ", message.payload)
         print("payload hex: ", message.payload.hex())
+
 
 if __name__ == "__main__":
     main()

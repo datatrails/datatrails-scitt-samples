@@ -43,6 +43,7 @@ REQUEST_TIMEOUT = 30
 POLL_TIMEOUT = 60
 POLL_INTERVAL = 10
 
+
 def get_dt_auth_header(
     logger: logging.Logger
 ) -> str:
@@ -71,6 +72,7 @@ def get_dt_auth_header(
     # Format as a request header
     res = response.json()
     return f'{res["token_type"]} {res["access_token"]}'
+
 
 def submit_statement(
     statement_file_path: str,
@@ -101,6 +103,7 @@ def submit_statement(
 
     return res["operationID"]
 
+
 def get_operation_status(
     operation_id: str,
     headers: dict
@@ -117,6 +120,7 @@ def get_operation_status(
     response.raise_for_status()
 
     return response.json()
+
 
 def wait_for_entry_id(
     operation_id: str,
@@ -151,6 +155,7 @@ def wait_for_entry_id(
 
     raise TimeoutError("signed statement not registered within polling duration")
 
+
 def attach_receipt(
     entry_id: str,
     signed_statement_filepath: str,
@@ -167,7 +172,7 @@ def attach_receipt(
         logger.error("FAILED to get receipt")
         logger.debug(response)
         exit(1)
-    
+
     logger.debug(response.content)
 
     # Open up the signed statement
@@ -180,10 +185,11 @@ def attach_receipt(
     message.uhdr['receipts'] = [response.content]
     ts = Sign1Message.encode(message, sign=False)
 
-    # Write out the updated Transparent Statement 
+    # Write out the updated Transparent Statement
     with open(transparent_statement_file_path, 'wb') as file:
         file.write(ts)
         logger.info("File saved successfully")
+
 
 def main():
     """Creates a signed statement"""
@@ -249,6 +255,7 @@ def main():
             auth_headers,
             logger
         )
+
 
 if __name__ == "__main__":
     main()
