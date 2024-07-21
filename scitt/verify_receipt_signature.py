@@ -19,7 +19,7 @@ from pycose.headers import KID
 HEADER_LABEL_DID = 391
 
 
-def read_cbor_file(cbor_file: str) -> bytes | None:
+def read_cbor_file(cbor_file: str) -> Sign1Message:
     """
     opens the receipt from the receipt file.
     NOTE: the receipt is expected to be in cbor encoding.
@@ -149,7 +149,7 @@ def main():
     """Verifies a counter signed receipt signature"""
 
     parser = argparse.ArgumentParser(
-        description="Verify a counter signed receipt signature from a Receipt or Transparent Statement."
+        description="Verify countersigned signature from a Receipt or Transparent Statement."
     )
 
     options = parser.add_argument_group("Input File Type")
