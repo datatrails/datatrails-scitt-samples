@@ -31,8 +31,9 @@ def read_cbor_file(cbor_file: str) -> Sign1Message:
     try:
         message = Sign1Message.decode(receipt)
     except (ValueError, AttributeError):
+        # This is fatal
         print("failed to decode cose sign1 from file", file=sys.stderr)
-        return None
+        sys.exit(1)
 
     return message
 
