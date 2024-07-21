@@ -25,17 +25,17 @@ def read_cbor_file(cbor_file: str) -> Sign1Message:
     NOTE: the receipt is expected to be in cbor encoding.
     """
     with open(cbor_file, "rb") as file:
-        receipt = file.read()
+        contents = file.read()
 
     # decode the cbor encoded cose sign1 message
     try:
-        message = Sign1Message.decode(receipt)
+        cose_object = Sign1Message.decode(contents)
     except (ValueError, AttributeError):
         # This is fatal
         print("failed to decode cose sign1 from file", file=sys.stderr)
         sys.exit(1)
 
-    return message
+    return cose_object
 
 
 def get_didweb_pubkey(didurl: str, kid: bytes) -> dict:
@@ -105,6 +105,8 @@ def verify_receipt(receipt: Sign1Message) -> bool:
     """
     verifies the counter signed receipt signature
     """
+
+    print(receipt)
 
     # get the verification key from didweb
     kid: bytes = receipt.phdr[KID]
