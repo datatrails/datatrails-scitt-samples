@@ -116,7 +116,7 @@ def verify_receipt(receipt: Sign1Message) -> bool:
     receipt.key = cose_key
 
     # verify the counter signed receipt signature
-    verified = receipt.verify_signature() # type: ignore
+    verified = receipt.verify_signature()  # type: ignore
 
     return verified
 
