@@ -106,8 +106,6 @@ def verify_receipt(receipt: Sign1Message) -> bool:
     verifies the counter signed receipt signature
     """
 
-    print(receipt)
-
     # get the verification key from didweb
     kid: bytes = receipt.phdr[KID]
     didurl = receipt.phdr[HEADER_LABEL_DID]
@@ -118,7 +116,7 @@ def verify_receipt(receipt: Sign1Message) -> bool:
     receipt.key = cose_key
 
     # verify the counter signed receipt signature
-    verified = receipt.verify_signature()
+    verified = receipt.verify_signature() # type: ignore
 
     return verified
 
@@ -137,14 +135,12 @@ def verify_transparent_statement(transparent_statement: Sign1Message) -> bool:
 
     # Re-constitute it as a COSE object
     try:
-        print(receipt_bytes)
         receipt = Sign1Message.decode(receipt_bytes)
     except (ValueError, AttributeError):
         print("failed to extract receipt from Transparent Statement", file=sys.stderr)
         return False
 
     # Verify it
-    print(receipt)
     return verify_receipt(receipt)
 
 
