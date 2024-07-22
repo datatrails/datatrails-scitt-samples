@@ -50,11 +50,11 @@ class TestCreateHashedSignedStatement(unittest.TestCase):
         payload_location = "example-location"
 
         signed_statement = create_hashed_signed_statement(
-            signing_key=signing_key, 
-            payload=payload, 
-            subject=subject, 
-            issuer=issuer, 
-            content_type=content_type, 
+            signing_key=signing_key,
+            payload=payload,
+            subject=subject,
+            issuer=issuer,
+            content_type=content_type,
             payload_location=payload_location
         )
 
