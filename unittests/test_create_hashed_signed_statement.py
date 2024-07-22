@@ -55,7 +55,7 @@ class TestCreateHashedSignedStatement(unittest.TestCase):
             subject=subject,
             issuer=issuer,
             content_type=content_type,
-            payload_location=payload_location
+            payload_location=payload_location,
         )
 
         # decode the cbor encoded cose sign1 message
