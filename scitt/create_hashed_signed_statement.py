@@ -206,7 +206,7 @@ def main():
         payload=payload_contents,
         payload_location=args.payload_location,
         signing_key=signing_key,
-        subject=args.subject
+        subject=args.subject,
     )
 
     with open(args.output_file, "wb") as output_file:
