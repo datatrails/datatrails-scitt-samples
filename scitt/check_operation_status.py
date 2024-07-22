@@ -12,7 +12,7 @@ import requests
 
 # all timeouts and durations are in seconds
 REQUEST_TIMEOUT = 30
-POLL_TIMEOUT = 60
+POLL_TIMEOUT = 120
 POLL_INTERVAL = 10
 
 
