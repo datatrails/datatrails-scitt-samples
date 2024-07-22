@@ -21,7 +21,7 @@ from scitt.create_hashed_signed_statement import (
     HEADER_LABEL_CWT_CNF,
     HEADER_LABEL_CNF_COSE_KEY,
     HEADER_LABEL_PAYLOAD_HASH_ALGORITHM,
-    HEADER_LABEL_LOCATION,
+    HEADER_LABEL_PAYLOAD_LOCATION,
 )
 
 from .constants import KNOWN_STATEMENT
@@ -47,10 +47,15 @@ class TestCreateHashedSignedStatement(unittest.TestCase):
         subject = "testsubject"
         issuer = "testissuer"
         content_type = "application/json"
-        location_hint = "example-location"
+        payload_location = "example-location"
 
         signed_statement = create_hashed_signed_statement(
-            signing_key, payload, subject, issuer, content_type, location_hint
+            signing_key=signing_key, 
+            payload=payload, 
+            subject=subject, 
+            issuer=issuer, 
+            content_type=content_type, 
+            payload_location=payload_location
         )
 
         # decode the cbor encoded cose sign1 message
@@ -63,7 +68,7 @@ class TestCreateHashedSignedStatement(unittest.TestCase):
         self.assertEqual(
             -16, message.phdr[HEADER_LABEL_PAYLOAD_HASH_ALGORITHM]
         )  # -16 for sha256
-        self.assertEqual(location_hint, message.phdr[HEADER_LABEL_LOCATION])
+        self.assertEqual(payload_location, message.phdr[HEADER_LABEL_PAYLOAD_LOCATION])
 
         # get the verification key from cwt cnf
         cwt = message.phdr[HEADER_LABEL_CWT]
