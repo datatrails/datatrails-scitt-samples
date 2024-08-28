@@ -1,7 +1,9 @@
 """ Module for creating a SCITT signed statement with a detached payload"""
 
-import hashlib
 import argparse
+import hashlib
+import json
+import dump_cbor
 
 from typing import Optional
 
@@ -42,6 +44,8 @@ HEADER_LABEL_PAYLOAD_HASH_ALGORITHM = -6800
 HEADER_LABEL_PAYLOAD_LOCATION = -6801
 HEADER_LABEL_PAYLOAD_PRE_CONTENT_TYPE = -6802
 
+# key/value pairs of tstr:tstr supporting metadata
+HEADER_LABEL_META_MAP = -6803
 
 def open_signing_key(key_file: str) -> SigningKey:
     """
@@ -55,7 +59,7 @@ def open_signing_key(key_file: str) -> SigningKey:
         return signing_key
 
 
-def open_payload(payload_file: str) -> str:
+def read_file(payload_file: str) -> str:
     """
     opens the payload from the payload file.
     """
@@ -70,6 +74,7 @@ def create_hashed_signed_statement(
     issuer: str,
     content_type: str,
     payload_location: str,
+    meta_map: dict,
 ) -> bytes:
     """
     creates a hashed signed statement, given the signing_key, payload, subject and issuer
@@ -88,7 +93,7 @@ def create_hashed_signed_statement(
     y_part = xy_parts[32:64]
 
     # create a protected header where
-    #  the verification key is attached to the cwt claims
+    # the verification key is attached to the cwt claims
     protected_header = {
         Algorithm: Es256,
         KID: b"testkey",
@@ -107,6 +112,7 @@ def create_hashed_signed_statement(
         },
         HEADER_LABEL_PAYLOAD_HASH_ALGORITHM: -16,  # for sha256
         HEADER_LABEL_PAYLOAD_LOCATION: payload_location,
+        HEADER_LABEL_META_MAP: meta_map,
     }
 
     # now create a sha256 hash of the payload
@@ -157,6 +163,13 @@ def main():
         help="issuer who owns the signing key.",
     )
 
+    # meta-map
+    parser.add_argument(
+        "--meta-map-file",
+        type=str,
+        help="Filepath containing a dictionary of key:value pairs (str:str) for indexed meta-data.",
+    )
+
     # output file
     parser.add_argument(
         "--output-file",
@@ -197,8 +210,12 @@ def main():
 
     args = parser.parse_args()
 
+    meta_map_dict = json.loads(read_file(args.meta_map_file))
+
+    print("meta_map:", meta_map_dict)
+
     signing_key = open_signing_key(args.signing_key_file)
-    payload_contents = open_payload(args.payload_file)
+    payload_contents = read_file(args.payload_file)
 
     signed_statement = create_hashed_signed_statement(
         content_type=args.content_type,
@@ -207,10 +224,13 @@ def main():
         payload_location=args.payload_location,
         signing_key=signing_key,
         subject=args.subject,
+        meta_map=meta_map_dict,
     )
-
+    
     with open(args.output_file, "wb") as output_file:
         output_file.write(signed_statement)
+
+    dump_cbor.print(args.output_file)
 
 
 if __name__ == "__main__":
