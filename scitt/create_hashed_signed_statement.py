@@ -230,7 +230,7 @@ def main():
     with open(args.output_file, "wb") as output_file:
         output_file.write(signed_statement)
 
-    dump_cbor.print(args.output_file)
+    dump_cbor.print_cbor(args.output_file)
 
 
 if __name__ == "__main__":
