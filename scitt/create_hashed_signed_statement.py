@@ -4,9 +4,7 @@ import hashlib
 import argparse
 
 from typing import Optional
-
 from hashlib import sha256
-
 from pycose.messages import Sign1Message
 from pycose.headers import Algorithm, KID
 from pycose.algorithms import Es256
@@ -17,7 +15,6 @@ from pycose.keys.keyops import SignOp, VerifyOp
 from pycose.keys import CoseKey
 
 from ecdsa import SigningKey, VerifyingKey
-
 
 # CWT header label comes from version 4 of the scitt architecture document
 # https://www.ietf.org/archive/id/draft-ietf-scitt-architecture-04.html#name-issuer-identity
@@ -32,7 +29,10 @@ HEADER_LABEL_CWT_SUBJECT = 2
 # https://datatracker.ietf.org/doc/html/rfc8747#name-confirmation-claim
 HEADER_LABEL_CWT_CNF = 8
 HEADER_LABEL_CNF_COSE_KEY = 1
-
+HEADER_LABEL_COSE_ALG_SHA256 = -16
+HEADER_LABEL_COSE_ALG_SHA384 = -43
+HEADER_LABEL_COSE_ALG_SHA512 = -44
+HEADER_LABEL_COSE_ALG_SHA512_256 = -17
 
 # Signed Hash envelope header labels from:
 # https://github.com/OR13/draft-steele-cose-hash-envelope/blob/main/draft-steele-cose-hash-envelope.md
@@ -64,12 +64,14 @@ def open_payload(payload_file: str) -> str:
 
 
 def create_hashed_signed_statement(
-    signing_key: SigningKey,
-    payload: str,
-    subject: str,
     issuer: str,
-    content_type: str,
-    payload_location: str,
+    kid: str,
+    signing_key: SigningKey,
+    subject: str,
+    payload_hash: str = None,
+    payload_hash_alg: str = "SHA-256",
+    payload_location: str = None,
+    pre_image_content_type: str = None,
 ) -> bytes:
     """
     creates a hashed signed statement, given the signing_key, payload, subject and issuer
@@ -87,12 +89,21 @@ def create_hashed_signed_statement(
     x_part = xy_parts[0:32]
     y_part = xy_parts[32:64]
 
+    # Expectation to create a Hashed Envelope
+    match payload_hash_alg:
+        case 'SHA-256':
+            payload_hash_alg_label = HEADER_LABEL_COSE_ALG_SHA256
+        case 'SHA-384':
+            payload_hash_alg_label = HEADER_LABEL_COSE_ALG_SHA384
+        case 'SHA-512':
+            payload_hash_alg_label = HEADER_LABEL_COSE_ALG_SHA512
+
     # create a protected header where
-    #  the verification key is attached to the cwt claims
+    # the verification key is attached to the cwt claims
     protected_header = {
         Algorithm: Es256,
-        KID: b"testkey",
-        HEADER_LABEL_PAYLOAD_PRE_CONTENT_TYPE: content_type,
+        KID: kid,
+        HEADER_LABEL_PAYLOAD_PRE_CONTENT_TYPE: pre_image_content_type,
         HEADER_LABEL_CWT: {
             HEADER_LABEL_CWT_ISSUER: issuer,
             HEADER_LABEL_CWT_SUBJECT: subject,
@@ -105,15 +116,9 @@ def create_hashed_signed_statement(
                 },
             },
         },
-        HEADER_LABEL_PAYLOAD_HASH_ALGORITHM: -16,  # for sha256
+        HEADER_LABEL_PAYLOAD_HASH_ALGORITHM: payload_hash_alg_label,
         HEADER_LABEL_PAYLOAD_LOCATION: payload_location,
     }
-
-    # now create a sha256 hash of the payload
-    #
-    # NOTE: any hashing algorithm can be used.
-    payload_hash = sha256(payload.encode("utf-8")).digest()
-
     # create the statement as a sign1 message using the protected header and payload
     statement = Sign1Message(phdr=protected_header, payload=payload_hash)
 
@@ -138,15 +143,15 @@ def create_hashed_signed_statement(
 
 
 def main():
-    """Creates a signed statement"""
+    """Creates a signed statement of a hashed payload"""
 
-    parser = argparse.ArgumentParser(description="Create a signed statement.")
+    parser = argparse.ArgumentParser(description="Create a signed statement, over a hashed payload.")
 
     # content-type
     parser.add_argument(
         "--content-type",
         type=str,
-        help="The iana.org media type for the payload file",
+        help="The iana.org media type for the payload content",
         default="application/json",
     )
 
@@ -155,6 +160,14 @@ def main():
         "--issuer",
         type=str,
         help="issuer who owns the signing key.",
+    )
+
+    # key ID
+    parser.add_argument(
+        "--kid",
+        type=str,
+        help="The Key Identifier",
+        default=b"testkey",
     )
 
     # output file
@@ -199,11 +212,14 @@ def main():
 
     signing_key = open_signing_key(args.signing_key_file)
     payload_contents = open_payload(args.payload_file)
+    payload_hash = sha256(payload_contents.encode("utf-8")).digest()
 
     signed_statement = create_hashed_signed_statement(
-        content_type=args.content_type,
-        issuer=args.issuer,
-        payload=payload_contents,
+        kid=args.kid,
+        pre_image_content_type=args.content_type,
+        issuer = args.issuer,
+        payload_hash_alg = "SHA-256",
+        payload_hash = payload_hash,
         payload_location=args.payload_location,
         signing_key=signing_key,
         subject=args.subject,
