@@ -3,7 +3,7 @@
 import argparse
 
 from scitt.statement_creation import create_hashed_signed_statement
-from scitt.scripts.fileacess import open_payload, open_signing_key
+from scitt.scripts.fileaccess import open_payload, open_signing_key
 
 
 def main():

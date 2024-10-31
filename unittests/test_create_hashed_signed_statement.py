@@ -15,13 +15,13 @@ from pycose.keys.keytype import KtyEC2
 from pycose.keys.keyops import VerifyOp
 from pycose.keys import CoseKey
 
-from scitt.create_hashed_signed_statement import (
-    create_hashed_signed_statement,
+from scitt.statement_creation import create_hashed_signed_statement
+from scitt.cbor_header_labels import (
     HEADER_LABEL_CWT,
     HEADER_LABEL_CWT_CNF,
     HEADER_LABEL_CNF_COSE_KEY,
     HEADER_LABEL_PAYLOAD_HASH_ALGORITHM,
-    HEADER_LABEL_PAYLOAD_LOCATION,
+    HEADER_LABEL_LOCATION,
 )
 
 from .constants import KNOWN_STATEMENT
@@ -50,6 +50,7 @@ class TestCreateHashedSignedStatement(unittest.TestCase):
         payload_location = "example-location"
 
         signed_statement = create_hashed_signed_statement(
+            b"testkey",
             signing_key=signing_key,
             payload=payload,
             subject=subject,
@@ -68,7 +69,7 @@ class TestCreateHashedSignedStatement(unittest.TestCase):
         self.assertEqual(
             -16, message.phdr[HEADER_LABEL_PAYLOAD_HASH_ALGORITHM]
         )  # -16 for sha256
-        self.assertEqual(payload_location, message.phdr[HEADER_LABEL_PAYLOAD_LOCATION])
+        self.assertEqual(payload_location, message.phdr[HEADER_LABEL_LOCATION])
 
         # get the verification key from cwt cnf
         cwt = message.phdr[HEADER_LABEL_CWT]

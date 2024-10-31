@@ -1,10 +1,29 @@
 """Miscellaneous functions for file access.
 """
+import sys
 import json
 import hashlib
 
+from pycose.messages import Sign1Message
 from ecdsa import SigningKey
 
+def read_cbor_file(cbor_file: str) -> Sign1Message:
+    """
+    opens the receipt from the receipt file.
+    NOTE: the receipt is expected to be in cbor encoding.
+    """
+    with open(cbor_file, "rb") as file:
+        contents = file.read()
+
+    # decode the cbor encoded cose sign1 message
+    try:
+        cose_object = Sign1Message.decode(contents)
+    except (ValueError, AttributeError):
+        # This is fatal
+        print("failed to decode cose sign1 from file", file=sys.stderr)
+        sys.exit(1)
+
+    return cose_object
 
 def open_event_json(event_json_file: str) -> bytes:
     """

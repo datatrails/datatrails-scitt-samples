@@ -67,7 +67,7 @@ tasks:
         
         deactivate
 
-  unittests:
+  test:
     desc: Run unittests
     deps:
       - task: venv
