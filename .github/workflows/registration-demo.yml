@@ -20,7 +20,7 @@ env:
   DATATRAILS_CLIENT_SECRET: ${{ secrets.DATATRAILS_CLIENT_SECRET }}
 
 jobs:
-  build:
+  register-statement:
     strategy:
       fail-fast: false
       matrix:
@@ -46,10 +46,12 @@ jobs:
           --signing-key-file-path scitt-signing-key.pem
 
     - name: Create statement
+      env:
+        DATATRAILS_URL: ${{ env.DATATRAILS_URL }}
+        DATATRAILS_CLIENT_ID: ${{ env.DATATRAILS_CLIENT_ID }}
+        DATATRAILS_CLIENT_SECRET: ${{ secrets.DATATRAILS_CLIENT_ID }}
+
       run: |
-        export DATATRAILS_URL=${{ env.DATATRAILS_URL }}
-        export DATATRAILS_CLIENT_ID=${{ env.DATATRAILS_CLIENT_ID }}
-        export DATATRAILS_CLIENT_SECRET=${{ secrets.DATATRAILS_CLIENT_ID }}
 
         echo ${{ inputs.payload }} > payload.json
         python3 -m scitt.scripts.create_signed_statement \
@@ -61,10 +63,15 @@ jobs:
           --output-file signed-statement.cbor
 
     - name: Register statement
+      env:
+        DATATRAILS_URL: ${{ env.DATATRAILS_URL }}
+        DATATRAILS_CLIENT_ID: ${{ env.DATATRAILS_CLIENT_ID }}
+        DATATRAILS_CLIENT_SECRET: ${{ secrets.DATATRAILS_CLIENT_ID }}
+
       run: |
-        export DATATRAILS_URL=${{ env.DATATRAILS_URL }}
-        export DATATRAILS_CLIENT_ID=${{ env.DATATRAILS_CLIENT_ID }}
-        export DATATRAILS_CLIENT_SECRET=${{ secrets.DATATRAILS_CLIENT_ID }}
+        # export DATATRAILS_URL=${{ env.DATATRAILS_URL }}
+        # export DATATRAILS_CLIENT_ID=${{ env.DATATRAILS_CLIENT_ID }}
+        # export DATATRAILS_CLIENT_SECRET=${{ secrets.DATATRAILS_CLIENT_ID }}
 
         python3 -m scitt.scripts.register_signed_statement \
           --signed-statement-file signed-statement.cbor \
