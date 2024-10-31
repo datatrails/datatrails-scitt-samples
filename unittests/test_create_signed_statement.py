@@ -44,8 +44,7 @@ class TestCreateSignedStatement(unittest.TestCase):
         content_type = "application/json"
 
         signed_statement = create_signed_statement(
-            b"testkey",
-            signing_key, payload, subject, issuer, content_type
+            b"testkey", signing_key, payload, subject, issuer, content_type
         )
 
         # verify the signed statement

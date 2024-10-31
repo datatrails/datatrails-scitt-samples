@@ -22,6 +22,8 @@ class TestVerifyReciept(unittest.TestCase):
         tests we can verify the signature of a known receipt.
         """
         receipt = read_cbor_file(KNOWN_RECEIPT_FILE)
-        verified = verify_receipt_mmriver(receipt, b"will fail until leaf hash is known")
+        verified = verify_receipt_mmriver(
+            receipt, b"will fail until leaf hash is known"
+        )
 
         self.assertTrue(verified)

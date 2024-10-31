@@ -7,6 +7,7 @@ import hashlib
 from pycose.messages import Sign1Message
 from ecdsa import SigningKey
 
+
 def read_cbor_file(cbor_file: str) -> Sign1Message:
     """
     opens the receipt from the receipt file.
@@ -24,6 +25,7 @@ def read_cbor_file(cbor_file: str) -> Sign1Message:
         sys.exit(1)
 
     return cose_object
+
 
 def open_event_json(event_json_file: str) -> bytes:
     """
