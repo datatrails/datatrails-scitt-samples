@@ -6,6 +6,7 @@ Notably:
 * Logging
 * Development override of the service url
 """
+
 from typing import Optional
 from dataclasses import fields
 import logging

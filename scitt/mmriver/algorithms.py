@@ -9,6 +9,7 @@ https://robinbryce.github.io/draft-bryce-cose-merkle-mountain-range-proofs/draft
 
 
 """
+
 from typing import List
 import hashlib
 

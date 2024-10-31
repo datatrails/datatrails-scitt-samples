@@ -2,6 +2,7 @@
 
 The statement will then be registered with one or more transparency services.
 """
+
 from hashlib import sha256
 
 from pycose.messages import Sign1Message

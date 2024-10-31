@@ -1,12 +1,13 @@
 """ Module for creating a SCITT signed statement with a detached payload"""
 
+import sys
 import argparse
 
 from scitt.statement_creation import create_hashed_signed_statement
 from scitt.scripts.fileaccess import open_payload, open_signing_key
 
 
-def main():
+def main(args=None):
     """Creates a signed statement"""
 
     parser = argparse.ArgumentParser(description="Create a signed statement.")
@@ -64,7 +65,7 @@ def main():
         default="scitt-signing-key.pem",
     )
 
-    args = parser.parse_args()
+    args = parser.parse_args(args or sys.argv[1:])
 
     signing_key = open_signing_key(args.signing_key_file)
     payload_contents = open_payload(args.payload_file)

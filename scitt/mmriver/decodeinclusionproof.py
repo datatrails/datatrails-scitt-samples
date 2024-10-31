@@ -7,6 +7,7 @@ Which are a VDS tree algorithm for COSE receipts, which is defined by
 https://cose-wg.github.io/draft-ietf-cose-merkle-tree-proofs/draft-ietf-cose-merkle-tree-proofs.html
 
 """
+
 from typing import List
 
 from scitt.cbor_header_labels import (

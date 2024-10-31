@@ -1,12 +1,13 @@
 """ Module for creating a SCITT signed statement """
 
+import sys
 import argparse
 
 from scitt.scripts.fileaccess import open_payload, open_signing_key
 from scitt.statement_creation import create_signed_statement
 
 
-def main():
+def main(args=None):
     """Creates a signed statement"""
 
     parser = argparse.ArgumentParser(description="Create a signed statement.")
@@ -62,7 +63,7 @@ def main():
         default="signed-statement.cbor",
     )
 
-    args = parser.parse_args()
+    args = parser.parse_args(args or sys.argv[1:])
 
     signing_key = open_signing_key(args.signing_key_file)
     payload = open_payload(args.payload_file)

@@ -65,7 +65,7 @@ tasks:
         source {{ .VENV_DIR }}/bin/activate
 
         pycodestyle --format=pylint scitt unittests
-        python3 -m black {{ .PACKAGE_NAME }} unittests
+        black scitt unittests
         
         deactivate
 

@@ -2,6 +2,7 @@
 
 Specific accomodation for detached payloads.
 """
+
 import cbor2
 from pycose.messages import Sign1Message
 
@@ -36,7 +37,7 @@ def decode_sign1_detached(message: bytes, payload=None) -> Sign1Message:
     if payload is None:
         payload = b""
 
-    cose_obj[
-        2
-    ] = payload  # force replace with b'' if payload is detached, due to lack of pycose support
+    cose_obj[2] = (
+        payload  # force replace with b'' if payload is detached, due to lack of pycose support
+    )
     return Sign1Message.from_cose_obj(cose_obj, True)

@@ -2,9 +2,8 @@
     DataTrails Transparency Service and optionally returning
     a Transparent Statement """
 
-import argparse
-import logging
 import sys
+import argparse
 from pycose.messages import Sign1Message
 
 from scitt.datatrails.servicecontext import ServiceContext
@@ -45,7 +44,7 @@ def attach_receipt(
         file.write(ts)
 
 
-def main():
+def main(args=None):
     """Creates a Transparent Statement"""
 
     parser = argparse.ArgumentParser(description="Register a signed statement.")
@@ -71,6 +70,12 @@ def main():
         help="output file to store the Transparent Statement (leave blank to skip saving).",
         default="",
     )
+    parser.add_argument(
+        "--output-receipt-file",
+        type=str,
+        help="output file to store the receipt in (leave blank to skip saving).",
+        default="",
+    )
 
     # log level
     parser.add_argument(
@@ -86,7 +91,7 @@ def main():
         action="store_true",
     )
 
-    args = parser.parse_args()
+    args = parser.parse_args(args or sys.argv[1:])
     cfg_overrides = {}
     if args.datatrails_url:
         cfg_overrides["datatrails_url"] = args.datatrails_url
@@ -100,7 +105,7 @@ def main():
 
     # If the client wants the Transparent Statement or receipt, wait for registration to complete
     if args.verify or args.output_file != "":
-        logging.info("Waiting for registration to complete")
+        ctx.info("Waiting for registration to complete")
         # Wait for the registration to complete
         try:
             entry_id = wait_for_entry_id(ctx, op_id)
@@ -126,6 +131,11 @@ def main():
 
     if args.output_file == "":
         return
+
+    if args.output_receipt_file != "":
+        with open(args.output_receipt_file, "wb") as file:
+            file.write(receipt)
+        ctx.info(f"Receipt saved successfully {args.output_receipt_file}")
 
     # Attach the receipt
     attach_receipt(receipt, args.signed_statement_file, args.output_file)

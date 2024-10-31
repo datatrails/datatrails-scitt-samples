@@ -5,6 +5,7 @@
 .env.*
 .envrc
 .vscode/launch.json
+build
 my-signing-key.pem
 payload.json
 payload.txt

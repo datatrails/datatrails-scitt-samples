@@ -3,7 +3,11 @@
 
 name: Python Quality Control
 
-on: [pull_request]
+on:
+  pull_request:
+
+env:
+  DATATRAILS_CLIENT_SECRET: ${{ secrets.DATATRAILS_CLIENT_SECRET }}
 
 jobs:
   build:

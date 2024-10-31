@@ -2,6 +2,7 @@
 
 Registering a statement on the Data Trails transparency ledger requires an API token.
 """
+
 from typing import Optional
 import requests
 from scitt.datatrails import envconfig

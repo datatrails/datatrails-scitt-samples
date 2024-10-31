@@ -3,7 +3,12 @@
 
 name: Python Quality Control
 
-on: [push]
+on:
+  workflow_dispatch:
+  push:
+
+env:
+  DATATRAILS_CLIENT_SECRET: ${{ secrets.DATATRAILS_CLIENT_SECRET }}
 
 jobs:
   build:

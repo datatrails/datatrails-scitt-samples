@@ -1,5 +1,6 @@
 """Environment based configuration for the samples and this package
 """
+
 import os
 from dataclasses import dataclass
 import logging
