@@ -42,6 +42,12 @@ jobs:
             echo "DISABLED guard due to mismatch with local environment"
             # exit 1
         fi
+        export DATATRAILS_URL=${{ env.DATATRAILS_URL }}
+        export DATATRAILS_CLIENT_ID=${{ env.DATATRAILS_CLIENT_ID }}
+
+        echo "DATATRAILS_URL: $DATATRAILS_URL"
+        echo "DATATRAILS_CLIENT_ID: $DATATRAILS_CLIENT_ID"
+        export DATATRAILS_CLIENT_SECRET=${{ secrets.DATATRAILS_CLIENT_ID }}
         python3 -m unittest
       shell: bash
     - name: Run type-hint checks
