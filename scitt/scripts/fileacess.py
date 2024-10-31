@@ -5,6 +5,16 @@ import hashlib
 
 from ecdsa import SigningKey
 
+
+def open_event_json(event_json_file: str) -> bytes:
+    """
+    opens the event json
+    """
+    with open(event_json_file, "rb") as file:
+        event_json = file.read()
+        return event_json
+
+
 def open_signing_key(key_file: str) -> SigningKey:
     """
     opens the signing key from the key file.
@@ -28,4 +38,3 @@ def open_payload(payload_file: str) -> str:
         payload = json.dumps(payload, ensure_ascii=False)
 
         return payload
-

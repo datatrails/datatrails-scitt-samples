@@ -18,7 +18,7 @@ from scitt.cbor_header_labels import (
     HEADER_LABEL_MMRIVER_VDS_TREE_ALG,
 )
 
-from inclusionproof import InclusionProof
+from scitt.mmriver.inclusionproof import InclusionProof
 
 
 def decode_inclusion_proofs(phdr: dict, uhdr: dict) -> List[InclusionProof]:

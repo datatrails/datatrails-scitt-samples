@@ -18,7 +18,7 @@ def main():
     pem_key = generate_key(topem=True)
     # Save the private key to a file
     with open(FILE_NAME, "wb") as pem_file:
-        pem_file.write(pem_key) # type: ignore
+        pem_file.write(pem_key)  # type: ignore
     print(f"PEM formatted private key generated and saved as '{FILE_NAME}'")
 
 

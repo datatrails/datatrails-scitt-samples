@@ -17,7 +17,8 @@ from pycose.keys import CoseKey
 from ecdsa import SigningKey, VerifyingKey
 
 from scitt.cbor_header_labels import (
-    HEADER_LABEL_TYPE, COSE_TYPE,
+    HEADER_LABEL_TYPE,
+    COSE_TYPE,
     HEADER_LABEL_FEED,
     HEADER_LABEL_CWT,
     HEADER_LABEL_CWT_ISSUER,
@@ -25,8 +26,9 @@ from scitt.cbor_header_labels import (
     HEADER_LABEL_CWT_CNF,
     HEADER_LABEL_CNF_COSE_KEY,
     HEADER_LABEL_PAYLOAD_HASH_ALGORITHM,
-    HEADER_LABEL_LOCATION
+    HEADER_LABEL_LOCATION,
 )
+
 
 def create_hashed_signed_statement(
     kid: bytes,
@@ -43,7 +45,7 @@ def create_hashed_signed_statement(
     """
 
     # NOTE: for the sample an ecdsa P256 key is used
-    verifying_key  = signing_key.verifying_key
+    verifying_key = signing_key.verifying_key
     if verifying_key is None:
         raise ValueError("signing key does not have a verifying key")
 
@@ -59,7 +61,7 @@ def create_hashed_signed_statement(
     protected_header = {
         HEADER_LABEL_TYPE: COSE_TYPE,
         Algorithm: Es256,
-        KID: b"testkey",
+        KID: kid,
         ContentType: content_type,
         HEADER_LABEL_CWT: {
             HEADER_LABEL_CWT_ISSUER: issuer,

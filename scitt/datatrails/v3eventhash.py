@@ -20,6 +20,7 @@ from typing import List
 import hashlib
 import bencodepy
 
+
 V3FIELDS = [
     "identity",
     "event_attributes",
