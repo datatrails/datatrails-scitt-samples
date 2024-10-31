@@ -2,13 +2,18 @@
 """
 import os
 from dataclasses import dataclass
+import logging
 
 DATATRAILS_URL_DEFAULT = "https://app.datatrails.ai"
+LOG_LEVEL_DEFAULT = logging.INFO
 
 
 @dataclass
 class ServiceConfig:
     """Configuration for the DataTrails service"""
+
+    # DATATRAILS_LOG_LEVEL
+    log_level: int = LOG_LEVEL_DEFAULT
 
     # The URL of the DataTrails service
     # DATATRAILS_URL
@@ -26,16 +31,25 @@ class ServiceConfig:
     # DATATRAILS_CLIENT_SECRET
     client_secret: str = ""
 
+    # Can't currently be configured
     request_timeout: int = 30
+
+    # TODO: retry & backoff
+    poll_interval: int = 10
+    poll_timeout: int = 30
 
 
 def env_config(require_auth=True) -> ServiceConfig:
     """Get the DataTrails service configuration from the environment"""
 
+    log_level = LOG_LEVEL_DEFAULT
+    if "DATATRAILS_LOG_LEVEL" in os.environ:
+        named = logging.getLevelNamesMapping()
+        log_level = named[os.environ["DATATRAILS_LOG_LEVEL"].upper()]
+
+    datatrails_url = DATATRAILS_URL_DEFAULT
     if "DATATRAILS_URL" in os.environ:
         datatrails_url = os.environ["DATATRAILS_URL"]
-    else:
-        datatrails_url = DATATRAILS_URL_DEFAULT
 
     client_id = os.environ.get("DATATRAILS_CLIENT_ID") or ""
     client_secret = os.environ.get("DATATRAILS_CLIENT_SECRET") or ""
@@ -44,4 +58,4 @@ def env_config(require_auth=True) -> ServiceConfig:
             "Please configure your DataTrails credentials in the shell environment"
         )
 
-    return ServiceConfig(datatrails_url, client_id, client_secret)
+    return ServiceConfig(log_level, datatrails_url, client_id, client_secret)

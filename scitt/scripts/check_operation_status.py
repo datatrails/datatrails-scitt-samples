@@ -55,7 +55,6 @@ def poll_operation_status(
     logger.info("starting to poll for operation status 'succeeded'")
 
     for _ in range(poll_attempts):
-
         try:
             operation_status = get_operation_status(operation_id, headers)
 

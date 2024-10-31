@@ -2,9 +2,8 @@
 
 Registering a statement on the Data Trails transparency ledger requires an API token.
 """
-import os
-import envconfig
 import requests
+from scitt.datatrails import envconfig
 
 
 def get_auth_header(cfg: envconfig.ServiceConfig | None = None) -> str:

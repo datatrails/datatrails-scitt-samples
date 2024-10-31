@@ -4,6 +4,7 @@
 *.sig
 .env.*
 .envrc
+.vscode/launch.json
 my-signing-key.pem
 payload.json
 payload.txt
