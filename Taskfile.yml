@@ -45,6 +45,7 @@ tasks:
         python3 --version
         pycodestyle --format=pylint {{ .PACKAGE_NAME }} unittests
         python3 -m pylint {{ .PACKAGE_NAME }} unittests
+        python3 -m pyright --stats {{ .PACKAGE_NAME }} unittests
         
         deactivate
 
