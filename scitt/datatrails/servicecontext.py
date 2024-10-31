@@ -96,12 +96,12 @@ class ServiceContext:
     # Convenience defaults for the logging methods
     def error(self, msg, *args, **kwargs):
         """error logging convenience method"""
-        return self.logger.error(msg, *args, **kwargs) # type: ignore
+        return self.logger.error(msg, *args, **kwargs)  # type: ignore
 
     def info(self, msg, *args, **kwargs):
         """info logging convenience method"""
-        return self.logger.info(msg, *args, **kwargs) # type: ignore
+        return self.logger.info(msg, *args, **kwargs)  # type: ignore
 
     def debug(self, msg, *args, **kwargs):
         """debug logging convenience method"""
-        return self.logger.debug(msg, *args, **kwargs) # type: ignore
+        return self.logger.debug(msg, *args, **kwargs)  # type: ignore
