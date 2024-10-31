@@ -43,8 +43,8 @@ tasks:
         source {{.VENV_DIR}}/bin/activate
 
         python3 --version
-        pycodestyle --format=pylint {{.PACKAGE_NAME}} unittests
-        python3 -m pylint {{.PACKAGE_NAME}} unittests
+        pycodestyle --format=pylint {{ .PACKAGE_NAME }} unittests
+        python3 -m pylint {{ .PACKAGE_NAME }} unittests
         
         deactivate
 
@@ -63,7 +63,8 @@ tasks:
         set -e
         source {{ .VENV_DIR }}/bin/activate
 
-        python3 -m black {{.PACKAGE_NAME}} unittests
+        pycodestyle --format=pylint scitt unittests
+        python3 -m black {{ .PACKAGE_NAME }} unittests
         
         deactivate
 
