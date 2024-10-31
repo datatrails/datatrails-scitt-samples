@@ -53,9 +53,9 @@ class TestRegisterSignedStatement(unittest.TestCase):
                 "--content-type",
                 "application/json",
                 "--subject",
-                "testsubject",
+                "TestRegisterSignedStatement:test_create_and_register_statement",
                 "--issuer",
-                "testissuer",
+                "https://github.com/datatrails/datatrails-scitt-samples",
                 "--output-file",
                 f"{self.test_dir}/signed-statement.cbor",
             ]
