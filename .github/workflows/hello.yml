@@ -2,3 +2,19 @@ name: hello
 
 on:
   workflow_dispatch:
+jobs:
+  register-statement:
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.11" ]
+        # reduced matrix for ci
+        os: [ubuntu-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+    - uses: actions/checkout@v4
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ matrix.python-version }}
+
