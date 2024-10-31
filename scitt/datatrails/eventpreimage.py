@@ -1,3 +1,22 @@
+"""Obtain the merkle log leaf hash and event hash for a DataTrails event
+
+For SCITT Statements registered with datatrails, the leaf hash currently
+includes content that is additional to the signed statement.  It currently
+requires a proprietary API call to DataTrails to obtain that content.  The
+content is available on a public access endpoint (no authorisation is required)
+
+These limitations are not inherent to the SCITT architecture.  The are specific
+to the current DataTrails implementation, and will be addressed in future
+releases.
+
+Note that the leaf hash can be read directly from the merkle log given only
+information in the receipt.  And, as the log data is public and easily
+replicable, this does not require interaction with datatrails.
+
+However, on its own, this does not show that the leaf hash commits the statement
+to the log.
+"""
+
 import base64
 import requests
 from scitt.datatrails.servicecontext import ServiceContext
@@ -8,20 +27,8 @@ from scitt.datatrails.entryid import entryid_to_identity
 def get_leaf_hash(ctx: ServiceContext, entryid: str, public=True) -> bytes:
     """Obtain the leaf hash for a given event identity
 
-    The leaf hash is the value that is proven by the COSE Receipt attached to the transparent statement.
-
-    For SCITT Statements registered with datatrails, the leaf hash currently includes content
-    that is additional to the signed statement.
-    It currently requires a proprietary API call to DataTrails to obtain that content.
-    The content is available on a public access endpoint (no authorisation is required)
-
-    These limitations are not inherent to the SCITT architecture.
-    The are specific to the current DataTrails implementation, and will be addressed in future releases.
-
-    Note that the leaf hash can be read directly from the merkle log given only information in the receipt.
-    And, as the log data is public and easily replicable, this does not require interaction with datatrails.
-
-    However, on its own, this does not show that the leaf hash commits the statement to the log.
+    The leaf hash is the value that is proven by the COSE Receipt attached to
+    the transparent statement.
     """
     identity = entryid_to_identity(entryid)
     event = get_event(ctx, identity, public)
@@ -31,8 +38,9 @@ def get_leaf_hash(ctx: ServiceContext, entryid: str, public=True) -> bytes:
 def get_signed_statement(ctx: ServiceContext, identity: str, public=True) -> bytes:
     """Obtain the signed statement for a given event identity
 
-    The signed statement is the value that is registered with the DataTrails service.
-    It is the value that is signed by the statement counter signing key.
+    The signed statement is the value that is registered with the DataTrails
+    service.  It is the value that is signed by the statement counter signing
+    key.
     """
     headers = None
     url = f"{ctx.cfg.datatrails_url}/archivist/v2/{identity}"

@@ -24,6 +24,7 @@ class ServiceConfig:
 
     # To register a statement you need a DataTrails account and to have created
     # a Custom Integration client id & secret.
+    # pylint: disable=line-too-long
     # See: https://docs.datatrails.ai/developers/developer-patterns/getting-access-tokens-using-app-registrations/
 
     # DATATRAILS_CLIENT_ID
@@ -34,7 +35,6 @@ class ServiceConfig:
     # Can't currently be configured
     request_timeout: int = 30
 
-    # TODO: retry & backoff
     poll_interval: int = 10
     poll_timeout: int = 30
 

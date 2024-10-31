@@ -1,14 +1,16 @@
 """SCITT Statement Registration
 
 This module provides functions to register a signed statement with the DataTrails
+
+# pylint: disable=line-too-long
 Per https://ietf-wg-scitt.github.io/draft-ietf-scitt-architecture/draft-ietf-scitt-architecture.html#name-registration
 
 They are defined in the expected order of use
 """
 
-import requests
 from time import sleep as time_sleep
-from scitt.errors import ResponseError, ResponseContentError
+import requests
+from scitt.errors import ResponseContentError
 from scitt.datatrails.servicecontext import ServiceContext
 
 
@@ -76,7 +78,6 @@ def wait_for_entry_id(
     Polls for the operation status to be 'succeeded'.
     """
 
-    # TODO: retry & backoff
     poll_attempts: int = int(ctx.cfg.poll_timeout / ctx.cfg.poll_interval)
 
     ctx.info("starting to poll for operation status 'succeeded'")

@@ -2,7 +2,6 @@
 
 The statement will then be registered with one or more transparency services.
 """
-from typing import Optional
 from hashlib import sha256
 
 from pycose.messages import Sign1Message
@@ -14,7 +13,7 @@ from pycose.keys.keytype import KtyEC2
 from pycose.keys.keyops import SignOp, VerifyOp
 from pycose.keys import CoseKey
 
-from ecdsa import SigningKey, VerifyingKey
+from ecdsa import SigningKey
 
 from scitt.cbor_header_labels import (
     HEADER_LABEL_TYPE,
@@ -30,6 +29,7 @@ from scitt.cbor_header_labels import (
 )
 
 
+# pylint: disable=too-many-positional-arguments
 def create_hashed_signed_statement(
     kid: bytes,
     content_type: str,
@@ -107,6 +107,7 @@ def create_hashed_signed_statement(
     return signed_statement
 
 
+# pylint: disable=too-many-positional-arguments
 def create_signed_statement(
     kid: bytes,
     signing_key: SigningKey,

@@ -1,11 +1,7 @@
 """ Module for checking when a statement has been anchored in the append-only ledger """
 
-import os
 import argparse
-import logging
 import sys
-import requests
-from time import sleep as time_sleep
 
 from scitt.datatrails.servicecontext import ServiceContext
 from scitt.statement_registration import wait_for_entry_id

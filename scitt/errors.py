@@ -1,3 +1,9 @@
+"""Common errors used in the scitt package
+
+Typically only those that may be interesting to explicitly catch.
+"""
+
+
 class ResponseError(Exception):
     """Raised for non 20x api responses"""
 

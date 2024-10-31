@@ -2,13 +2,18 @@
 This module illustrates how to calculate the append only log Merkle leaf hash
 of a scitt statement registered on the Data Trails transparency ledger.
 
-Currently the DataTrails implementation, scitt statements are recorded as a base64
-encoded event attribute. To reproduce the leaf hash from appendn only log,
-this original [event](https://docs.datatrails.ai/platform/overview/core-concepts/#events) data is required to obtain the hash.
+Currently the DataTrails implementation, scitt statements are recorded as a
+base64 encoded event attribute. To reproduce the leaf hash from appendn only
+log, this original
+[event](https://docs.datatrails.ai/platform/overview/core-concepts/#events) data
+is required to obtain the hash.
 
-This module implements the full process for obtaining the event and generating the ledger leaf hash.
+This module implements the full process for obtaining the event and generating
+the ledger leaf hash.
 
-See KB: https://support.datatrails.ai/hc/en-gb/articles/18120936244370-How-to-independently-verify-Merkle-Log-Events-recorded-on-the-DataTrails-transparency-ledger#h_01HTYDD6ZH0FV2K95D61RQ61ZJ
+See KB:
+
+https://support.datatrails.ai/hc/en-gb/articles/18120936244370-How-to-independently-verify-Merkle-Log-Events-recorded-on-the-DataTrails-transparency-ledger#h_01HTYDD6ZH0FV2K95D61RQ61ZJ
 
 This limitation will be removed in a future release of the DataTrails API.
 
@@ -16,7 +21,6 @@ Note that if you have access to the DataTrails UI, the leaf hash will match what
 is displayed there for the public view of the event.
 """
 
-from typing import List
 import hashlib
 import bencodepy
 
@@ -44,14 +48,15 @@ def v3leaf_hash(event: dict, domain=0) -> bytes:
 
     SHA256(BYTE(0x00) || BYTES(idTimestamp) || BENCODE(redactedEvent))
 
-    See KB: https://support.datatrails.ai/hc/en-gb/articles/18120936244370-How-to-independently-verify-Merkle-Log-Events-recorded-on-the-DataTrails-transparency-ledger#h_01HTYDD6ZH0FV2K95D61RQ61ZJ
     """
+    # pylint: disable=line-too-long
+    # KB: https://support.datatrails.ai/hc/en-gb/articles/18120936244370-How-to-independently-verify-Merkle-Log-Events-recorded-on-the-DataTrails-transparency-ledger#h_01HTYDD6ZH0FV2K95D61RQ61ZJ
     salt = get_mmrsalt(event, domain)
     preimage = get_v3preimage(event)
     return hashlib.sha256(salt + preimage).digest()
 
 
-def v3event_hash(event: dict, domain=0) -> bytes:
+def v3event_hash(event: dict) -> bytes:
     """Returns the V3 event hash"""
     preimage = get_v3preimage(event)
     return hashlib.sha256(preimage).digest()
@@ -84,8 +89,8 @@ def get_v3preimage(event: dict) -> bytes:
         # Ensure the leaf contains all required fields
         try:
             value = event[field]
-        except KeyError:
-            raise KeyError(f"V3 leaf is missing required field: {field}")
+        except KeyError as e:
+            raise KeyError(f"V3 leaf is missing required field: {field}") from e
 
         preimage[field] = value
 

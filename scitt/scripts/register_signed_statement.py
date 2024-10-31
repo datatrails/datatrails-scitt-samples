@@ -5,7 +5,6 @@
 import argparse
 import logging
 import sys
-import requests
 from pycose.messages import Sign1Message
 
 from scitt.datatrails.servicecontext import ServiceContext
@@ -24,9 +23,10 @@ def attach_receipt(
     transparent_statement_file_path: str,
 ):
     """
-    Given a Signed Statement file on disc and the provided receipt content, from the Transparency Service,
-    read the statement fromm disc, attach the provided receipt, writing the re-encoded result back to disc.
-    The resulting re-encoded statement is now a Transparent Statement.
+    Given a Signed Statement file on disc and the provided receipt content, from
+    the Transparency Service, read the statement fromm disc, attach the provided
+    receipt, writing the re-encoded result back to disc.  The resulting
+    re-encoded statement is now a Transparent Statement.
 
     The caller is expected to have *verified* the receipt first.
     """

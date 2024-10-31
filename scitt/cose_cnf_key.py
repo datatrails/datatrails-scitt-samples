@@ -8,8 +8,6 @@ from pycose.keys import CoseKey
 from pycose.keys.curves import P384
 from pycose.keys.keytype import KtyEC2
 from pycose.keys.keyparam import KpKty, KpKeyOps, EC2KpCurve
-from pycose.keys.keyops import VerifyOp
-from pycose.keys import CoseKey
 
 from scitt.cbor_header_labels import HEADER_LABEL_CWT
 from scitt.cbor_header_labels import HEADER_LABEL_CWT_CNF
@@ -34,8 +32,9 @@ def cnf_key_from_phdr(phdr: dict) -> CoseKey:
 
     key = key.copy()
 
-    # There is a legacy "deliberate" bug in the common datatrails cose library, due to a short cut for jwt compatibility.
-    # We encode the key as 'EC', the cose spec sais it MUST be 'EC2'
+    # There is a legacy "deliberate" bug in the common datatrails cose library,
+    # due to a short cut for jwt compatibility.  We encode the key as 'EC', the
+    # cose spec sais it MUST be 'EC2'
     if key.get(KpKty.identifier) == "EC":
         key[KpKty.identifier] = KtyEC2.identifier
 
@@ -49,5 +48,5 @@ def cnf_key_from_phdr(phdr: dict) -> CoseKey:
     try:
         key = CoseKey.from_dict(key)
     except Exception as e:
-        raise ValueError(f"Error extracting confirmation key: {e}")
+        raise ValueError(f"Error extracting confirmation key: {e}") from e
     return key

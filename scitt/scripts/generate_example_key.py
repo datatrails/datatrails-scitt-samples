@@ -8,6 +8,9 @@ FILE_NAME = "scitt-signing-key.pem"
 
 
 def generate_key(topem=True):
+    """Generate a private key using the NIST256p curve
+
+    Provided for example and test purposes only"""
     key = SigningKey.generate(curve=NIST256p)
     if not topem:
         return key
@@ -15,6 +18,7 @@ def generate_key(topem=True):
 
 
 def main():
+    """Generate a private key and save it to a file"""
     pem_key = generate_key(topem=True)
     # Save the private key to a file
     with open(FILE_NAME, "wb") as pem_file:

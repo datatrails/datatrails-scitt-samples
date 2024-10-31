@@ -6,6 +6,7 @@ Notably:
 * Logging
 * Development override of the service url
 """
+from typing import Optional
 from dataclasses import fields
 import logging
 
@@ -14,6 +15,20 @@ from scitt.datatrails.envconfig import ServiceConfig, env_config
 
 
 class ServiceContext:
+    """Defines a context for interacting with the DataTrails service.
+
+    Automatically obtains the configuration from the environment, allowing for
+    imperative overrides
+
+    Example use:
+
+        args = parser.parse_args()
+        cfg_overrides = {}
+        if args.datatrails_url:
+            cfg_overrides["datatrails_url"] = args.datatrails_url
+        ctx = ServiceContext.from_env("register-statement", **cfg_overrides)
+    """
+
     @classmethod
     def from_env(
         cls, clientname="datatrails-scitt", require_auth=True, **cfg_overrides
@@ -52,22 +67,26 @@ class ServiceContext:
         ctx.configure_logger(**cfg_logger)
         return ctx
 
-    def __init__(self, cfg: ServiceConfig | None = None):
+    def __init__(self, cfg: Optional[ServiceConfig] = None):
         if cfg is None:
             cfg = env_config()
         self.cfg = cfg
+        self.logger = None
         self._auth_header = None
 
     @property
     def auth_header(self):
+        """Get the authorization header"""
         if not self._auth_header:
             self._auth_header = get_auth_header(self.cfg)
         return self._auth_header
 
     def refresh_auth(self):
+        """Refresh the authorization header"""
         self._auth_header = get_auth_header(self.cfg)
 
     def configure_logger(self, name="datatrails-scitt", **kwargs):
+        """Configure the logger for the service context"""
         if "level" not in kwargs:
             kwargs["level"] = self.cfg.log_level
         self.logger = logging.getLogger(name)
@@ -76,10 +95,13 @@ class ServiceContext:
 
     # Convenience defaults for the logging methods
     def error(self, msg, *args, **kwargs):
+        """error logging convenience method"""
         return self.logger.error(msg, *args, **kwargs)
 
     def info(self, msg, *args, **kwargs):
+        """info logging convenience method"""
         return self.logger.info(msg, *args, **kwargs)
 
     def debug(self, msg, *args, **kwargs):
+        """debug logging convenience method"""
         return self.logger.debug(msg, *args, **kwargs)

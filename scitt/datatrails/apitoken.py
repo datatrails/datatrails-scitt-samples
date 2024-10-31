@@ -2,11 +2,12 @@
 
 Registering a statement on the Data Trails transparency ledger requires an API token.
 """
+from typing import Optional
 import requests
 from scitt.datatrails import envconfig
 
 
-def get_auth_header(cfg: envconfig.ServiceConfig | None = None) -> str:
+def get_auth_header(cfg: Optional[envconfig.ServiceConfig] = None) -> str:
     """
     Get DataTrails bearer token. If a configuration is not provided, it will be
     loaded from the environment.
@@ -29,7 +30,7 @@ def get_auth_header(cfg: envconfig.ServiceConfig | None = None) -> str:
 
     if response.status_code != 200:
         raise ValueError(
-            "FAILED to acquire bearer token %s, %s", response.text, response.reason
+            f"FAILED to acquire bearer token {response.text},{response.reason}"
         )
 
     # Format as a request header
