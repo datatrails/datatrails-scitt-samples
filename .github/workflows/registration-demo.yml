@@ -1,5 +1,7 @@
 name: Registration Demo
 
+# NOTE: This workflow can't be tested until it is merged into the main branch :-/
+
 on:
   workflow_dispatch:
     inputs:
@@ -21,64 +23,57 @@ env:
 
 jobs:
   register-statement:
-    strategy:
-      fail-fast: false
-      matrix:
-        python-version: ["3.11" ]
-        # reduced matrix for ci
-        os: [ubuntu-latest]
-    runs-on: ${{ matrix.os }}
+    runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v4
-    - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v4
-      with:
-        python-version: ${{ matrix.python-version }}
+      - uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.11"
 
-    - name: Install dependencies
-      run: |
-        python3 -m pip install --upgrade pip
-        python3 -m pip install -r requirements-dev.txt
-      shell: bash
-    - name: Generate ephemeral issuer key
-      run: |
-        python3 -m scitt.scripts.generate_example_key.py \
-          --signing-key-file-path scitt-signing-key.pem
+      - name: Install dependencies
+        run: |
+          python3 -m pip install --upgrade pip
+          python3 -m pip install -r requirements-dev.txt
+        shell: bash
+      - name: Generate ephemeral issuer key
+        run: |
+          python3 -m scitt.scripts.generate_example_key.py \
+            --signing-key-file-path scitt-signing-key.pem
 
-    - name: Create statement
-      env:
-        DATATRAILS_URL: ${{ env.DATATRAILS_URL }}
-        DATATRAILS_CLIENT_ID: ${{ env.DATATRAILS_CLIENT_ID }}
-        DATATRAILS_CLIENT_SECRET: ${{ secrets.DATATRAILS_CLIENT_ID }}
+      - name: Create statement
+        env:
+          DATATRAILS_URL: ${{ env.DATATRAILS_URL }}
+          DATATRAILS_CLIENT_ID: ${{ env.DATATRAILS_CLIENT_ID }}
+          DATATRAILS_CLIENT_SECRET: ${{ secrets.DATATRAILS_CLIENT_ID }}
 
-      run: |
+        run: |
 
-        echo ${{ inputs.payload }} > payload.json
-        python3 -m scitt.scripts.create_signed_statement \
-          --signing-key-file-path scitt-signing-key.pem \
-          --payload-file payload.json \
-          --content-type ${{ inputs.content_type }} \
-          --subject ${{ inputs.subject }} \
-          --issuer ${{ inputs.issuer }} \
-          --output-file signed-statement.cbor
+          # NOTE: We are reling on github's ui to sanitize the inputs
 
-    - name: Register statement
-      env:
-        DATATRAILS_URL: ${{ env.DATATRAILS_URL }}
-        DATATRAILS_CLIENT_ID: ${{ env.DATATRAILS_CLIENT_ID }}
-        DATATRAILS_CLIENT_SECRET: ${{ secrets.DATATRAILS_CLIENT_ID }}
+          echo ${{ inputs.payload }} > payload.json
+          python3 -m scitt.scripts.create_signed_statement \
+            --signing-key-file-path scitt-signing-key.pem \
+            --payload-file payload.json \
+            --content-type ${{ inputs.content_type }} \
+            --subject ${{ inputs.subject }} \
+            --issuer ${{ inputs.issuer }} \
+            --output-file signed-statement.cbor
 
-      run: |
-        # export DATATRAILS_URL=${{ env.DATATRAILS_URL }}
-        # export DATATRAILS_CLIENT_ID=${{ env.DATATRAILS_CLIENT_ID }}
-        # export DATATRAILS_CLIENT_SECRET=${{ secrets.DATATRAILS_CLIENT_ID }}
+      - name: Register statement
+        env:
+          DATATRAILS_URL: ${{ env.DATATRAILS_URL }}
+          DATATRAILS_CLIENT_ID: ${{ env.DATATRAILS_CLIENT_ID }}
+          DATATRAILS_CLIENT_SECRET: ${{ secrets.DATATRAILS_CLIENT_ID }}
 
-        python3 -m scitt.scripts.register_signed_statement \
-          --signed-statement-file signed-statement.cbor \
-          --output-file transparent-statement.cbor \
-          --output-receipt-file statement-receipt.cbor
+        run: |
 
-        echo -n "Transparent Statement: "
-        cat transparent-statement.cbor | base64
-        echo -n "Receipt              : "
-        cat statement-receipt.cbor | base64
+          python3 -m scitt.scripts.register_signed_statement \
+            --signed-statement-file signed-statement.cbor \
+            --output-file transparent-statement.cbor \
+            --output-receipt-file statement-receipt.cbor
+
+          echo -n "Transparent Statement: "
+          cat transparent-statement.cbor | base64
+          echo -n "Receipt              : "
+          cat statement-receipt.cbor | base64
