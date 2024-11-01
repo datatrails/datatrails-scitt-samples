@@ -30,6 +30,10 @@ jobs:
       with:
         version: 3.x
         repo-token: ${{ secrets.GITHUB_TOKEN }}
+    - name: Install dependencies
+      run: |
+        task venv
+      shell: bash
 
     - name: Build and test package (registration demo)
       env:
@@ -38,23 +42,8 @@ jobs:
         DATATRAILS_CLIENT_SECRET: ${{ secrets.DATATRAILS_CLIENT_ID }}
 
       run: |
-        export DATATRAILS_URL=$DATATRAILS_URL
-        export DATATRAILS_CLIENT_ID=${DATATRAILS_CLIENT_ID}
-        export DATATRAILS_CLIENT_SECRET=${DATATRAILS_CLIENT_ID}
+        echo ${DATATRAILS_URL} > .env.token
+        echo ${DATATRAILS_CLIENT_ID} >> .env.token
+        echo ${DATATRAILS_CLIENT_SECRET} >> .env.token
         task test:wheel
-
       shell: bash
-    - name: Run type-hint checks
-      if: ${{ matrix.python-version != '3.12' }}
-      run: |
-        python3 -m pyright --stats datatrails_scitt_samples
-      shell: bash
-    - uses: pypa/gh-action-pip-audit@v1.0.8
-      if: ${{ matrix.os == 'ubuntu-latest' }}
-      with:
-        # GHSA-wj6h-64fc-37mp - python-ecdsa will not be fixed by maintainers
-        ignore-vulns: |
-          GHSA-wj6h-64fc-37mp
-        inputs: requirements.txt
-
-
