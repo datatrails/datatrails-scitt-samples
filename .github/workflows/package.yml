@@ -39,11 +39,8 @@ jobs:
       env:
         DATATRAILS_URL: ${{ env.DATATRAILS_URL }}
         DATATRAILS_CLIENT_ID: ${{ env.DATATRAILS_CLIENT_ID }}
-        DATATRAILS_CLIENT_SECRET: ${{ secrets.DATATRAILS_CLIENT_ID }}
+        DATATRAILS_CLIENT_SECRET: ${{ secrets.DATATRAILS_CLIENT_SECRET }}
 
       run: |
-        echo ${DATATRAILS_URL} > .env.token
-        echo ${DATATRAILS_CLIENT_ID} >> .env.token
-        echo ${DATATRAILS_CLIENT_SECRET} >> .env.token
         task test:wheel
       shell: bash
