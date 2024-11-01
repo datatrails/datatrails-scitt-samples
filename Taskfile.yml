@@ -79,6 +79,63 @@ tasks:
         
         deactivate
 
+  registration-demo:
+    envfile: .env.token
+    desc: |
+      Build and install the package, then register a signed statement with the datatrails server
+
+      ** REQUIRES ENVIRONMENT VARIABLES **
+      DATATRAILS_URL
+      DATATRAILS_CLIENT_ID
+      DATATRAILS_CLIENT_SECRET
+
+      Add them to .env.token for maximal convenience
+
+    vars:
+      PAYLOAD: '{\"name\": \"R2D2\"}'
+      CONTENT_TYPE: "application/json"
+      SUBJECT: "test:wheel"
+      ISSUER: "github.com/datatrails/datatrails-scitt-samples/Taskfile.yml"
+
+    deps:
+      - task: venv
+    cmds:
+      - task: wheel
+      - |
+        set -e
+        source {{ .VENV_DIR }}/bin/activate
+        pip install --force-reinstall dist/*.whl
+
+        echo "Generating ephemeral issuer key"
+        datatrails-sciit-demo-generate-example-key \
+          --signing-key-file datatrails_scitt_samples-signing-key.pem
+
+        echo "Creating the statement"
+        echo {{ .PAYLOAD }} > payload.json
+        create-signed-statement \
+            --signing-key-file datatrails_scitt_samples-signing-key.pem \
+            --payload-file payload.json \
+            --content-type {{ .CONTENT_TYPE }} \
+            --subject {{ .SUBJECT }} \
+            --issuer {{ .ISSUER }} \
+            --output-file signed-statement.cbor
+
+        echo "Registering the statement"
+        register-signed-statement \
+            --signed-statement-file signed-statement.cbor \
+            --output-file transparent-statement.cbor \
+            --output-receipt-file statement-receipt.cbor
+
+        echo "The statement has been registered, and its receipt fully verified"
+
+        echo -n "Transparent Statement: "
+        cat transparent-statement.cbor | base64
+        echo -n "Receipt              : "
+        cat statement-receipt.cbor | base64
+
+        deactivate
+
+
   venv:
     desc: Builds python environment
     cmds: 
@@ -100,11 +157,8 @@ tasks:
     cmds:
       - |
         set -e
+        rm -rf dist/*
         source {{ .VENV_DIR }}/bin/activate
-
-        python3 -m pip install --upgrade pip
-        python3 -m pip install -r requirements-dev.txt
-        python3 -m pip install setuptools wheel
         python3 -m build --sdist
         python3 -m build --wheel
         twine check dist/*
