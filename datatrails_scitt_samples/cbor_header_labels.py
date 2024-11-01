@@ -24,6 +24,14 @@ HEADER_LABEL_CNF_COSE_KEY = 1
 # https://www.iana.org/assignments/cose/cose.xhtml#header-parameters
 HEADER_LABEL_PAYLOAD_HASH_ALGORITHM = -6800
 HEADER_LABEL_LOCATION = -6801
+HEADER_LABEL_PAYLOAD_PRE_CONTENT_TYPE = -6802
+
+# meta-map from:
+# https://github.com/SteveLasker/cose-meta-map
+# key/value pairs of tstr:tstr supporting metadata
+# pre-adoption/private use parameters
+# https://www.iana.org/assignments/cose/cose.xhtml#header-parameters
+HEADER_LABEL_META_MAP = -6804
 
 # CBOR Object Signing and Encryption (COSE) "typ" (type) Header Parameter
 # https://datatracker.ietf.org/doc/rfc9596/
@@ -42,3 +50,11 @@ HEADER_LABEL_COSE_RECEIPTS_INCLUSION_PROOFS = -1
 HEADER_LABEL_MMRIVER_VDS_TREE_ALG = 2
 HEADER_LABEL_MMRIVER_INCLUSION_PROOF_INDEX = 1
 HEADER_LABEL_MMRIVER_INCLUSION_PROOF_PATH = 2
+
+# https://datatracker.ietf.org/doc/html/rfc8747#name-confirmation-claim
+HEADER_LABEL_CWT_CNF = 8
+HEADER_LABEL_CNF_COSE_KEY = 1
+HEADER_LABEL_COSE_ALG_SHA256 = -16
+HEADER_LABEL_COSE_ALG_SHA384 = -43
+HEADER_LABEL_COSE_ALG_SHA512 = -44
+HEADER_LABEL_COSE_ALG_SHA512_256 = -17

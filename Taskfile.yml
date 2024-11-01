@@ -112,10 +112,16 @@ tasks:
       Add them to .env.token for maximal convenience
 
     vars:
-      PAYLOAD: '{\"name\": \"R2D2\"}'
       CONTENT_TYPE: "application/json"
-      SUBJECT: "test:wheel"
       ISSUER: "github.com/datatrails/datatrails-scitt-samples/Taskfile.yml"
+      METADATA: '{\"key1\": \"value\", \"key2\": \"42\"}'
+      METADATA_FILE: "/tmp/metadata.json"
+      SIGNED_STATEMENT_FILE: "/tmp/signed-statement.cbor"
+      SIGNING_KEY: "/tmp/my-signing-key.pem"
+      PAYLOAD: '{\"name\": \"R2D2\"}'
+      PAYLOAD_FILE: "/tmp/payload.json"
+      PAYLOAD_LOCATION: "https://storage.example/{{ .SUBJECT }}"
+      SUBJECT: "test:wheel"
 
     cmds:
       - |
@@ -128,21 +134,24 @@ tasks:
 
         echo "Generating ephemeral issuer key"
         datatrails-sciit-demo-generate-example-key \
-          --signing-key-file datatrails_scitt_samples-signing-key.pem
+          --signing-key-file {{.SIGNING_KEY}}
 
         echo "Creating the statement"
-        echo {{ .PAYLOAD }} > payload.json
+        echo {{ .PAYLOAD }} > {{ .PAYLOAD_FILE }}
+        echo {{ .METADATA }} > {{ .METADATA_FILE }}
         create-signed-statement \
-            --signing-key-file datatrails_scitt_samples-signing-key.pem \
-            --payload-file payload.json \
             --content-type {{ .CONTENT_TYPE }} \
-            --subject {{ .SUBJECT }} \
             --issuer {{ .ISSUER }} \
-            --output-file signed-statement.cbor
+            --metadata-file {{ .METADATA_FILE }}
+            --output-file {{ .SINGED_STATEMENT_FILE }}
+            --payload-file {{ .PAYLOAD_FILE }} \
+            --payload-location {{ .PAYLOAD_LOCATION }} \
+            --signing-key-file {{.SIGNING_KEY}} \
+            --subject {{ .SUBJECT }} \
 
         echo "Registering the statement"
         register-signed-statement \
-            --signed-statement-file signed-statement.cbor \
+            --signed-statement-file {{ .SINGED_STATEMENT_FILE }} \
             --output-file transparent-statement.cbor \
             --output-receipt-file statement-receipt.cbor
 

@@ -22,6 +22,11 @@ from datatrails_scitt_samples.cbor_header_labels import (
     HEADER_LABEL_CNF_COSE_KEY,
     HEADER_LABEL_PAYLOAD_HASH_ALGORITHM,
     HEADER_LABEL_LOCATION,
+    HEADER_LABEL_META_MAP,
+    HEADER_LABEL_PAYLOAD_PRE_CONTENT_TYPE,
+    HEADER_LABEL_COSE_ALG_SHA256,
+    HEADER_LABEL_COSE_ALG_SHA384,
+    HEADER_LABEL_COSE_ALG_SHA512
 )
 
 from .constants import KNOWN_STATEMENT
@@ -42,21 +47,27 @@ class TestCreateHashedSignedStatement(unittest.TestCase):
         # create the signed statement
         signing_key = SigningKey.generate(curve=NIST256p)
 
-        payload = json.dumps(KNOWN_STATEMENT)
+        payload_contents = json.dumps(KNOWN_STATEMENT)
+        payload_hash = sha256(payload_contents.encode("utf-8")).digest()
 
-        subject = "testsubject"
-        issuer = "testissuer"
         content_type = "application/json"
-        payload_location = "example-location"
+        issuer = "testissuer"
+        kid = b"testkey"
+        meta_map_dict = {"key1": "value", "key2":"42"}
+        subject = "testsubject"
+        payload_location = f"https://storage.example/{subject}"
+        payload_hash_alg = "SHA-256"
 
         signed_statement = create_hashed_signed_statement(
-            b"testkey",
-            signing_key=signing_key,
-            payload=payload,
-            subject=subject,
-            issuer=issuer,
             content_type=content_type,
-            payload_location=payload_location,
+            issuer = issuer,
+            kid = kid,
+            subject = subject,
+            meta_map = meta_map_dict,
+            payload = payload_hash,
+            payload_hash_alg = payload_hash_alg,
+            payload_location = payload_location,
+            signing_key = signing_key,
         )
 
         # decode the cbor encoded cose sign1 message
@@ -64,7 +75,7 @@ class TestCreateHashedSignedStatement(unittest.TestCase):
 
         # check the returned message payload is the sha256 hash
         # and the correct headers are set
-        payload_hash = sha256(payload.encode("utf-8")).digest()
+        payload_hash = sha256(payload_contents.encode("utf-8")).digest()
         self.assertEqual(payload_hash, message.payload)
         self.assertEqual(
             -16, message.phdr[HEADER_LABEL_PAYLOAD_HASH_ALGORITHM]

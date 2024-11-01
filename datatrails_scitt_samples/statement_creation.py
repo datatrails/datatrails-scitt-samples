@@ -2,8 +2,11 @@
 
 The statement will then be registered with one or more transparency services.
 """
-
+import argparse
+import hashlib
+import json
 from hashlib import sha256
+from typing import Optional
 
 from pycose.messages import Sign1Message
 from pycose.headers import Algorithm, KID, ContentType
@@ -27,15 +30,22 @@ from datatrails_scitt_samples.cbor_header_labels import (
     HEADER_LABEL_CNF_COSE_KEY,
     HEADER_LABEL_PAYLOAD_HASH_ALGORITHM,
     HEADER_LABEL_LOCATION,
+    HEADER_LABEL_META_MAP,
+    HEADER_LABEL_PAYLOAD_PRE_CONTENT_TYPE,
+    HEADER_LABEL_COSE_ALG_SHA256,
+    HEADER_LABEL_COSE_ALG_SHA384,
+    HEADER_LABEL_COSE_ALG_SHA512
 )
 
 
 # pylint: disable=too-many-positional-arguments
 def create_hashed_signed_statement(
-    kid: bytes,
     content_type: str,
     issuer: str,
+    kid: bytes,
+    meta_map: dict,
     payload: str,
+    payload_hash_alg: str,
     payload_location: str,
     signing_key: SigningKey,
     subject: str,
@@ -45,6 +55,14 @@ def create_hashed_signed_statement(
     the payload will be hashed and the hash added to the payload field.
     """
 
+    # Expectation to create a Hashed Envelope
+    match payload_hash_alg:
+        case 'SHA-256':
+            payload_hash_alg_label = HEADER_LABEL_COSE_ALG_SHA256
+        case 'SHA-384':
+            payload_hash_alg_label = HEADER_LABEL_COSE_ALG_SHA384
+        case 'SHA-512':
+            payload_hash_alg_label = HEADER_LABEL_COSE_ALG_SHA512
     # NOTE: for the sample an ecdsa P256 key is used
     verifying_key = signing_key.verifying_key
     if verifying_key is None:
@@ -63,7 +81,6 @@ def create_hashed_signed_statement(
         HEADER_LABEL_TYPE: COSE_TYPE,
         Algorithm: Es256,
         KID: kid,
-        ContentType: content_type,
         HEADER_LABEL_CWT: {
             HEADER_LABEL_CWT_ISSUER: issuer,
             HEADER_LABEL_CWT_SUBJECT: subject,
@@ -76,17 +93,14 @@ def create_hashed_signed_statement(
                 },
             },
         },
-        HEADER_LABEL_PAYLOAD_HASH_ALGORITHM: -16,  # for sha256
+        HEADER_LABEL_PAYLOAD_PRE_CONTENT_TYPE: content_type,
+        HEADER_LABEL_PAYLOAD_HASH_ALGORITHM: payload_hash_alg_label,
         HEADER_LABEL_LOCATION: payload_location,
+        HEADER_LABEL_META_MAP: meta_map,
     }
 
-    # now create a sha256 hash of the payload
-    #
-    # NOTE: any hashing algorithm can be used.
-    payload_hash = sha256(payload.encode("utf-8")).digest()
-
     # create the statement as a sign1 message using the protected header and payload
-    statement = Sign1Message(phdr=protected_header, payload=payload_hash)
+    statement = Sign1Message(phdr=protected_header, payload=payload)
 
     # create the cose_key to sign the statement using the signing key
     cose_key = {
@@ -111,11 +125,13 @@ def create_hashed_signed_statement(
 # pylint: disable=too-many-positional-arguments
 def create_signed_statement(
     kid: bytes,
+    meta_map: dict,
     signing_key: SigningKey,
     payload: str,
     subject: str,
     issuer: str,
     content_type: str,
+    payload_location: str,
 ) -> bytes:
     """
     creates a signed statement, given the signing_key, payload, subject and issuer
@@ -151,6 +167,7 @@ def create_signed_statement(
                 },
             },
         },
+        HEADER_LABEL_META_MAP: meta_map,
     }
 
     # create the statement as a sign1 message using the protected header and payload

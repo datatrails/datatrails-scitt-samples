@@ -47,16 +47,20 @@ def open_signing_key(key_file: str) -> SigningKey:
         return signing_key
 
 
-def open_payload(payload_file: str) -> str:
+def read_file(payload_file: str) -> str:
     """
     opens the payload from the payload file.
-    NOTE: the payload is expected to be in json format.
-          however, any payload of type bytes is allowed.
+    NOTE: if the payload is in .json format
+          json.loads is used to validate structure
     """
-    with open(payload_file, encoding="UTF-8") as file:
-        payload = json.loads(file.read())
+    if payload_file.endswith(".json"):
+        with open(payload_file, encoding="UTF-8") as file:
+            payload = json.loads(file.read())
 
-        # convert the payload to a cose sign1 payload
-        payload = json.dumps(payload, ensure_ascii=False)
+            # convert the payload to a cose sign1 payload
+            payload = json.dumps(payload, ensure_ascii=False)
 
-        return payload
+            return payload
+    else:
+        with open(payload_file, encoding="UTF-8") as file:
+            return file.read()
