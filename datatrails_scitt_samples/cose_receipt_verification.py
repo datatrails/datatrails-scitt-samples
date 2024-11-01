@@ -3,7 +3,9 @@
 from pycose.messages import Sign1Message
 from datatrails_scitt_samples.cose_sign1message import decode_sign1_detached
 from datatrails_scitt_samples.cose_cnf_key import cnf_key_from_phdr
-from datatrails_scitt_samples.mmriver.decodeinclusionproof import decode_inclusion_proofs
+from datatrails_scitt_samples.mmriver.decodeinclusionproof import (
+    decode_inclusion_proofs,
+)
 from datatrails_scitt_samples.mmriver.algorithms import included_root
 
 

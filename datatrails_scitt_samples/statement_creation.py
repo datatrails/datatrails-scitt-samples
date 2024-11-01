@@ -29,7 +29,7 @@ from datatrails_scitt_samples.cbor_header_labels import (
     HEADER_LABEL_PAYLOAD_PRE_CONTENT_TYPE,
     HEADER_LABEL_COSE_ALG_SHA256,
     HEADER_LABEL_COSE_ALG_SHA384,
-    HEADER_LABEL_COSE_ALG_SHA512
+    HEADER_LABEL_COSE_ALG_SHA512,
 )
 
 
@@ -52,11 +52,11 @@ def create_hashed_signed_statement(
 
     # Expectation to create a Hashed Envelope
     match payload_hash_alg:
-        case 'SHA-256':
+        case "SHA-256":
             payload_hash_alg_label = HEADER_LABEL_COSE_ALG_SHA256
-        case 'SHA-384':
+        case "SHA-384":
             payload_hash_alg_label = HEADER_LABEL_COSE_ALG_SHA384
-        case 'SHA-512':
+        case "SHA-512":
             payload_hash_alg_label = HEADER_LABEL_COSE_ALG_SHA512
     # NOTE: for the sample an ecdsa P256 key is used
     verifying_key = signing_key.verifying_key

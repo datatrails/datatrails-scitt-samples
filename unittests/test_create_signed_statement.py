@@ -18,7 +18,7 @@ from datatrails_scitt_samples.statement_creation import create_signed_statement
 from datatrails_scitt_samples.cbor_header_labels import (
     HEADER_LABEL_CWT,
     HEADER_LABEL_CWT_CNF,
-    HEADER_LABEL_CNF_COSE_KEY
+    HEADER_LABEL_CNF_COSE_KEY,
 )
 from .constants import KNOWN_STATEMENT
 
@@ -42,22 +42,20 @@ class TestCreateSignedStatement(unittest.TestCase):
         content_type = "application/json"
         issuer = "testissuer"
         kid = b"testkey"
-        meta_map_dict = {"key1": "value", "key2":"42"}
+        meta_map_dict = {"key1": "value", "key2": "42"}
         subject = "testsubject"
         payload_location = f"https://storage.example/{subject}"
 
         signed_statement = create_signed_statement(
             content_type=content_type,
-            issuer = issuer,
+            issuer=issuer,
             kid=kid,
             subject=subject,
             meta_map=meta_map_dict,
-            payload = payload,
+            payload=payload,
             payload_location=payload_location,
             signing_key=signing_key,
-            )
-
-
+        )
 
         # verify the signed statement
 

@@ -4,6 +4,7 @@ import argparse
 from pprint import pprint
 from pycose.messages import Sign1Message
 
+
 def print_cbor(payload_file: str) -> str:
 
     with open(payload_file, "rb") as data_file:

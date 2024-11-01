@@ -22,11 +22,6 @@ from datatrails_scitt_samples.cbor_header_labels import (
     HEADER_LABEL_CNF_COSE_KEY,
     HEADER_LABEL_PAYLOAD_HASH_ALGORITHM,
     HEADER_LABEL_LOCATION,
-    HEADER_LABEL_META_MAP,
-    HEADER_LABEL_PAYLOAD_PRE_CONTENT_TYPE,
-    HEADER_LABEL_COSE_ALG_SHA256,
-    HEADER_LABEL_COSE_ALG_SHA384,
-    HEADER_LABEL_COSE_ALG_SHA512
 )
 
 from .constants import KNOWN_STATEMENT
@@ -53,21 +48,21 @@ class TestCreateHashedSignedStatement(unittest.TestCase):
         content_type = "application/json"
         issuer = "testissuer"
         kid = b"testkey"
-        meta_map_dict = {"key1": "value", "key2":"42"}
+        meta_map_dict = {"key1": "value", "key2": "42"}
         subject = "testsubject"
         payload_location = f"https://storage.example/{subject}"
         payload_hash_alg = "SHA-256"
 
         signed_statement = create_hashed_signed_statement(
             content_type=content_type,
-            issuer = issuer,
-            kid = kid,
-            subject = subject,
-            meta_map = meta_map_dict,
-            payload = payload_hash,
-            payload_hash_alg = payload_hash_alg,
-            payload_location = payload_location,
-            signing_key = signing_key,
+            issuer=issuer,
+            kid=kid,
+            subject=subject,
+            meta_map=meta_map_dict,
+            payload=payload_hash,
+            payload_hash_alg=payload_hash_alg,
+            payload_location=payload_location,
+            signing_key=signing_key,
         )
 
         # decode the cbor encoded cose sign1 message

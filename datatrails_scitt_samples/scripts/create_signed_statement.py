@@ -99,13 +99,13 @@ def main(args=None):
 
     signed_statement = create_signed_statement(
         content_type=args.content_type,
-        issuer = args.issuer,
+        issuer=args.issuer,
         kid=args.kid,
         meta_map=meta_map_dict,
-        payload = payload,
+        payload=payload,
         payload_location=args.payload_location,
         subject=args.subject,
-        signing_key=signing_key
+        signing_key=signing_key,
     )
 
     with open(args.output_file, "wb") as output_file:
