@@ -165,8 +165,8 @@ tasks:
 
   wheel:
     desc: Builds python wheel package
-    deps:
-      - task: venv
+    # deps:
+    #   - task: venv
     cmds:
       - |
         set -e
