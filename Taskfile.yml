@@ -41,8 +41,7 @@ tasks:
         source {{.VENV_DIR}}/bin/activate
 
         python3 --version
-        pycodestyle --format=pylint {{ .PACKAGE_NAME }} unittests
-        python3 -m pylint {{ .PACKAGE_NAME }} unittests
+        ruff check {{ .PACKAGE_NAME }} unittests
         python3 -m pyright --stats {{ .PACKAGE_NAME }} unittests
         
         deactivate
@@ -62,7 +61,7 @@ tasks:
         set -e
         source {{ .VENV_DIR }}/bin/activate
 
-        pycodestyle --format=pylint {{ .PACKAGE_NAME }} unittests
+        ruff check --fix {{ .PACKAGE_NAME }} unittests
         black {{ .PACKAGE_NAME }} unittests
         
         deactivate
@@ -108,6 +107,7 @@ tasks:
         python3 -m pip install setuptools wheel
         python3 -m build --sdist
         python3 -m build --wheel
+        twine check dist/*
         
         deactivate
 

@@ -34,7 +34,7 @@ def submit_statement(
 
     # Make sure it's actually in process and wil work
     res = response.json()
-    if not "operationID" in res:
+    if "operationID" not in res:
         raise ResponseContentError("FAILED No OperationID locator in response")
 
     return res["operationID"]

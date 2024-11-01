@@ -42,7 +42,7 @@ def cnf_key_from_phdr(phdr: dict) -> CoseKey:
     if key[EC2KpCurve.identifier] == "P-384":
         key[EC2KpCurve.identifier] = P384.identifier
 
-    if not KpKeyOps.identifier in key:
+    if KpKeyOps.identifier not in key:
         key[KpKeyOps.identifier] = [VerifyOp]
 
     try:
