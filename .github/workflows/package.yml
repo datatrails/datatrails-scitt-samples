@@ -38,7 +38,10 @@ jobs:
         DATATRAILS_CLIENT_SECRET: ${{ secrets.DATATRAILS_CLIENT_ID }}
 
       run: |
-        task -s test:wheel
+        export DATATRAILS_URL=$DATATRAILS_URL
+        export DATATRAILS_CLIENT_ID=${DATATRAILS_CLIENT_ID}
+        export DATATRAILS_CLIENT_SECRET=${DATATRAILS_CLIENT_ID}
+        task test:wheel
 
       shell: bash
     - name: Run type-hint checks
