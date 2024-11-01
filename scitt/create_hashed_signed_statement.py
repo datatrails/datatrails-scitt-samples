@@ -1,7 +1,10 @@
 """ Module for creating a SCITT signed statement with a detached payload"""
+# Source: https://github.com/datatrails/datatrails-scitt-samples/blob/main/scitt/create_hashed_signed_statement.py
 
-import hashlib
 import argparse
+import hashlib
+import json
+import dump_cbor
 
 from typing import Optional
 from hashlib import sha256
@@ -42,6 +45,8 @@ HEADER_LABEL_PAYLOAD_HASH_ALGORITHM = -6800
 HEADER_LABEL_PAYLOAD_LOCATION = -6801
 HEADER_LABEL_PAYLOAD_PRE_CONTENT_TYPE = -6802
 
+# key/value pairs of tstr:tstr supporting metadata
+HEADER_LABEL_META_MAP = -6803
 
 def open_signing_key(key_file: str) -> SigningKey:
     """
@@ -55,7 +60,7 @@ def open_signing_key(key_file: str) -> SigningKey:
         return signing_key
 
 
-def open_payload(payload_file: str) -> str:
+def read_file(payload_file: str) -> str:
     """
     opens the payload from the payload file.
     """
@@ -65,10 +70,11 @@ def open_payload(payload_file: str) -> str:
 
 def create_hashed_signed_statement(
     issuer: str,
-    kid: str,
     signing_key: SigningKey,
     subject: str,
-    payload_hash: str = None,
+    kid: str = b"testkey",
+    meta_map: dict = None,
+    payload: str = None,
     payload_hash_alg: str = "SHA-256",
     payload_location: str = None,
     pre_image_content_type: str = None,
@@ -118,9 +124,10 @@ def create_hashed_signed_statement(
         },
         HEADER_LABEL_PAYLOAD_HASH_ALGORITHM: payload_hash_alg_label,
         HEADER_LABEL_PAYLOAD_LOCATION: payload_location,
+        HEADER_LABEL_META_MAP: meta_map,
     }
     # create the statement as a sign1 message using the protected header and payload
-    statement = Sign1Message(phdr=protected_header, payload=payload_hash)
+    statement = Sign1Message(phdr=protected_header, payload=payload)
 
     # create the cose_key to sign the statement using the signing key
     cose_key = {
@@ -170,6 +177,13 @@ def main():
         default=b"testkey",
     )
 
+    # meta-map
+    parser.add_argument(
+        "--meta-map-file",
+        type=str,
+        help="Filepath containing a dictionary of key:value pairs (str:str) for indexed meta-data.",
+    )
+
     # output file
     parser.add_argument(
         "--output-file",
@@ -210,8 +224,15 @@ def main():
 
     args = parser.parse_args()
 
+    if args.meta_map_file is not None:
+        meta_map_dict = json.loads(read_file(args.meta_map_file))
+    else:
+        meta_map_dict = {}
+
+    print("meta_map:", meta_map_dict)
+
     signing_key = open_signing_key(args.signing_key_file)
-    payload_contents = open_payload(args.payload_file)
+    payload_contents = read_file(args.payload_file)
     payload_hash = sha256(payload_contents.encode("utf-8")).digest()
 
     signed_statement = create_hashed_signed_statement(
@@ -219,14 +240,17 @@ def main():
         pre_image_content_type=args.content_type,
         issuer = args.issuer,
         payload_hash_alg = "SHA-256",
-        payload_hash = payload_hash,
+        payload = payload_hash,
         payload_location=args.payload_location,
         signing_key=signing_key,
         subject=args.subject,
+        meta_map=meta_map_dict,
     )
 
     with open(args.output_file, "wb") as output_file:
         output_file.write(signed_statement)
+
+    dump_cbor.print_cbor(args.output_file)
 
 
 if __name__ == "__main__":

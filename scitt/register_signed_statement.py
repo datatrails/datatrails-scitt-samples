@@ -30,8 +30,10 @@ REQUEST_TIMEOUT = 30
 POLL_TIMEOUT = 60
 POLL_INTERVAL = 10
 
+logger = logging.getLogger("check operation status")
+logging.basicConfig(level=logging.getLevelName("INFO"))
 
-def get_dt_auth_header(logger: logging.Logger) -> str:
+def get_dt_auth_header() -> str:
     """
     Get DataTrails bearer token from OIDC credentials in env
     """
@@ -65,8 +67,8 @@ def get_dt_auth_header(logger: logging.Logger) -> str:
     return f'{res["token_type"]} {res["access_token"]}'
 
 
-def submit_statement(
-    statement_file_path: str, headers: dict, logger: logging.Logger
+def register_statement(
+    statement_file_path: str, headers: dict
 ) -> str:
     """
     Given a Signed Statement CBOR file on disk, register it on the DataTrails
@@ -75,6 +77,8 @@ def submit_statement(
     # Read the binary data from the file
     with open(statement_file_path, "rb") as data_file:
         data = data_file.read()
+
+    logger.info("in register_statement")
 
     # Make the POST request
     response = requests.post(
@@ -113,12 +117,14 @@ def get_operation_status(operation_id: str, headers: dict) -> dict:
     return response.json()
 
 
-def wait_for_entry_id(operation_id: str, headers: dict, logger: logging.Logger) -> str:
+def wait_for_entry_id(operation_id: str, headers: dict) -> str:
     """
     Polls for the operation status to be 'succeeded'.
     """
 
     poll_attempts: int = int(POLL_TIMEOUT / POLL_INTERVAL)
+    if not logger:
+        print("logger not set")
 
     logger.info("starting to poll for operation status 'succeeded'")
 
@@ -147,8 +153,7 @@ def attach_receipt(
     entry_id: str,
     signed_statement_filepath: str,
     transparent_statement_file_path: str,
-    headers: dict,
-    logger: logging.Logger,
+    headers: dict
 ):
     """
     Given a Signed Statement and a corresponding Entry ID, fetch a Receipt from
@@ -214,23 +219,23 @@ def main():
 
     args = parser.parse_args()
 
-    logger = logging.getLogger("check operation status")
-    logging.basicConfig(level=logging.getLevelName(args.log_level))
+    # logger = logging.getLogger("check operation status")
+    # logging.basicConfig(level=logging.getLevelName(args.log_level))
 
     # Get auth
-    auth_headers = {"Authorization": get_dt_auth_header(logger)}
+    auth_headers = {"Authorization": get_dt_auth_header()}
 
     # Submit Signed Statement to DataTrails
-    op_id = submit_statement(args.signed_statement_file, auth_headers, logger)
-    logging.info("Successfully submitted with Operation ID %s", op_id)
+    op_id = register_statement(args.signed_statement_file, auth_headers)
+    logger.info("Successfully submitted with Operation ID %s", op_id)
 
     # If the client wants the Transparent Statement, wait for it
     if args.output_file != "":
-        logging.info("Now waiting for registration to complete")
+        logger.info("Now waiting for registration to complete")
 
         # Wait for the registration to complete
         try:
-            entry_id = wait_for_entry_id(op_id, auth_headers, logger)
+            entry_id = wait_for_entry_id(op_id, auth_headers)
         except TimeoutError as e:
             logger.error(e)
             sys.exit(1)
@@ -239,7 +244,7 @@ def main():
 
         # Attach the receipt
         attach_receipt(
-            entry_id, args.signed_statement_file, args.output_file, auth_headers, logger
+            entry_id, args.signed_statement_file, args.output_file, auth_headers
         )
 
 
