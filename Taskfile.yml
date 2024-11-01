@@ -119,6 +119,14 @@ tasks:
         set -e
         source {{ .VENV_DIR }}/bin/activate
 
+        export DATATRAILS_URL=$DATATRAILS_URL
+        export DATATRAILS_CLIENT_ID=${DATATRAILS_CLIENT_ID}
+        export DATATRAILS_CLIENT_SECRET=${DATATRAILS_CLIENT_ID}
+        echo "DATATRAILS_URL=$DATATRAILS_URL"
+        echo "DATATRAILS_CLIENT_ID=${DATATRAILS_CLIENT_ID}"
+        # echo "DATATRAILS_CLIENT_SECRET=${DATATRAILS_CLIENT_ID}"
+
+
         echo "Generating ephemeral issuer key"
         datatrails-sciit-demo-generate-example-key \
           --signing-key-file datatrails_scitt_samples-signing-key.pem
