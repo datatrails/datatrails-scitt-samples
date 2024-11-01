@@ -6,11 +6,6 @@ name: Test Packaging
 on:
   pull_request:
 
-env:
-  # DATATRAILS_CLIENT_ID: ${{ secrets.DATATRAILS_CLIENT_ID }}
-  # DATATRAILS_CLIENT_SECRET: ${{ secrets.DATATRAILS_CLIENT_SECRET }}
-  DATATRAILS_CLIENT_SECRET: ${{ secret.DATATRAILS_CLIENT_SECRET }}
-
 jobs:
   build:
     strategy:
@@ -50,18 +45,16 @@ jobs:
 
     - name: Test package (registration demo)
       env:
-        DATATRAILS_URL: ${{ env.DATATRAILS_URL }}
-        DATATRAILS_CLIENT_ID: ${{ env.DATATRAILS_CLIENT_ID }}
-      #   DATATRAILS_URL: ${{ env.DATATRAILS_URL }}
-      #   DATATRAILS_CLIENT_ID: ${{ env.DATATRAILS_CLIENT_ID }}
-      #   DATATRAILS_CLIENT_SECRET: ${{ secrets.DATATRAILS_CLIENT_SECRET }}
+        DATATRAILS_URL: ${{ vars.DATATRAILS_URL }}
+        DATATRAILS_CLIENT_ID: ${{ vars.DATATRAILS_CLIENT_ID }}
+        DATATRAILS_CLIENT_SECRET: ${{ secrets.DATATRAILS_CLIENT_SECRET }}
 
       run: |
         source venv/bin/activate
-        echo "DATATRAILS_URL=$DATATRAILS_URL" > .env.token
-        echo "DATATRAILS_CLIENT_ID=$DATATRAILS_CLIENT_ID" >> .env.token
-        echo "DATATRAILS_CLIENT_SECRET=$DATATRAILS_CLIENT_SECRET" >> .env.token
-        source .env.token
-        cat .env.token
+        # echo "DATATRAILS_URL=$DATATRAILS_URL" > .env.token
+        # echo "DATATRAILS_CLIENT_ID=$DATATRAILS_CLIENT_ID" >> .env.token
+        # echo "DATATRAILS_CLIENT_SECRET=$DATATRAILS_CLIENT_SECRET" >> .env.token
+        # source .env.token
+        # cat .env.token
         task registration-demo
       shell: bash
