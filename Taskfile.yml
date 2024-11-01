@@ -120,6 +120,10 @@ tasks:
     cmds:
       - |
         set -e
+
+        cat .env.token | wc -l
+
+        source .env.token
         echo "Generating ephemeral issuer key"
         datatrails-sciit-demo-generate-example-key \
           --signing-key-file datatrails_scitt_samples-signing-key.pem
