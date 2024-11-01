@@ -1,0 +1,57 @@
+# This workflow tests that the installed package and its scripts work as expectedca
+# It is a pre-requisite for publishing a releasew wheel to PyPI
+
+name: Test Packaging
+
+on:
+  pull_request:
+
+env:
+  DATATRAILS_CLIENT_SECRET: ${{ secrets.DATATRAILS_CLIENT_SECRET }}
+
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.11", "3.12" ]
+        # reduced matrix for ci
+        os: [ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+    - uses: actions/checkout@v4
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ matrix.python-version }}
+
+    - name: Install Task
+      uses: arduino/setup-task@v1
+      with:
+        version: 3.x
+        repo-token: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Build and test package (registration demo)
+      env:
+        DATATRAILS_URL: ${{ env.DATATRAILS_URL }}
+        DATATRAILS_CLIENT_ID: ${{ env.DATATRAILS_CLIENT_ID }}
+        DATATRAILS_CLIENT_SECRET: ${{ secrets.DATATRAILS_CLIENT_ID }}
+
+      run: |
+        task -s test:wheel
+
+      shell: bash
+    - name: Run type-hint checks
+      if: ${{ matrix.python-version != '3.12' }}
+      run: |
+        python3 -m pyright --stats datatrails_scitt_samples
+      shell: bash
+    - uses: pypa/gh-action-pip-audit@v1.0.8
+      if: ${{ matrix.os == 'ubuntu-latest' }}
+      with:
+        # GHSA-wj6h-64fc-37mp - python-ecdsa will not be fixed by maintainers
+        ignore-vulns: |
+          GHSA-wj6h-64fc-37mp
+        inputs: requirements.txt
+
+

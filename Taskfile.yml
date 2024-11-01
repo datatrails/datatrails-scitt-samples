@@ -79,6 +79,23 @@ tasks:
         
         deactivate
 
+  test:wheel:
+    desc: |
+      Build and install the package, then register a signed statement with the datatrails server
+
+      ** REQUIRES ENVIRONMENT VARIABLES **
+      DATATRAILS_URL
+      DATATRAILS_CLIENT_ID
+      DATATRAILS_CLIENT_SECRET
+
+      Add them to .env.token for maximal convenience
+    deps:
+      - task: wheel
+    cmds:
+      - pip install --force-reinstall dist/*.whl
+      - task: registration-demo
+
+
   registration-demo:
     envfile: .env.token
     desc: |
@@ -97,14 +114,10 @@ tasks:
       SUBJECT: "test:wheel"
       ISSUER: "github.com/datatrails/datatrails-scitt-samples/Taskfile.yml"
 
-    deps:
-      - task: venv
     cmds:
-      - task: wheel
       - |
         set -e
         source {{ .VENV_DIR }}/bin/activate
-        pip install --force-reinstall dist/*.whl
 
         echo "Generating ephemeral issuer key"
         datatrails-sciit-demo-generate-example-key \

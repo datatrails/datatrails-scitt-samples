@@ -11,6 +11,7 @@ my-signing-key.pem
 payload.json
 payload.txt
 receipt.cbor
+statement-receipt.cbor
 scitt-receipt.txt
 scitt-signing-key.pem
 scitt/artifacts/_manifest/*
