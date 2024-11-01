@@ -2,11 +2,16 @@ name: hello
 
 on:
   workflow_dispatch:
-  push:
+  # push:
+    # branches: [ "main" ]
 
 jobs:
   register-statement:
     runs-on: ubuntu-latest
+    # Sets the permissions granted to the `GITHUB_TOKEN` for the actions in this job.
+    permissions:
+      contents: read
+      packages: write
     steps:
       - uses: actions/checkout@v4
       - name: Set up Python
@@ -14,5 +19,5 @@ jobs:
         with:
           python-version: "3.11"
       - name: hello
-        run: echo "Hello, World!"
-
+        run: |
+          echo "Hello, World!"
