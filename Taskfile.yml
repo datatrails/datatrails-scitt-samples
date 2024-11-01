@@ -92,10 +92,11 @@ tasks:
     deps:
       - task: wheel
     cmds:
-      - pip install --force-reinstall dist/*.whl
       - |
         source {{ .VENV_DIR }}/bin/activate
+        pip install --force-reinstall dist/*.whl
         task registration-demo
+        deactivate
 
 
   registration-demo:
