@@ -52,8 +52,8 @@ jobs:
         python3 -m build --wheel
         twine check dist/*
         pip install --force-reinstall dist/*.whl
-        export DATATRAILS_URL
-        export DATATRAILS_CLIENT_ID
-        export DATATRAILS_CLIENT_SECRET
+        export DATATRAILS_URL=$DATATRAILS_URL
+        export DATATRAILS_CLIENT_ID=$DATATRAILS_CLIENT_ID
+        export DATATRAILS_CLIENT_SECRET=$DATATRAILS_CLIENT_SECRET
         task registration-demo
       shell: bash
