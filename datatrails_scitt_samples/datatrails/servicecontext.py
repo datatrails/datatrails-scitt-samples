@@ -11,8 +11,8 @@ from typing import Optional
 from dataclasses import fields
 import logging
 
-from scitt.datatrails.apitoken import get_auth_header
-from scitt.datatrails.envconfig import ServiceConfig, env_config
+from datatrails_scitt_samples.datatrails.apitoken import get_auth_header
+from datatrails_scitt_samples.datatrails.envconfig import ServiceConfig, env_config
 
 
 class ServiceContext:

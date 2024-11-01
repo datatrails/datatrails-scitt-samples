@@ -14,11 +14,11 @@ import shutil
 import tempfile
 import unittest
 
-from scitt.scripts.generate_example_key import main as generate_example_key
-from scitt.scripts.create_hashed_signed_statement import (
+from datatrails_scitt_samples.scripts.generate_example_key import main as generate_example_key
+from datatrails_scitt_samples.scripts.create_hashed_signed_statement import (
     main as create_hashed_signed_statement,
 )
-from scitt.scripts.register_signed_statement import main as register_signed_statement
+from datatrails_scitt_samples.scripts.register_signed_statement import main as register_signed_statement
 
 
 class TestRegisterSignedStatement(unittest.TestCase):
@@ -49,7 +49,7 @@ class TestRegisterSignedStatement(unittest.TestCase):
                 "--signing-key-file",
                 f"{self.test_dir}/scitt-signing-key.pem",
                 "--payload-file",
-                os.path.join(self.parent_dir, "scitt", "artifacts", "thedroid.json"),
+                os.path.join(self.parent_dir, "datatrails_scitt_samples", "artifacts", "thedroid.json"),
                 "--content-type",
                 "application/json",
                 "--subject",

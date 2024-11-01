@@ -10,8 +10,8 @@ They are defined in the expected order of use
 
 from time import sleep as time_sleep
 import requests
-from scitt.errors import ResponseContentError
-from scitt.datatrails.servicecontext import ServiceContext
+from datatrails_scitt_samples.errors import ResponseContentError
+from datatrails_scitt_samples.datatrails.servicecontext import ServiceContext
 
 
 def submit_statement(

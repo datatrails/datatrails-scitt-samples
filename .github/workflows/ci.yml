@@ -31,9 +31,9 @@ jobs:
       shell: bash
     - name: Run integrity checks
       run: |
-        pycodestyle --format=pylint scitt unittests
-        python3 -m pylint scitt unittests
-        python3 -m black scitt unittests
+        pycodestyle --format=pylint datatrails_scitt_samples unittests
+        python3 -m pylint datatrails_scitt_samples unittests
+        python3 -m black datatrails_scitt_samples unittests
         modified=$(git status -s | wc -l)
         if [ $modified -gt 0 ]
         then
@@ -51,7 +51,7 @@ jobs:
     - name: Run type-hint checks
       if: ${{ matrix.python-version != '3.12' }}
       run: |
-        python3 -m pyright --stats scitt
+        python3 -m pyright --stats datatrails_scitt_samples
       shell: bash
     - uses: pypa/gh-action-pip-audit@v1.0.8
       if: ${{ matrix.os == 'ubuntu-latest' }}

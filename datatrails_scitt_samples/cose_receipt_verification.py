@@ -1,10 +1,10 @@
 """Verification of the MMRIVER draft-bryce-cose-merkle-mountain-range-proofs receipt"""
 
 from pycose.messages import Sign1Message
-from scitt.cose_sign1message import decode_sign1_detached
-from scitt.cose_cnf_key import cnf_key_from_phdr
-from scitt.mmriver.decodeinclusionproof import decode_inclusion_proofs
-from scitt.mmriver.algorithms import included_root
+from datatrails_scitt_samples.cose_sign1message import decode_sign1_detached
+from datatrails_scitt_samples.cose_cnf_key import cnf_key_from_phdr
+from datatrails_scitt_samples.mmriver.decodeinclusionproof import decode_inclusion_proofs
+from datatrails_scitt_samples.mmriver.algorithms import included_root
 
 
 def verify_receipt_mmriver(receipt: bytes, leaf: bytes) -> bool:

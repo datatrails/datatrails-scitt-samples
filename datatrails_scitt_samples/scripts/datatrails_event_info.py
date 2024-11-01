@@ -12,10 +12,10 @@ from pprint import pprint
 
 from pycose.messages import Sign1Message
 
-from scitt.scripts.fileaccess import open_event_json
-from scitt.datatrails.servicecontext import ServiceContext
-from scitt.datatrails.eventpreimage import get_event
-from scitt.datatrails.v3eventhash import v3leaf_hash, v3event_hash
+from datatrails_scitt_samples.scripts.fileaccess import open_event_json
+from datatrails_scitt_samples.datatrails.servicecontext import ServiceContext
+from datatrails_scitt_samples.datatrails.eventpreimage import get_event
+from datatrails_scitt_samples.datatrails.v3eventhash import v3leaf_hash, v3event_hash
 
 
 def main():

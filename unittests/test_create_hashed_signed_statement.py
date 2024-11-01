@@ -15,8 +15,8 @@ from pycose.keys.keytype import KtyEC2
 from pycose.keys.keyops import VerifyOp
 from pycose.keys import CoseKey
 
-from scitt.statement_creation import create_hashed_signed_statement
-from scitt.cbor_header_labels import (
+from datatrails_scitt_samples.statement_creation import create_hashed_signed_statement
+from datatrails_scitt_samples.cbor_header_labels import (
     HEADER_LABEL_CWT,
     HEADER_LABEL_CWT_CNF,
     HEADER_LABEL_CNF_COSE_KEY,

@@ -6,14 +6,14 @@ import sys
 import argparse
 from pycose.messages import Sign1Message
 
-from scitt.datatrails.servicecontext import ServiceContext
-from scitt.statement_registration import (
+from datatrails_scitt_samples.datatrails.servicecontext import ServiceContext
+from datatrails_scitt_samples.statement_registration import (
     submit_statement_from_file,
     wait_for_entry_id,
     get_receipt,
 )
-from scitt.datatrails.eventpreimage import get_leaf_hash
-from scitt.cose_receipt_verification import verify_receipt_mmriver
+from datatrails_scitt_samples.datatrails.eventpreimage import get_leaf_hash
+from datatrails_scitt_samples.cose_receipt_verification import verify_receipt_mmriver
 
 
 def attach_receipt(

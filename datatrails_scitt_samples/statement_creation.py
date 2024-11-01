@@ -16,7 +16,7 @@ from pycose.keys import CoseKey
 
 from ecdsa import SigningKey
 
-from scitt.cbor_header_labels import (
+from datatrails_scitt_samples.cbor_header_labels import (
     HEADER_LABEL_TYPE,
     COSE_TYPE,
     HEADER_LABEL_FEED,

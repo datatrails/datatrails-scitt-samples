@@ -19,9 +19,9 @@ to the log.
 
 import base64
 import requests
-from scitt.datatrails.servicecontext import ServiceContext
-from scitt.datatrails.v3eventhash import v3leaf_hash
-from scitt.datatrails.entryid import entryid_to_identity
+from datatrails_scitt_samples.datatrails.servicecontext import ServiceContext
+from datatrails_scitt_samples.datatrails.v3eventhash import v3leaf_hash
+from datatrails_scitt_samples.datatrails.entryid import entryid_to_identity
 
 
 def get_leaf_hash(ctx: ServiceContext, entryid: str, public=True) -> bytes:

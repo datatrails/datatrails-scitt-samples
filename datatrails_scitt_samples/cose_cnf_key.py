@@ -9,9 +9,9 @@ from pycose.keys.curves import P384
 from pycose.keys.keytype import KtyEC2
 from pycose.keys.keyparam import KpKty, KpKeyOps, EC2KpCurve
 
-from scitt.cbor_header_labels import HEADER_LABEL_CWT
-from scitt.cbor_header_labels import HEADER_LABEL_CWT_CNF
-from scitt.cbor_header_labels import HEADER_LABEL_CNF_COSE_KEY
+from datatrails_scitt_samples.cbor_header_labels import HEADER_LABEL_CWT
+from datatrails_scitt_samples.cbor_header_labels import HEADER_LABEL_CWT_CNF
+from datatrails_scitt_samples.cbor_header_labels import HEADER_LABEL_CNF_COSE_KEY
 
 
 def cnf_key_from_phdr(phdr: dict) -> CoseKey:

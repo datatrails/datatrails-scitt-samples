@@ -5,7 +5,7 @@ Registering a statement on the Data Trails transparency ledger requires an API t
 
 from typing import Optional
 import requests
-from scitt.datatrails import envconfig
+from datatrails_scitt_samples.datatrails import envconfig
 
 
 def get_auth_header(cfg: Optional[envconfig.ServiceConfig] = None) -> str:

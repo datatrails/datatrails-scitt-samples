@@ -3,8 +3,8 @@
 import argparse
 import sys
 
-from scitt.datatrails.servicecontext import ServiceContext
-from scitt.statement_registration import wait_for_entry_id
+from datatrails_scitt_samples.datatrails.servicecontext import ServiceContext
+from datatrails_scitt_samples.statement_registration import wait_for_entry_id
 
 
 def main():

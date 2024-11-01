@@ -10,7 +10,7 @@ https://cose-wg.github.io/draft-ietf-cose-merkle-tree-proofs/draft-ietf-cose-mer
 
 from typing import List
 
-from scitt.cbor_header_labels import (
+from datatrails_scitt_samples.cbor_header_labels import (
     HEADER_LABEL_COSE_RECEIPTS_VDS,
     HEADER_LABEL_COSE_RECEIPTS_VDP,
     HEADER_LABEL_COSE_RECEIPTS_INCLUSION_PROOFS,
@@ -19,7 +19,7 @@ from scitt.cbor_header_labels import (
     HEADER_LABEL_MMRIVER_VDS_TREE_ALG,
 )
 
-from scitt.mmriver.inclusionproof import InclusionProof
+from datatrails_scitt_samples.mmriver.inclusionproof import InclusionProof
 
 
 def decode_inclusion_proofs(phdr: dict, uhdr: dict) -> List[InclusionProof]:

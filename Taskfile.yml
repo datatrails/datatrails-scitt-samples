@@ -2,11 +2,9 @@
 # Otherwise, it offers some minimal workflow automation using https://taskfile.dev/
 version: '3'
 vars:
-  VENV_DIR: scitt
   # Put this in the root of the repo for vscode autodection
   VENV_DIR: venv
-
-  PACKAGE_NAME: scitt
+  PACKAGE_NAME: datatrails_scitt_samples
 
 tasks:
 
@@ -64,8 +62,8 @@ tasks:
         set -e
         source {{ .VENV_DIR }}/bin/activate
 
-        pycodestyle --format=pylint scitt unittests
-        black scitt unittests
+        pycodestyle --format=pylint {{ .PACKAGE_NAME }} unittests
+        black {{ .PACKAGE_NAME }} unittests
         
         deactivate
 
