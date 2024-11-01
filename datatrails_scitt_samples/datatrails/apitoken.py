@@ -31,7 +31,7 @@ def get_auth_header(cfg: Optional[envconfig.ServiceConfig] = None) -> str:
 
     if response.status_code != 200:
         raise ValueError(
-            f"FAILED to acquire bearer token {response.text},{response.reason}"
+            f"FAILED to acquire bearer token.secret provided: {cfg.client_secret and 'yes' or 'no'}. {cfg.datatrails_url} id={cfg.client_id}. {response.text} {response.reason}"
         )
 
     # Format as a request header
