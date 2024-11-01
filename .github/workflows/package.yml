@@ -32,13 +32,17 @@ jobs:
       with:
         version: 3.x
         repo-token: ${{ secrets.GITHUB_TOKEN }}
-    - name: Install dependencies
+    - name: Build Package
       run: |
         # task venv
         python3 -m venv venv 
         source venv/bin/activate
-        python3 -m pip install -r requirements.txt
-        python3 -m pip install -r requirements-dev.txt
+        python3 -m pip install -qq -r requirements.txt
+        python3 -m pip install -qq -r requirements-dev.txt
+        python3 -m build --sdist
+        python3 -m build --wheel
+        twine check dist/*
+        pip install --force-reinstall dist/*.whl
 
       shell: bash
 
@@ -50,12 +54,10 @@ jobs:
 
       run: |
         source venv/bin/activate
-        python3 -m build --sdist
-        python3 -m build --wheel
-        twine check dist/*
-        pip install --force-reinstall dist/*.whl
         echo "DATATRAILS_URL=$DATATRAILS_URL" > .env.token
         echo "DATATRAILS_CLIENT_ID=$DATATRAILS_CLIENT_ID" >> .env.token
         echo "DATATRAILS_CLIENT_SECRET=$DATATRAILS_CLIENT_SECRET" >> .env.token
+        source .env.token
+        cat .env.token
         task registration-demo
       shell: bash
