@@ -2,11 +2,6 @@
 
 The statement will then be registered with one or more transparency services.
 """
-import argparse
-import hashlib
-import json
-from hashlib import sha256
-from typing import Optional
 
 from pycose.messages import Sign1Message
 from pycose.headers import Algorithm, KID, ContentType

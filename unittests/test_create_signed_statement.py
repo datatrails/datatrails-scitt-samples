@@ -18,12 +18,7 @@ from datatrails_scitt_samples.statement_creation import create_signed_statement
 from datatrails_scitt_samples.cbor_header_labels import (
     HEADER_LABEL_CWT,
     HEADER_LABEL_CWT_CNF,
-    HEADER_LABEL_CNF_COSE_KEY,
-    HEADER_LABEL_META_MAP,
-    HEADER_LABEL_PAYLOAD_PRE_CONTENT_TYPE,
-    HEADER_LABEL_COSE_ALG_SHA256,
-    HEADER_LABEL_COSE_ALG_SHA384,
-    HEADER_LABEL_COSE_ALG_SHA512
+    HEADER_LABEL_CNF_COSE_KEY
 )
 from .constants import KNOWN_STATEMENT
 
