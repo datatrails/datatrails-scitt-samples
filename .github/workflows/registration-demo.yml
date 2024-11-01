@@ -42,11 +42,6 @@ jobs:
             --signing-key-file-path datatrails_scitt_samples-signing-key.pem
 
       - name: Create statement
-        env:
-          DATATRAILS_URL: ${{ env.DATATRAILS_URL }}
-          DATATRAILS_CLIENT_ID: ${{ env.DATATRAILS_CLIENT_ID }}
-          DATATRAILS_CLIENT_SECRET: ${{ secrets.DATATRAILS_CLIENT_ID }}
-
         run: |
 
           # NOTE: We are reling on github's ui to sanitize the inputs
@@ -62,8 +57,8 @@ jobs:
 
       - name: Register statement
         env:
-          DATATRAILS_URL: ${{ env.DATATRAILS_URL }}
-          DATATRAILS_CLIENT_ID: ${{ env.DATATRAILS_CLIENT_ID }}
+          DATATRAILS_URL: ${{ vars.DATATRAILS_URL }}
+          DATATRAILS_CLIENT_ID: ${{ vars.DATATRAILS_CLIENT_ID }}
           DATATRAILS_CLIENT_SECRET: ${{ secrets.DATATRAILS_CLIENT_ID }}
 
         run: |

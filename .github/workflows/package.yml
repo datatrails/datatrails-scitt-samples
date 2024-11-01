@@ -1,10 +1,11 @@
 # This workflow tests that the installed package and its scripts work as expectedca
 # It is a pre-requisite for publishing a releasew wheel to PyPI
 
-name: Test Packaging
+name: Package and Publish
 
 on:
   pull_request:
+  release:
 
 jobs:
   build:
@@ -29,6 +30,7 @@ jobs:
       with:
         version: 3.x
         repo-token: ${{ secrets.GITHUB_TOKEN }}
+
     - name: Build Package
       run: |
         # task venv
@@ -43,7 +45,7 @@ jobs:
 
       shell: bash
 
-    - name: Test package (registration demo)
+    - name: Test installed package (registration-demo)
       env:
         DATATRAILS_URL: ${{ vars.DATATRAILS_URL }}
         DATATRAILS_CLIENT_ID: ${{ vars.DATATRAILS_CLIENT_ID }}
@@ -51,10 +53,14 @@ jobs:
 
       run: |
         source venv/bin/activate
-        # echo "DATATRAILS_URL=$DATATRAILS_URL" > .env.token
-        # echo "DATATRAILS_CLIENT_ID=$DATATRAILS_CLIENT_ID" >> .env.token
-        # echo "DATATRAILS_CLIENT_SECRET=$DATATRAILS_CLIENT_SECRET" >> .env.token
-        # source .env.token
-        # cat .env.token
         task registration-demo
       shell: bash
+
+    - name: Publish to PyPI
+      if: ${{ github.event_name == 'release' }}
+      uses: pypa/gh-action-pypi-publish@release/v1
+      with:
+        verbose: true
+        # skip-existing: true
+        user: ${{ vars.PYPI_USER }}
+        password: ${{ secrets.PYPI_PASSWORD }}
