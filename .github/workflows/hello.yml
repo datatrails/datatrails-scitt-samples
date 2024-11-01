@@ -2,6 +2,7 @@ name: hello
 
 on:
   workflow_dispatch:
+  push:
 
 jobs:
   register-statement:
