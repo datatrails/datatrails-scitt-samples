@@ -93,7 +93,9 @@ tasks:
       - task: wheel
     cmds:
       - pip install --force-reinstall dist/*.whl
-      - task: registration-demo
+      - |
+        source {{ .VENV_DIR }}/bin/activate
+        task registration-demo
 
 
   registration-demo:
@@ -117,8 +119,6 @@ tasks:
     cmds:
       - |
         set -e
-        source {{ .VENV_DIR }}/bin/activate
-
         echo "Generating ephemeral issuer key"
         datatrails-sciit-demo-generate-example-key \
           --signing-key-file datatrails_scitt_samples-signing-key.pem
@@ -165,8 +165,6 @@ tasks:
 
   wheel:
     desc: Builds python wheel package
-    # deps:
-    #   - task: venv
     cmds:
       - |
         set -e
