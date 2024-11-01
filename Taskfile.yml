@@ -121,10 +121,7 @@ tasks:
       - |
         set -e
 
-        source .env.token
-
-        echo "lines in env.token"
-        cat .env.token | wc -l
+        echo "DATATRAILS_ xxx var value char counts"
         echo "$DATATRAILS_URL" | wc -c
         echo "$DATATRAILS_CLIENT_ID" | wc -c
         echo "$DATATRAILS_CLIENT_SECRET" | wc -c
