@@ -47,10 +47,10 @@ jobs:
       shell: bash
 
     - name: Test package (registration demo)
-      env:
-        # DATATRAILS_URL: ${{ env.DATATRAILS_URL }}
-        # DATATRAILS_CLIENT_ID: ${{ env.DATATRAILS_CLIENT_ID }}
-        # DATATRAILS_CLIENT_SECRET: ${{ secrets.DATATRAILS_CLIENT_SECRET }}
+      # env:
+      #   DATATRAILS_URL: ${{ env.DATATRAILS_URL }}
+      #   DATATRAILS_CLIENT_ID: ${{ env.DATATRAILS_CLIENT_ID }}
+      #   DATATRAILS_CLIENT_SECRET: ${{ secrets.DATATRAILS_CLIENT_SECRET }}
 
       run: |
         source venv/bin/activate
