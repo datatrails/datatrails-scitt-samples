@@ -14,6 +14,7 @@ receipt.cbor
 statement-receipt.cbor
 scitt-receipt.txt
 scitt-signing-key.pem
+my-signing-key.pem
 scitt/artifacts/_manifest/*
 signed-statement.cbor
 signed-statement.txt

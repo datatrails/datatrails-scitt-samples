@@ -143,7 +143,7 @@ tasks:
             --content-type {{ .CONTENT_TYPE }} \
             --issuer {{ .ISSUER }} \
             --metadata-file {{ .METADATA_FILE }}
-            --output-file {{ .SINGED_STATEMENT_FILE }}
+            --output-file {{ .SIGNED_STATEMENT_FILE }}
             --payload-file {{ .PAYLOAD_FILE }} \
             --payload-location {{ .PAYLOAD_LOCATION }} \
             --signing-key-file {{.SIGNING_KEY}} \
