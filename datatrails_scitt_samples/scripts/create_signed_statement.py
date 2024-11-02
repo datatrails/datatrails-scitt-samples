@@ -67,7 +67,7 @@ def main(args=None):
         "--signing-key-file",
         type=str,
         help="filepath to the stored ecdsa P-256 signing key, in pem format.",
-        default="scitt-signing-key.pem",
+        default="/tmp/my-signing-key.pem",
     )
 
     # subject
