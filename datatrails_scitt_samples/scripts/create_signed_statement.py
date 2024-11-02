@@ -95,7 +95,8 @@ def main(args=None):
         meta_map_dict = {}
 
     signing_key = open_signing_key(args.signing_key_file)
-    payload = read_file(args.payload_file)
+    # Payload must be encoded to bytes
+    payload = read_file(args.payload_file).encode("utf-8")
 
     signed_statement = create_signed_statement(
         content_type=args.content_type,

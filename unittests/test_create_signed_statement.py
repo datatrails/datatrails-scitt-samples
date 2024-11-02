@@ -37,7 +37,7 @@ class TestCreateSignedStatement(unittest.TestCase):
         # create the signed statement
         signing_key = SigningKey.generate(curve=NIST256p)
 
-        payload = json.dumps(KNOWN_STATEMENT)
+        payload = json.dumps(KNOWN_STATEMENT).encode("utf-8")
 
         content_type = "application/json"
         issuer = "testissuer"

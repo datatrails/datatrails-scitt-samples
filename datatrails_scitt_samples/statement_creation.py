@@ -171,7 +171,7 @@ def create_signed_statement(
     # create the statement as a sign1 message using the protected header and payload
     statement = Sign1Message(
         phdr=protected_header,
-        payload=payload.encode("utf-8")
+        payload=payload
     )
 
     # create the cose_key to sign the statement using the signing key
