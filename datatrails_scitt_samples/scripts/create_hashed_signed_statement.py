@@ -93,7 +93,6 @@ def main(args=None):
     signing_key = open_signing_key(args.signing_key_file)
     payload_contents = read_file(args.payload_file)
     payload_hash = sha256(payload_contents.encode("utf-8")).digest()
-
     signed_statement = create_hashed_signed_statement(
         content_type=args.content_type,
         issuer=args.issuer,

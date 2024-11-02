@@ -39,7 +39,7 @@ def create_hashed_signed_statement(
     issuer: str,
     kid: bytes,
     meta_map: dict,
-    payloaddd: str,
+    payload: bytes,
     payload_hash_alg: str,
     payload_location: str,
     signing_key: SigningKey,
@@ -97,7 +97,7 @@ def create_hashed_signed_statement(
     # create the statement as a sign1 message using the protected header and payload
     statement = Sign1Message(
         phdr=protected_header,
-        payload=payloaddd
+        payload=payload
     )
 
     # create the cose_key to sign the statement using the signing key
@@ -125,7 +125,7 @@ def create_signed_statement(
     kid: bytes,
     meta_map: dict,
     signing_key: SigningKey,
-    payloaddd: str,
+    payload: bytes,
     subject: str,
     issuer: str,
     content_type: str,
@@ -169,7 +169,10 @@ def create_signed_statement(
     }
 
     # create the statement as a sign1 message using the protected header and payload
-    statement = Sign1Message(phdr=protected_header, payload=payloaddd.encode("utf-8"))
+    statement = Sign1Message(
+        phdr=protected_header,
+        payload=payload.encode("utf-8")
+    )
 
     # create the cose_key to sign the statement using the signing key
     cose_key = {
