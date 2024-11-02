@@ -35,6 +35,7 @@ class TestRegisterSignedStatement(unittest.TestCase):
     def tearDown(self):
         shutil.rmtree(self.test_dir)
 
+
     @unittest.skipUnless(
         os.getenv("DATATRAILS_CLIENT_SECRET") != "",
         "test requires authentication via env DATATRAILS_xxx",
