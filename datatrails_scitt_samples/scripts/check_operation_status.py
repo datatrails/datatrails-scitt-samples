@@ -1,4 +1,4 @@
-""" Module for checking when a statement has been anchored in the append-only ledger """
+"""Module for checking when a statement has been anchored in the append-only ledger"""
 
 import argparse
 import sys

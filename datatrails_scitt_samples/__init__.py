@@ -1,2 +1,1 @@
-"""Archivist SCITT Samples
-"""
+"""Archivist SCITT Samples"""

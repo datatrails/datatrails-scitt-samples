@@ -1,6 +1,6 @@
-""" Module for submitting a SCITT signed statement to the
-    DataTrails Transparency Service and optionally returning
-    a Transparent Statement """
+"""Module for submitting a SCITT signed statement to the
+DataTrails Transparency Service and optionally returning
+a Transparent Statement"""
 
 import sys
 import argparse

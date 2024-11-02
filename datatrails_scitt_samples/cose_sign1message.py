@@ -7,6 +7,19 @@ import cbor2
 from pycose.messages import Sign1Message
 
 
+def extract_to_be_signed(msg: Sign1Message) -> bytes:
+    """Get the bytes that need to be signed for remote signing
+
+    When using a Sign1Message this way, If the configured algorithm does not
+    match the remote sign operation, verification will fail.
+    """
+    sig_structure = ["Signature1"]
+    sig_structure = msg._base_structure(sig_structure)
+
+    sig_structure.append(msg.payload)
+    return cbor2.dumps(sig_structure)
+
+
 def decode_sign1_detached(message: bytes, payload=None) -> Sign1Message:
     """
     Decodes a COSE sign1 message from a message with a detached payload.

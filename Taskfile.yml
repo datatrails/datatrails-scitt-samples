@@ -61,7 +61,7 @@ tasks:
         set -e
         source {{ .VENV_DIR }}/bin/activate
 
-        ruff check --fix {{ .PACKAGE_NAME }} unittests
+        ruff format {{ .PACKAGE_NAME }} unittests
         black {{ .PACKAGE_NAME }} unittests
         
         deactivate

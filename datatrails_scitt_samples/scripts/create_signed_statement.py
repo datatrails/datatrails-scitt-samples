@@ -1,4 +1,4 @@
-""" Module for creating a SCITT signed statement """
+"""Module for creating a SCITT signed statement"""
 
 import sys
 import argparse

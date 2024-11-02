@@ -1,4 +1,4 @@
-""" Module for creating a SCITT signed statement with a detached payload"""
+"""Module for creating a SCITT signed statement with a detached payload"""
 
 import argparse
 import json

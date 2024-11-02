@@ -1,5 +1,4 @@
-"""Miscellaneous functions for file access.
-"""
+"""Miscellaneous functions for file access."""
 
 import sys
 import json

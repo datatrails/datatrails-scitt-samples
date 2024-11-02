@@ -1,4 +1,4 @@
-""" Module for dumping a CBOR file """
+"""Module for dumping a CBOR file"""
 
 import argparse
 from pprint import pprint
@@ -6,7 +6,6 @@ from pycose.messages import Sign1Message
 
 
 def print_cbor(payload_file: str):
-
     with open(payload_file, "rb") as data_file:
         data = data_file.read()
         message = Sign1Message.decode(data)

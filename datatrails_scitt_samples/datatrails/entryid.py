@@ -1,4 +1,4 @@
-"""Decode the entryid assuming it has been returned by the DataTrails service """
+"""Decode the entryid assuming it has been returned by the DataTrails service"""
 
 
 def entryid_to_identity(entryid: str) -> str:
