@@ -46,10 +46,10 @@ jobs:
 
           # NOTE: We are reling on github's ui to sanitize the inputs
 
-          echo ${{ inputs.payload }} > payload.json
+          echo ${{ inputs.payload }} > /tmp/payload.json
           python3 -m datatrails_scitt_samples.scripts.create_signed_statement \
             --signing-key-file-path datatrails_scitt_samples-signing-key.pem \
-            --payload-file payload.json \
+            --payload-file /tmp/payload.json \
             --content-type ${{ inputs.content_type }} \
             --subject ${{ inputs.subject }} \
             --issuer ${{ inputs.issuer }} \

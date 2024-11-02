@@ -58,7 +58,7 @@ def main(args=None):
         "--payload-file",
         type=str,
         help="filepath to the content that will be hashed into the payload of the SCITT Statement.",
-        default="scitt-payload.json",
+        default="/tmp/payload.json",
     )
 
     # payload-location
