@@ -44,13 +44,13 @@ class TestRegisterSignedStatement(unittest.TestCase):
         """Test creating a signed statement and registering it"""
 
         # generate an example key
-        generate_example_key(["--signing-key-file", "/tmp/my-signing-key.pem"])
+        generate_example_key(["--signing-key-file", "my-signing-key.pem"])
 
         # create a signed statement
         create_hashed_signed_statement(
             [
                 "--signing-key-file",
-                "/tmp/my-signing-key.pem",
+                "my-signing-key.pem",
                 "--payload-file",
                 os.path.join(
                     self.parent_dir,

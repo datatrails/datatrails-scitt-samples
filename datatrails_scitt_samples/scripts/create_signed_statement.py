@@ -51,7 +51,7 @@ def main(args=None):
         "--payload-file",
         type=str,
         help="filepath to the content that will be hashed into the payload of the SCITT Statement.",
-        default="/tmp/payload.json",
+        default="payload.json",
     )
 
     # payload-location
@@ -67,7 +67,7 @@ def main(args=None):
         "--signing-key-file",
         type=str,
         help="filepath to the stored ecdsa P-256 signing key, in pem format.",
-        default="/tmp/my-signing-key.pem",
+        default="my-signing-key.pem",
     )
 
     # subject

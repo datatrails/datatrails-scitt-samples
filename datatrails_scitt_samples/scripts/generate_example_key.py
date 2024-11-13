@@ -6,7 +6,7 @@ import sys
 import argparse
 from ecdsa import SigningKey, NIST256p
 
-FILE_NAME = "/tmp/my-signing-key.pem"
+FILE_NAME = "my-signing-key.pem"
 
 
 def generate_key(topem=True):
