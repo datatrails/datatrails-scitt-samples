@@ -33,9 +33,6 @@ jobs:
 
     - name: Build Package
       run: |
-        # task venv
-        python3 -m venv venv 
-        source venv/bin/activate
         python3 -m pip install -qq -r requirements.txt
         python3 -m pip install -qq -r requirements-dev.txt
         python3 -m build --sdist
