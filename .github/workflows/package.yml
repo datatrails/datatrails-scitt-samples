@@ -49,7 +49,6 @@ jobs:
         DATATRAILS_CLIENT_SECRET: ${{ secrets.DATATRAILS_CLIENT_SECRET }}
 
       run: |
-        source venv/bin/activate
         task registration-demo
       shell: bash
 
