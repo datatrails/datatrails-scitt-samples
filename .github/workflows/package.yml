@@ -14,7 +14,7 @@ jobs:
       matrix:
         python-version: ["3.11", "3.12" ]
         # reduced matrix for ci
-        os: [ubuntu-latest, windows-latest]
+        os: [ubuntu-latest]
         # os: [ubuntu-latest, windows-latest] scripts on windows are a PITA
         # instead, peaple can do 'python3 -m datatrails_scitt_samples.scripts.create_signed_statement ...'
     runs-on: ${{ matrix.os }}

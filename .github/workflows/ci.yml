@@ -13,7 +13,7 @@ jobs:
       matrix:
         python-version: ["3.11", "3.12" ]
         # reduced matrix for ci
-        os: [ubuntu-latest, windows-latest]
+        os: [ubuntu-latest]
     runs-on: ${{ matrix.os }}
     steps:
     - uses: actions/checkout@v4
