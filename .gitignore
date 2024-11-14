@@ -1,5 +1,10 @@
 *.pem
-.env.token
+*.csr
+*.egg-info
+*.sig
+.env.*
+.envrc
+.vscode/launch.json
 payload.json
 scitt/artifacts/_manifest/*
 datatrails_scitt_samples/__pycache__/*
@@ -7,3 +12,4 @@ datatrails_scitt_samples/scripts/__pycache__/*
 datatrails_scitt_samples/datatrails/__pycache__/*
 datatrails_scitt_samples/mmriver/__pycache__/*
 venv/*
+

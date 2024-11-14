@@ -2,7 +2,7 @@
 Unit tests
 """
 
-import unittest
+# import unittest
 
 # Hides Docstring
-unittest.TestCase.shortDescription = lambda x: None
+# unittest.TestCase.shortDescription = lambda x: None

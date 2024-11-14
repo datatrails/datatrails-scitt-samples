@@ -1,5 +1,7 @@
 #
-pycose~=1.0.1
+bencode.py~=4.0.0
 ecdsa~=0.18.0
 jwcrypto~=1.5.0
-requests~=2.32.0
+pycose~=1.0.1
+pycryptodome~=3.20.0
+requests>=2.32.0

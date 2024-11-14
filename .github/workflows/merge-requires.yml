@@ -1,0 +1,33 @@
+# This workflow configures the repository specific choices of which CI builds
+# must pass in order for a build to merge. This allows a sinlge global teraform
+# configured rule to require a "well known" check in each repository. Whilst
+# granting repository stakeholders the ability configure what workflows are
+# appropriate to satisfy that check.
+name: Merge Requires
+on:
+  workflow_run:
+    workflows:
+      - Build and test
+      - Package and Publish
+    types: 
+      - completed
+
+jobs:
+  merge-checks-ok:
+    runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    steps:
+      - run: |
+          echo 'The merge check passed'
+          echo ${{ github.event.workflow_run.name }}
+          echo ${{ github.event.workflow_run.url }}
+
+  merge-checks-failed:
+    runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.conclusion == 'failure' }}
+    steps:
+      - run: |
+          echo 'The merge check failed'
+          echo ${{ github.event.workflow_run.name }}
+          echo ${{ github.event.workflow_run.url }}
+          exit 1
