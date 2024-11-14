@@ -13,16 +13,21 @@ on:
       - completed
 
 jobs:
-  on-success:
+  merge-checks-ok:
     runs-on: ubuntu-latest
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
     steps:
-      - run: echo 'The repository configured checks have all passed'
+      - run: |
+          echo 'The merge check passed'
+          echo ${{ github.event.workflow_run.name }}
+          echo ${{ github.event.workflow_run.url }}
 
-  on-failure:
+  merge-checks-failed:
     runs-on: ubuntu-latest
     if: ${{ github.event.workflow_run.conclusion == 'failure' }}
     steps:
       - run: |
-          echo 'One or more configured repository checks failed'
+          echo 'The merge check failed'
+          echo ${{ github.event.workflow_run.name }}
+          echo ${{ github.event.workflow_run.url }}
           exit 1
