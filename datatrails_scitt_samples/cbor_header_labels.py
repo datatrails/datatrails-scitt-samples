@@ -2,7 +2,7 @@
 
 # CWT header label comes from version 4 of the scitt architecture document
 # https://www.ietf.org/archive/id/draft-ietf-scitt-architecture-04.html#name-issuer-identity
-HEADER_LABEL_CWT = 13
+HEADER_LABEL_CWT = 15
 
 # subject header label comes from version 2 of the scitt architecture document
 # https://www.ietf.org/archive/id/draft-birkholz-scitt-architecture-02.html#name-envelope-and-claim-format
