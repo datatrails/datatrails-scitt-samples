@@ -55,7 +55,7 @@ class TestCreateHashedSignedStatement(unittest.TestCase):
         tests we can also verifiy that signed statement.
         """
 
-        # XXX: TODO: Testing CI/CD infra: should still fail the Merge Requires check
+        # XXX: it should not be possible to merge until this is removed
         assert False is True
 
         # create the signed statement
