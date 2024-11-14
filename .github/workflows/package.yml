@@ -4,8 +4,7 @@
 name: Package and Publish
 
 on:
-  pull_request:
-  release:
+  workflow_call:
 
 jobs:
   build:
