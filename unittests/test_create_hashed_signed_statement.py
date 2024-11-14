@@ -55,9 +55,6 @@ class TestCreateHashedSignedStatement(unittest.TestCase):
         tests we can also verifiy that signed statement.
         """
 
-        # XXX: it should not be possible to merge until this is removed
-        assert False is True
-
         # create the signed statement
         signing_key = SigningKey.generate(curve=NIST256p)
 
