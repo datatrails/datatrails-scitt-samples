@@ -6,7 +6,9 @@
 name: Merge Requires
 on:
   workflow_run:
-    workflows: ["Build and test", "Package and Publish"]
+    workflows:
+      - Build and test
+      - Package and Publish
     types: 
       - completed
 
@@ -15,4 +17,10 @@ jobs:
     runs-on: ubuntu-latest
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
     steps:
-      - run: echo 'The Run Tests workflow passed'
+      - run: echo 'The repository configured checks have all passed'
+
+  on-failure:
+    runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.conclusion == 'failure' }}
+    steps:
+      - run: echo 'One or more configured repository checks failed'
