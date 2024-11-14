@@ -18,8 +18,16 @@ jobs:
   merge-checks-ok:
     runs-on: ubuntu-latest
     needs: [ci]
+    steps:
+      - name: ok
+        run: |
+          echo "It's working!"
 
   release-checks-ok:
     runs-on: ubuntu-latest
     if: ${{ github.event_name == 'release' }}
     needs: [ci, release]
+    steps:
+      - name: ok
+        run: |
+          echo "Houston we have cleared the tower"
