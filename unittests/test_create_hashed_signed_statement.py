@@ -52,11 +52,8 @@ class TestCreateHashedSignedStatement(unittest.TestCase):
     def test_sign_and_verify_statement(self):
         """
         tests we can create a signed statement given a known key and statement.
-        tests we can also verifiy that signed statement.
+        tests we can also verify that signed statement.
         """
-
-        # XXX: TODO: Testing CI/CD infra: should still fail the Merge Requires check
-        assert False is True
 
         # create the signed statement
         signing_key = SigningKey.generate(curve=NIST256p)
