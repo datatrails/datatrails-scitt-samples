@@ -35,10 +35,6 @@ class TestCreateSignedStatement(unittest.TestCase):
         tests we can also verifiy that signed statement.
         """
 
-        # FORCE FAIL FOR CI EXPERIMENT
-
-        assert False is True
-
         # create the signed statement
         signing_key = SigningKey.generate(curve=NIST256p)
 
