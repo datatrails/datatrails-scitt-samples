@@ -9,9 +9,11 @@ on:
 
 jobs:
   ci:
+    if: ${{ github.event_name != 'release' }}
     secrets: inherit
     uses: ./.github/workflows/ci.yml
   release:
+    if: ${{ github.event_name == 'release' }}
     secrets: inherit
     uses: ./.github/workflows/package.yml
 
