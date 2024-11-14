@@ -1,0 +1,62 @@
+# This workflow tests that the installed package and its scripts work as expectedca
+# It is a pre-requisite for publishing a releasew wheel to PyPI
+
+name: Package and Publish
+
+on:
+  pull_request:
+  release:
+
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.11", "3.12" ]
+        # reduced matrix for ci
+        os: [ubuntu-latest, windows-latest]
+        # os: [ubuntu-latest, windows-latest] scripts on windows are a PITA
+        # instead, peaple can do 'python3 -m datatrails_scitt_samples.scripts.create_signed_statement ...'
+    runs-on: ${{ matrix.os }}
+    steps:
+    - uses: actions/checkout@v4
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ matrix.python-version }}
+
+    - name: Install Task
+      uses: arduino/setup-task@v1
+      with:
+        version: 3.x
+        repo-token: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Build Package
+      run: |
+        python3 -m pip install -qq -r requirements.txt
+        python3 -m pip install -qq -r requirements-dev.txt
+        python3 -m build --sdist
+        python3 -m build --wheel
+        twine check dist/*
+        pip install --force-reinstall dist/*.whl
+
+      shell: bash
+
+    - name: Test installed package (registration-demo)
+      env:
+        DATATRAILS_URL: ${{ vars.DATATRAILS_URL }}
+        DATATRAILS_CLIENT_ID: ${{ vars.DATATRAILS_CLIENT_ID }}
+        DATATRAILS_CLIENT_SECRET: ${{ secrets.DATATRAILS_CLIENT_SECRET }}
+
+      run: |
+        task registration-demo
+      shell: bash
+
+    - name: Publish to PyPI
+      if: ${{ github.event_name == 'release' }}
+      uses: pypa/gh-action-pypi-publish@release/v1
+      with:
+        verbose: true
+        # skip-existing: true
+        user: ${{ vars.PYPI_USER }}
+        password: ${{ secrets.PYPI_PASSWORD }}

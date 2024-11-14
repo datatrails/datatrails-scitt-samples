@@ -1,2 +1,0 @@
-"""Archivist SCITT Samples
-"""
