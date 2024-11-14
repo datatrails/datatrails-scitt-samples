@@ -1,10 +1,9 @@
-venv/*
+*.pem
+.env.token
 payload.json
-signed-statement.txt
-scitt-signing-key.pem
-scitt-receipt.txt
 scitt/artifacts/_manifest/*
-my-signing-key.pem
-receipt.cbor
-signed-statement.cbor
-transparent-statement.cbor
+datatrails_scitt_samples/__pycache__/*
+datatrails_scitt_samples/scripts/__pycache__/*
+datatrails_scitt_samples/datatrails/__pycache__/*
+datatrails_scitt_samples/mmriver/__pycache__/*
+venv/*
