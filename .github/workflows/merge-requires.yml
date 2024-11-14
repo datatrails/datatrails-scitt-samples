@@ -23,4 +23,6 @@ jobs:
     runs-on: ubuntu-latest
     if: ${{ github.event.workflow_run.conclusion == 'failure' }}
     steps:
-      - run: echo 'One or more configured repository checks failed'
+      - run: |
+          echo 'One or more configured repository checks failed'
+          exit 1
