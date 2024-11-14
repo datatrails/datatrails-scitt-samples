@@ -55,6 +55,9 @@ class TestCreateHashedSignedStatement(unittest.TestCase):
         tests we can also verifiy that signed statement.
         """
 
+        # XXX: TODO: Testing CI/CD infra
+        assert False is True
+
         # create the signed statement
         signing_key = SigningKey.generate(curve=NIST256p)
 
