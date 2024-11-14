@@ -7,7 +7,6 @@ name: Merge Requires
 on:
   workflow_run:
     workflows: ["Build and test", "Package and Publish"]
-    branches: [main]
     types: 
       - completed
 
