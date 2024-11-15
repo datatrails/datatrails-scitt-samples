@@ -1,6 +1,7 @@
 """
 Pairwise unit tests for creating a signed statement with a hashed payload
 """
+
 import unittest
 import json
 
@@ -21,19 +22,14 @@ from pycose.keys import CoseKey
 from datatrails_scitt_samples.statement_creation import (
     cose_key_ec2_p256,
     create_hashed_signed_statement,
-    create_hashed_statement
+    create_hashed_statement,
 )
 
-from datatrails_scitt_samples.cose_sign1message import (
-    extract_to_be_signed
-)
+from datatrails_scitt_samples.cose_sign1message import extract_to_be_signed
 
-from datatrails_scitt_samples.cose_cnf_key import (
-    cnf_key_from_phdr
-)
+from datatrails_scitt_samples.cose_cnf_key import cnf_key_from_phdr
 
 from datatrails_scitt_samples.cbor_header_labels import (
-    HEADER_LABEL_CWT,
     HEADER_LABEL_CWT_CNF,
     HEADER_LABEL_CNF_COSE_KEY,
     HEADER_LABEL_PAYLOAD_HASH_ALGORITHM,
@@ -41,6 +37,8 @@ from datatrails_scitt_samples.cbor_header_labels import (
 )
 
 from .constants import KNOWN_STATEMENT
+
+from .create_options import create_options, get_cwt_phdr
 
 
 class TestCreateHashedSignedStatement(unittest.TestCase):
@@ -79,6 +77,7 @@ class TestCreateHashedSignedStatement(unittest.TestCase):
             payload_hash_alg=payload_hash_alg,
             payload_location=payload_location,
             signing_key=signing_key,
+            **create_options,
         )
 
         # decode the cbor encoded cose sign1 message
@@ -94,7 +93,7 @@ class TestCreateHashedSignedStatement(unittest.TestCase):
         self.assertEqual(payload_location, message.phdr[HEADER_LABEL_LOCATION])
 
         # get the verification key from cwt cnf
-        cwt = message.phdr[HEADER_LABEL_CWT]
+        cwt = get_cwt_phdr(message.phdr)
         cnf = cwt[HEADER_LABEL_CWT_CNF]
         verification_key = cnf[HEADER_LABEL_CNF_COSE_KEY]
 
@@ -114,7 +113,6 @@ class TestCreateHashedSignedStatement(unittest.TestCase):
         verified = message.verify_signature()
 
         self.assertTrue(verified)
-
 
     def test_create_hashed_statement_remote_sign(self):
         """Test using the samples api to accomplish remote issuer signing"""
@@ -151,6 +149,7 @@ class TestCreateHashedSignedStatement(unittest.TestCase):
             payload_hash_alg=payload_hash_alg,
             payload_location=payload_location,
             verifying_key=verifying_key,
+            **create_options,
         )
 
         # This is essentially compute_signature() from pycose's SignCommon (base of Sign1Message)
@@ -165,7 +164,6 @@ class TestCreateHashedSignedStatement(unittest.TestCase):
         # Receive signature bytes in response and set them on the statement
         signature = alg.sign(key=cose_signing_key, data=to_be_signed)
 
-
         # Now, locally, complete serialization of the statement with the signature attached
 
         # This would be nice, but pycose doesn't appear to support it
@@ -173,8 +171,16 @@ class TestCreateHashedSignedStatement(unittest.TestCase):
         # signed_statement = statement.encode(sign=False)
 
         # Instead, we'll just encode directly following the implementation of encod
-        struct = [statement.phdr_encoded, statement.uhdr_encoded, statement.payload, signature]
-        signed_statement = cbor2.dumps(cbor2.CBORTag(statement.cbor_tag, struct), default=statement._custom_cbor_encoder)
+        struct = [
+            statement.phdr_encoded,
+            statement.uhdr_encoded,
+            statement.payload,
+            signature,
+        ]
+        signed_statement = cbor2.dumps(
+            cbor2.CBORTag(statement.cbor_tag, struct),
+            default=statement._custom_cbor_encoder,
+        )
 
         # decode the cbor encoded cose sign1 message
         message = Sign1Message.decode(signed_statement)

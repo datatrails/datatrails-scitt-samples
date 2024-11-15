@@ -6,6 +6,7 @@ import json
 
 from datatrails_scitt_samples.scripts.fileaccess import read_file, open_signing_key
 from datatrails_scitt_samples.statement_creation import create_signed_statement
+from datatrails_scitt_samples.statement_creation import OPTION_USE_DRAFT_04_LABELS
 
 
 def main(args=None):
@@ -87,6 +88,12 @@ def main(args=None):
         default="signed-statement.cbor",
     )
 
+    parser.add_argument(
+        "--use-draft-04-labels",
+        help="force use of legacy labels (eg cwt_claims label 13 rather than 15)",
+        action="store_true",
+    )
+
     args = parser.parse_args(args or sys.argv[1:])
 
     if args.metadata_file is not None:
@@ -98,6 +105,10 @@ def main(args=None):
     # Payload must be encoded to bytes
     payload = read_file(args.payload_file).encode("utf-8")
 
+    options = {}
+    if args.use_draft_04_labels:
+        options[OPTION_USE_DRAFT_04_LABELS] = True
+
     signed_statement = create_signed_statement(
         content_type=args.content_type,
         issuer=args.issuer,
@@ -107,6 +118,7 @@ def main(args=None):
         payload_location=args.payload_location,
         subject=args.subject,
         signing_key=signing_key,
+        **options,
     )
 
     with open(args.output_file, "wb") as output_file:
