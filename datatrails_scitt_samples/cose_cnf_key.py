@@ -9,7 +9,7 @@ from pycose.keys.curves import P384
 from pycose.keys.keytype import KtyEC2
 from pycose.keys.keyparam import KpKty, KpKeyOps, EC2KpCurve
 
-from datatrails_scitt_samples.cbor_header_labels import HEADER_LABEL_CWT
+from datatrails_scitt_samples.cbor_header_labels import HEADER_LABEL_CWT, HEADER_LABEL_CWT_SCITT_DRAFT_04
 from datatrails_scitt_samples.cbor_header_labels import HEADER_LABEL_CWT_CNF
 from datatrails_scitt_samples.cbor_header_labels import HEADER_LABEL_CNF_COSE_KEY
 
@@ -20,7 +20,10 @@ def cnf_key_from_phdr(phdr: dict) -> CoseKey:
     """
     cwt_claims = phdr.get(HEADER_LABEL_CWT)
     if cwt_claims is None:
-        raise ValueError("Missing cwt claims in protected header")
+        # fall back to scitt draft 04
+        cwt_claims = phdr.get(HEADER_LABEL_CWT_SCITT_DRAFT_04)
+        if cwt_claims is None:
+            raise ValueError("Missing cwt claims in protected header")
 
     # Note: issuer is the key vault key identity, subject is the tenant's merkle log tile path
     cnf_claim = cwt_claims.get(HEADER_LABEL_CWT_CNF)
