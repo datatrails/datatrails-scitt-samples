@@ -35,7 +35,6 @@ class TestRegisterSignedStatement(unittest.TestCase):
     def tearDown(self):
         shutil.rmtree(self.test_dir)
 
-
     @unittest.skipUnless(
         os.getenv("DATATRAILS_CLIENT_SECRET") != "",
         "test requires authentication via env DATATRAILS_xxx",
@@ -49,6 +48,7 @@ class TestRegisterSignedStatement(unittest.TestCase):
         # create a signed statement
         create_hashed_signed_statement(
             [
+                "--use-draft-04-labels",  # TEMPORY: Until backend support catches up
                 "--signing-key-file",
                 "my-signing-key.pem",
                 "--payload-file",

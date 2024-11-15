@@ -5,6 +5,8 @@
 .env.*
 .envrc
 .vscode/launch.json
+build/
+dist/
 payload.json
 scitt/artifacts/_manifest/*
 datatrails_scitt_samples/__pycache__/*
@@ -12,3 +14,8 @@ datatrails_scitt_samples/scripts/__pycache__/*
 datatrails_scitt_samples/datatrails/__pycache__/*
 datatrails_scitt_samples/mmriver/__pycache__/*
 venv/*
+payload.txt
+signed-statement.cbor
+statement-receipt.cbor
+transparent-statement.cbor
+verified_payload.txt

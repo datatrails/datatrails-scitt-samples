@@ -1,8 +1,13 @@
 """Definitions of all COSE, SCITT, CBOR labels used by these exmaples"""
 
-# CWT header label comes from version 4 of the scitt architecture document
+# CWT header label previously came from version 4 of the scitt architecture document
 # https://www.ietf.org/archive/id/draft-ietf-scitt-architecture-04.html#name-issuer-identity
-HEADER_LABEL_CWT = 13
+HEADER_LABEL_CWT_SCITT_DRAFT_04 = 13
+
+# CWT header label is defined by
+# https://datatracker.ietf.org/doc/html/draft-ietf-cose-cwt-claims-in-headers-10#section-2
+# And referenced by https://www.ietf.org/archive/id/draft-ietf-scitt-architecture-10.html#name-signed-statements
+HEADER_LABEL_CWT = 15
 
 # subject header label comes from version 2 of the scitt architecture document
 # https://www.ietf.org/archive/id/draft-birkholz-scitt-architecture-02.html#name-envelope-and-claim-format
