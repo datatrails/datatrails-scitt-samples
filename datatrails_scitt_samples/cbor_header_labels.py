@@ -7,7 +7,7 @@ HEADER_LABEL_CWT_SCITT_DRAFT_04 = 13
 # CWT header label is defined by
 # https://datatracker.ietf.org/doc/html/draft-ietf-cose-cwt-claims-in-headers-10#section-2
 # And referenced by https://www.ietf.org/archive/id/draft-ietf-scitt-architecture-10.html#name-signed-statements
-HEADER_LABEL_CWT = 15
+HEADER_LABEL_CWT = 13
 
 # subject header label comes from version 2 of the scitt architecture document
 # https://www.ietf.org/archive/id/draft-birkholz-scitt-architecture-02.html#name-envelope-and-claim-format
