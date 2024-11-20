@@ -1,4 +1,4 @@
-"""Definitions of all COSE, SCITT, CBOR labels used by these exmaples"""
+"""Definitions of all COSE, SCITT, CBOR labels used by these examples"""
 
 # CWT header label previously came from version 4 of the scitt architecture document
 # https://www.ietf.org/archive/id/draft-ietf-scitt-architecture-04.html#name-issuer-identity
@@ -47,7 +47,7 @@ HEADER_LABEL_COSE_RECEIPTS_INCLUSION_PROOFS = -1
 
 # MMRIVER headers
 # https://robinbryce.github.io/draft-bryce-cose-merkle-mountain-range-proofs/draft-bryce-cose-merkle-mountain-range-proofs.html#name-receipt-of-inclusion
-HEADER_LABEL_MMRIVER_VDS_TREE_ALG = 2
+HEADER_LABEL_MMRIVER_VDS_TREE_ALG = 3
 HEADER_LABEL_MMRIVER_INCLUSION_PROOF_INDEX = 1
 HEADER_LABEL_MMRIVER_INCLUSION_PROOF_PATH = 2
 
