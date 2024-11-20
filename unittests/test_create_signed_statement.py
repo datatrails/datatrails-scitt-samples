@@ -16,11 +16,12 @@ from pycose.keys import CoseKey
 
 from datatrails_scitt_samples.statement_creation import create_signed_statement
 from datatrails_scitt_samples.cbor_header_labels import (
-    HEADER_LABEL_CWT,
     HEADER_LABEL_CWT_CNF,
     HEADER_LABEL_CNF_COSE_KEY,
 )
 from .constants import KNOWN_STATEMENT
+
+from .create_options import create_options, get_cwt_phdr
 
 
 class TestCreateSignedStatement(unittest.TestCase):
@@ -55,6 +56,7 @@ class TestCreateSignedStatement(unittest.TestCase):
             payload=payload,
             payload_location=payload_location,
             signing_key=signing_key,
+            **create_options,
         )
 
         # verify the signed statement
@@ -63,7 +65,7 @@ class TestCreateSignedStatement(unittest.TestCase):
         message = Sign1Message.decode(signed_statement)
 
         # get the verification key from cwt cnf
-        cwt = message.phdr[HEADER_LABEL_CWT]
+        cwt = get_cwt_phdr(message.phdr)
         cnf = cwt[HEADER_LABEL_CWT_CNF]
         verification_key = cnf[HEADER_LABEL_CNF_COSE_KEY]
 

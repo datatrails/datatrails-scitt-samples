@@ -1,6 +1,6 @@
 """Definitions of all COSE, SCITT, CBOR labels used by these exmaples"""
 
-# CWT header label comes from version 4 of the scitt architecture document
+# CWT header label previously came from version 4 of the scitt architecture document
 # https://www.ietf.org/archive/id/draft-ietf-scitt-architecture-04.html#name-issuer-identity
 HEADER_LABEL_CWT = 15
 

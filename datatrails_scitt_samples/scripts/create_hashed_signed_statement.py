@@ -5,6 +5,7 @@ import json
 import sys
 
 from datatrails_scitt_samples.statement_creation import create_hashed_signed_statement
+from datatrails_scitt_samples.statement_creation import OPTION_USE_DRAFT_04_LABELS
 from datatrails_scitt_samples.scripts.fileaccess import read_file, open_signing_key
 from hashlib import sha256
 
@@ -83,12 +84,22 @@ def main(args=None):
         help="subject to correlate statements made about an artifact.",
     )
 
+    parser.add_argument(
+        "--use-draft-04-labels",
+        help="force use of legacy labels (eg cwt_claims label 13 rather than 15)",
+        action="store_true",
+    )
+
     args = parser.parse_args(args or sys.argv[1:])
 
     if args.metadata_file is not None:
         meta_map_dict = json.loads(read_file(args.metadata_file))
     else:
         meta_map_dict = {}
+
+    options = {}
+    if args.use_draft_04_labels:
+        options[OPTION_USE_DRAFT_04_LABELS] = True
 
     signing_key = open_signing_key(args.signing_key_file)
     payload_contents = read_file(args.payload_file)
@@ -103,6 +114,7 @@ def main(args=None):
         payload_location=args.payload_location,
         signing_key=signing_key,
         subject=args.subject,
+        **options,
     )
 
     with open(args.output_file, "wb") as output_file:

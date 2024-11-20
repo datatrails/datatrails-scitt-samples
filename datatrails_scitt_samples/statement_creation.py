@@ -19,6 +19,7 @@ from datatrails_scitt_samples.cbor_header_labels import (
     COSE_TYPE,
     HEADER_LABEL_FEED,
     HEADER_LABEL_CWT,
+    HEADER_LABEL_CWT_SCITT_DRAFT_04,
     HEADER_LABEL_CWT_ISSUER,
     HEADER_LABEL_CWT_SUBJECT,
     HEADER_LABEL_CWT_CNF,
@@ -32,6 +33,8 @@ from datatrails_scitt_samples.cbor_header_labels import (
     HEADER_LABEL_COSE_ALG_SHA512,
 )
 
+OPTION_USE_DRAFT_04_LABELS = "draft_04_labels"
+
 
 # pylint: disable=too-many-positional-arguments
 def create_hashed_signed_statement(
@@ -44,6 +47,7 @@ def create_hashed_signed_statement(
     payload_location: str,
     signing_key: SigningKey,
     subject: str,
+    **kwargs,
 ) -> bytes:
     """
     creates a hashed signed statement, given the signing_key, payload, subject and issuer
@@ -63,6 +67,7 @@ def create_hashed_signed_statement(
         payload_location,
         verifying_key,
         subject,
+        **kwargs,
     )
 
     # create the cose_key to locally sign the statement using the signing key
@@ -85,6 +90,7 @@ def create_hashed_statement(
     payload_location: str,
     verifying_key: VerifyingKey,
     subject: str,
+    **kwargs,
 ) -> Sign1Message:
     """
     creates a hashed signed statement, given the verification_key, payload, subject and issuer
@@ -106,7 +112,11 @@ def create_hashed_statement(
     #  the verification key is attached to the cwt claims
     protected_header[Algorithm] = Es256
     protected_header[KID] = kid
-    protected_header[HEADER_LABEL_CWT] = cwt
+    cwt_label = HEADER_LABEL_CWT
+    if kwargs.get(OPTION_USE_DRAFT_04_LABELS):
+        cwt_label = HEADER_LABEL_CWT_SCITT_DRAFT_04
+
+    protected_header[cwt_label] = cwt
 
     # create the statement as a sign1 message using the protected header and payload
     return Sign1Message(phdr=protected_header, payload=payload)
@@ -122,6 +132,7 @@ def create_signed_statement(
     issuer: str,
     content_type: str,
     payload_location: str,
+    **kwargs,
 ) -> bytes:
     """
     creates a signed statement, given the signing_key, payload, subject and issuer
@@ -132,7 +143,7 @@ def create_signed_statement(
         raise ValueError("signing key does not have a verifying key")
 
     statement = create_statement(
-        kid, meta_map, verifying_key, payload, subject, issuer, content_type
+        kid, meta_map, verifying_key, payload, subject, issuer, content_type, **kwargs
     )
 
     # create the cose_key for locally signing the statement
@@ -153,6 +164,7 @@ def create_statement(
     subject: str,
     issuer: str,
     content_type: str,
+    **kwargs,
 ) -> Sign1Message:
     """
     creates a statement, given the verification_key, payload, subject and issuer.
@@ -169,7 +181,12 @@ def create_statement(
     protected_header = inline_payload_protected_header(subject, content_type, meta_map)
     protected_header[Algorithm] = Es256
     protected_header[KID] = kid
-    protected_header[HEADER_LABEL_CWT] = cwt
+
+    cwt_label = HEADER_LABEL_CWT
+    if kwargs.get(OPTION_USE_DRAFT_04_LABELS):
+        cwt_label = HEADER_LABEL_CWT_SCITT_DRAFT_04
+
+    protected_header[cwt_label] = cwt
 
     protected_header = {
         Algorithm: Es256,
