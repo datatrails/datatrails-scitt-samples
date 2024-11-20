@@ -16,26 +16,18 @@ from pycose.keys.keyops import VerifyOp
 from pycose.keys import CoseKey
 from pycose.headers import KID
 
+from datatrails_scitt_samples.datatrails.v3eventhash import v3leaf_hash
+from datatrails_scitt_samples.datatrails.eventpreimage import get_event
+from datatrails_scitt_samples.cose_receipt_verification import verify_receipt_mmriver
+from datatrails_scitt_samples.datatrails.servicecontext import ServiceContext
+from datatrails_scitt_samples.scripts.fileaccess import read_cbor_file
+
 HEADER_LABEL_DID = 391
 
-
-def read_cbor_file(cbor_file: str) -> Sign1Message:
-    """
-    opens the receipt from the receipt file.
-    NOTE: the receipt is expected to be in cbor encoding.
-    """
-    with open(cbor_file, "rb") as file:
-        contents = file.read()
-
-    # decode the cbor encoded cose sign1 message
-    try:
-        cose_object = Sign1Message.decode(contents)
-    except (ValueError, AttributeError):
-        # This is fatal
-        print("failed to decode cose sign1 from file", file=sys.stderr)
-        sys.exit(1)
-
-    return cose_object
+def read_receipt_bytes(filename:str) -> bytes:
+    """read the file as binary"""
+    with open(filename, "rb") as file:
+        return file.read()
 
 
 def get_didweb_pubkey(didurl: str, kid: bytes) -> dict:
@@ -101,27 +93,42 @@ def get_didweb_pubkey(didurl: str, kid: bytes) -> dict:
     raise ValueError(f"no key with kid: {kid} in verification methods of did document")
 
 
-def verify_receipt(receipt: Sign1Message) -> bool:
+def verify_receipt(
+    ctx: ServiceContext,
+    receipt: bytes,
+    leaf: str|None = None,
+    event_identity: str | None = None) -> bool:
     """
-    verifies the counter signed receipt signature
+    Verifies the COSE Receipt
     """
 
-    # get the verification key from didweb
-    kid: bytes = receipt.phdr[KID]
-    didurl = receipt.phdr[HEADER_LABEL_DID]
+    if leaf is None:
+        if event_identity is None:
+            raise ValueError("leaf or event must be supplied")
+        public = False
+        if event_identity.startswith("public"):
+            public = True
+            event_identity.replace("public", "", 1)
+        event = get_event(ctx, event_identity, public)
+        leafbytes = v3leaf_hash(event)
+    else:
+        if leaf.startswith("0x"):
+            leaf = leaf[2:]
 
-    cose_key_dict = get_didweb_pubkey(didurl, kid)
-    cose_key = CoseKey.from_dict(cose_key_dict)
+        # Convert the hexadecimal string to bytes
+        leafbytes = bytes.fromhex(leaf)
+        
 
-    receipt.key = cose_key
+    # XXX: TODO: move away from did web and check the issuer & key are consistent and trusted.
 
-    # verify the counter signed receipt signature
-    verified = receipt.verify_signature()  # type: ignore
-
-    return verified
+    return verify_receipt_mmriver(receipt, leafbytes)
 
 
-def verify_transparent_statement(transparent_statement: Sign1Message) -> bool:
+def verify_transparent_statement(
+    ctx: ServiceContext,
+    transparent_statement: Sign1Message,
+    leaf: str|None = None,
+    event_identity: str | None = None) -> bool:
     """
     verifies the counter signed receipt signature in a TS
     """
@@ -141,7 +148,7 @@ def verify_transparent_statement(transparent_statement: Sign1Message) -> bool:
         return False
 
     # Verify it
-    return verify_receipt(receipt)
+    return verify_receipt(ctx, receipt_bytes, event_identity=event_identity, leaf=leaf)
 
 
 def main():
@@ -157,6 +164,26 @@ def main():
         type=str,
         help="filepath to a stored Receipt, in CBOR format.",
     )
+
+    parser.add_argument(
+        "--datatrails-url",
+        type=str,
+        help="The url of the DataTrails transparency service. (only needed if fetching event to verify)",
+        default=None,
+    )
+
+    options.add_argument(
+        "--leaf",
+        type=str,
+        help="the leaf hash value verified by the receipt",
+        default=None
+    )
+    options.add_argument(
+        "--event",
+        type=str,
+        help="the event identity"
+    )
+
     options.add_argument(
         "--transparent-statement-file",
         type=str,
@@ -165,15 +192,22 @@ def main():
     )
 
     args = parser.parse_args()
+    cfg_overrides = {}
+    if args.datatrails_url:
+        cfg_overrides["datatrails_url"] = args.datatrails_url
+    ctx = ServiceContext.from_env("verify-receipt", **cfg_overrides)
 
     if args.receipt_file:
-        receipt = read_cbor_file(args.receipt_file)
-        verified = verify_receipt(receipt)
+        receipt = read_receipt_bytes(args.receipt_file)
+        verified = verify_receipt(
+            ctx, receipt, event_identity=args.event, leaf=args.leaf)
     else:
         # Note this logic works because only the transparent statement arg
         # has a default. Don't change that without changing this!
         transparent_statement = read_cbor_file(args.transparent_statement_file)
-        verified = verify_transparent_statement(transparent_statement)
+        verified = verify_transparent_statement(
+            ctx, transparent_statement,
+            event_identity=args.event, leaf=args.leaf)
 
     if verified:
         print("signature verification succeeded")
