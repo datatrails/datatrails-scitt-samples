@@ -1,3 +1,6 @@
+[tool.black]
+target-version = ["py311", "py312", "py313"]
+
 [tool.coverage.report]
 fail_under = 100
 

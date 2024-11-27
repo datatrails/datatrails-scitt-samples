@@ -5,12 +5,13 @@ name: Build and test
 
 on:
   workflow_call:
+
 jobs:
   build:
     strategy:
       fail-fast: false
       matrix:
-        python-version: ["3.11", "3.12" ]
+        python-version: ["3.11", "3.12", "3.13" ]
         # reduced matrix for ci
         os: [ubuntu-latest, windows-latest]
     runs-on: ${{ matrix.os }}
@@ -27,14 +28,10 @@ jobs:
       shell: bash
 
     - name: Run integrity checks
-      env:
-        DATATRAILS_URL: ${{ vars.DATATRAILS_URL }}
-        DATATRAILS_CLIENT_ID: ${{ vars.DATATRAILS_CLIENT_ID }}
-        DATATRAILS_CLIENT_SECRET: ${{ secrets.DATATRAILS_CLIENT_SECRET }}
-
       run: |
-        ruff check datatrails_scitt_samples unittests
-        python3 -m black datatrails_scitt_samples unittests
+        ruff check datatrails_scitt_samples tests
+        python3 -m black datatrails_scitt_samples tests
+        python3 -m pyright --stats datatrails_scitt_samples
         modified=$(git status -s | wc -l)
         if [ $modified -gt 0 ]
         then
@@ -42,13 +39,17 @@ jobs:
             echo "DISABLED guard due to mismatch with local environment"
             # exit 1
         fi
+      shell: bash
+
+    - name: Simple tests
+      env:
+        DATATRAILS_URL: ${{ vars.DATATRAILS_URL }}
+        DATATRAILS_CLIENT_ID: ${{ vars.DATATRAILS_CLIENT_ID }}
+        DATATRAILS_CLIENT_SECRET: ${{ secrets.DATATRAILS_CLIENT_SECRET }}
+      run: |
         python3 -m unittest
       shell: bash
-    - name: Run type-hint checks
-      if: ${{ matrix.python-version != '3.12' }}
-      run: |
-        python3 -m pyright --stats datatrails_scitt_samples
-      shell: bash
+
     - uses: pypa/gh-action-pip-audit@v1.0.8
       if: ${{ matrix.os == 'ubuntu-latest' }}
       with:
@@ -57,4 +58,23 @@ jobs:
           GHSA-wj6h-64fc-37mp
         inputs: requirements.txt
 
+    - name: Install Task
+      uses: arduino/setup-task@v1
+      with:
+        version: "3.x"
+        repo-token: ${{ secrets.GITHUB_TOKEN }}
 
+    - name: Create and install wheel
+      run: |
+        python3 -m build --wheel
+        python3 -m pip install --force-reinstall dist/*.whl
+      shell: bash
+
+    - name: Test installed package (registration-demo)
+      env:
+        DATATRAILS_URL: ${{ vars.DATATRAILS_URL }}
+        DATATRAILS_CLIENT_ID: ${{ vars.DATATRAILS_CLIENT_ID }}
+        DATATRAILS_CLIENT_SECRET: ${{ secrets.DATATRAILS_CLIENT_SECRET }}
+      run: |
+        task registration-demo
+      shell: bash

@@ -16,6 +16,7 @@ tasks:
       - |
         set -e
         source {{.VENV_DIR}}/bin/activate
+        trap deactivate EXIT
         python -m pip install -e .
 
   audit:
@@ -26,11 +27,10 @@ tasks:
       - |
         set -e
         source {{.VENV_DIR}}/bin/activate
+        trap deactivate EXIT
 
         pip-audit -r requirements.txt
         
-        deactivate
-
   check:
     desc: Check the style, bug and quality of the code
     deps:
@@ -39,12 +39,11 @@ tasks:
       - |
         set -e
         source {{.VENV_DIR}}/bin/activate
+        trap deactivate EXIT
 
         python3 --version
-        ruff check {{ .PACKAGE_NAME }} unittests
-        python3 -m pyright --stats {{ .PACKAGE_NAME }} unittests
-        
-        deactivate
+        ruff check {{ .PACKAGE_NAME }} tests
+        python3 -m pyright --stats {{ .PACKAGE_NAME }} tests
 
   clean:
     desc: Clean git repo
@@ -60,25 +59,23 @@ tasks:
       - |
         set -e
         source {{ .VENV_DIR }}/bin/activate
+        trap deactivate EXIT
 
-        ruff format {{ .PACKAGE_NAME }} unittests
-        black {{ .PACKAGE_NAME }} unittests
-        
-        deactivate
+        ruff format {{ .PACKAGE_NAME }} tests
+        black {{ .PACKAGE_NAME }} tests
 
   test:
-    desc: Run unittests
+    desc: Run simple tests
     deps:
       - task: venv
     cmds:
       - |
         set -e
         source {{ .VENV_DIR }}/bin/activate
+        trap deactivate EXIT
 
         python3 -m unittest
         
-        deactivate
-
   test:wheel:
     desc: |
       Build and install the package, then register a signed statement with the datatrails server
@@ -94,9 +91,10 @@ tasks:
     cmds:
       - |
         source {{ .VENV_DIR }}/bin/activate
+        trap deactivate EXIT
+
         pip install --force-reinstall dist/*.whl
         task registration-demo
-        deactivate
 
 
   registration-demo:
@@ -171,9 +169,10 @@ tasks:
         then
             python3 -m venv {{ .VENV_DIR }}
             source {{ .VENV_DIR }}/bin/activate
+            trap deactivate EXIT
+
             python3 -m pip install -r requirements.txt
             python3 -m pip install -r requirements-dev.txt
-            deactivate
         fi
 
   wheel:
@@ -183,9 +182,9 @@ tasks:
         set -e
         rm -rf dist/*
         source {{ .VENV_DIR }}/bin/activate
+        trap deactivate EXIT
+
         python3 -m build --sdist
         python3 -m build --wheel
         twine check dist/*
-        
-        deactivate
 

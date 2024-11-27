@@ -4,41 +4,37 @@
 name: Package and Publish
 
 on:
-  workflow_call:
+  release:
+    types: [created]
 
 jobs:
-  build:
-    strategy:
-      fail-fast: false
-      matrix:
-        python-version: ["3.11", "3.12" ]
-        # reduced matrix for ci
-        os: [ubuntu-latest, windows-latest]
-        # os: [ubuntu-latest, windows-latest] scripts on windows are a PITA
-        # instead, peaple can do 'python3 -m datatrails_scitt_samples.scripts.create_signed_statement ...'
-    runs-on: ${{ matrix.os }}
+  deploy:
+    runs-on: ubuntu-latest
+
     steps:
     - uses: actions/checkout@v4
-    - name: Set up Python ${{ matrix.python-version }}
+    - name: Set up Python
       uses: actions/setup-python@v4
       with:
-        python-version: ${{ matrix.python-version }}
+        python-version: '3.x'
 
     - name: Install Task
       uses: arduino/setup-task@v1
       with:
-        version: 3.x
+        version: "3.x"
         repo-token: ${{ secrets.GITHUB_TOKEN }}
 
-    - name: Build Package
+    - name: Install dependencies
       run: |
-        python3 -m pip install -qq -r requirements.txt
-        python3 -m pip install -qq -r requirements-dev.txt
-        python3 -m build --sdist
-        python3 -m build --wheel
-        twine check dist/*
-        pip install --force-reinstall dist/*.whl
+        python3 -m pip install --upgrade pip
+        python3 -m pip install -r requirements.txt
+        python3 -m pip install -r requirements-dev.txt
+      shell: bash
 
+    - name: Create wheel
+      run: |
+         python3 -m build --sdist
+         python3 -m build --wheel
       shell: bash
 
     - name: Test installed package (registration-demo)
@@ -48,14 +44,14 @@ jobs:
         DATATRAILS_CLIENT_SECRET: ${{ secrets.DATATRAILS_CLIENT_SECRET }}
 
       run: |
+        python3 -m pip install --force-reinstall dist/*.whl
         task registration-demo
       shell: bash
 
     - name: Publish to PyPI
-      if: ${{ github.event_name == 'release' }}
       uses: pypa/gh-action-pypi-publish@release/v1
       with:
         verbose: true
         # skip-existing: true
-        user: ${{ vars.PYPI_USER }}
+        user: ${{ secrets.PYPI_USERNAME }}
         password: ${{ secrets.PYPI_PASSWORD }}
