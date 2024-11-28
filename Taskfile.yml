@@ -124,7 +124,7 @@ tasks:
     cmds:
       - |
         set -e
-        source {{ .VENV_DIR }}/bin/activate
+        # DONT source the env here, it breaks the windows ci
 
         echo "DATATRAILS_ xxx var value char counts"
         echo "$DATATRAILS_URL" | wc -c
