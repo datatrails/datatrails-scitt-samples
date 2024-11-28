@@ -8,6 +8,7 @@
 build/
 dist/
 payload.json
+metadata.json
 scitt/artifacts/_manifest/*
 datatrails_scitt_samples/__pycache__/*
 datatrails_scitt_samples/scripts/__pycache__/*

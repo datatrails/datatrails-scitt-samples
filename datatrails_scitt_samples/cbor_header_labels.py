@@ -52,7 +52,8 @@ HEADER_LABEL_COSE_RECEIPTS_INCLUSION_PROOFS = -1
 
 # MMRIVER headers
 # https://robinbryce.github.io/draft-bryce-cose-merkle-mountain-range-proofs/draft-bryce-cose-merkle-mountain-range-proofs.html#name-receipt-of-inclusion
-HEADER_LABEL_MMRIVER_VDS_TREE_ALG = 2
+HEADER_LABEL_MMRIVER_VDS_TREE_ALG_DRAFT_00 = 2
+HEADER_LABEL_MMRIVER_VDS_TREE_ALG = 3
 HEADER_LABEL_MMRIVER_INCLUSION_PROOF_INDEX = 1
 HEADER_LABEL_MMRIVER_INCLUSION_PROOF_PATH = 2
 

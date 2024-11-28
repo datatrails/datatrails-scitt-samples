@@ -124,6 +124,7 @@ tasks:
     cmds:
       - |
         set -e
+        source {{ .VENV_DIR }}/bin/activate
 
         echo "DATATRAILS_ xxx var value char counts"
         echo "$DATATRAILS_URL" | wc -c
