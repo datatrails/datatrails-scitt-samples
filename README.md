@@ -1,9 +1,3 @@
-<picture>
-  <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/datatrails/datatrails-scitt-samples/main/DataTrails_Horizontal_Logo_White.png">
-  <source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/datatrails/datatrails-scitt-samples/main/DataTrails_Horizontal_Logo_Black.png">
-  <img alt="DataTrails Logo" src="https://raw.githubusercontent.com/datatrails/datatrails-scitt-samples/main/DataTrails_Horizontal_Logo_Black.png">
-</picture>
-
 # DataTrails SCITT Examples
 
 The files in this repository can be used to demonstrate how the DataTrails SCITT API works.
