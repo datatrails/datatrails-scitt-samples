@@ -1,5 +1,7 @@
-![Logo](https://raw.githubusercontent.com/datatrails/datatrails-scitt-samples/main/DataTrails_Horizontal_Logo_Black.png#gh-light-mode-only)
-![Logo](https://raw.githubusercontent.com/datatrails/datatrails-scitt-samples/main/DataTrails_Horizontal_Logo_White.png#gh-dark-mode-only)
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/datatrails/datatrails-scitt-samples/main/DataTrails_Horizontal_Logo_White.png#gh-dark-mode-only">
+  <source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/datatrails/datatrails-scitt-samples/main/DataTrails_Horizontal_Logo_Black.png#gh-light-mode-only">
+</picture>
 
 # DataTrails SCITT Examples
 
@@ -12,5 +14,5 @@ The python package produced by this repository is tested to a production standar
 Its purpose is to provide a clear example of how to use the current DataTrails SCITT API's,
 as such, no promise of backwards compatibility is given.
 
-Developers are encouraged to use the sources in this repositor as reference
+Developers are encouraged to use the sources in this repository as reference
 material for their own integrations.
