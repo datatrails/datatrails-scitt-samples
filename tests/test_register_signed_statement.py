@@ -48,7 +48,7 @@ class TestRegisterSignedStatement(unittest.TestCase):
         # create a signed statement
         create_hashed_signed_statement(
             [
-                "--use-draft-04-labels",  # TEMPORY: Until backend support catches up
+                "--use-draft-04-labels",  # TEMPORARY: Until backend support catches up
                 "--signing-key-file",
                 "my-signing-key.pem",
                 "--payload-file",
