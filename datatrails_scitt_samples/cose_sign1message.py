@@ -1,6 +1,6 @@
 """Handling for COSE_Sign1 messages
 
-Specific accomodation for detached payloads.
+Specific accommodation for detached payloads.
 """
 
 import cbor2

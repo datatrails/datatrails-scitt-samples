@@ -86,7 +86,7 @@ def main(args=None):
     )
     parser.add_argument(
         "--verify",
-        help="verify the result of registraion",
+        help="verify the result of registration",
         default=False,
         action="store_true",
     )
