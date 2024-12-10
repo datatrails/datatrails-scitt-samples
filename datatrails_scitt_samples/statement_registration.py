@@ -10,8 +10,17 @@ They are defined in the expected order of use
 
 from time import sleep as time_sleep
 import requests
+import cbor2
 from datatrails_scitt_samples.errors import ResponseContentError
 from datatrails_scitt_samples.datatrails.servicecontext import ServiceContext
+
+def decode_cbor_data(data: bytes):
+    try:
+        return cbor2.loads(data)
+    except AttributeError as e:
+        raise AttributeError("Message was not tagged.") from e
+    except ValueError as e:
+        raise ValueError("Decode accepts only bytes as input.") from e
 
 
 def submit_statement(
@@ -33,11 +42,11 @@ def submit_statement(
     response.raise_for_status()
 
     # Make sure it's actually in process and will work
-    res = response.json()
-    if "operationID" not in res:
+    msg = decode_cbor_data(response.content)
+    if "OperationID" not in msg:
         raise ResponseContentError("FAILED No OperationID locator in response")
 
-    return res["operationID"]
+    return msg["OperationID"]
 
 
 def submit_statement_from_file(
@@ -66,8 +75,9 @@ def get_operation_status(ctx: ServiceContext, operation_id: str) -> dict:
     )
 
     response.raise_for_status()
-
-    return response.json()
+    if response.status_code == 202:
+        return {"Status":"running"}
+    return decode_cbor_data(response.content)
 
 
 def wait_for_entry_id(
@@ -88,11 +98,8 @@ def wait_for_entry_id(
 
             # pylint: disable=fixme
             # TODO: ensure get_operation_status handles error cases from the rest request
-            if (
-                "status" in operation_status
-                and operation_status["status"] == "succeeded"
-            ):
-                return operation_status["entryID"]
+            if (operation_status["Status"] == "succeeded"):
+                return operation_status["EntryID"]
 
         except requests.HTTPError as e:
             ctx.debug("failed getting operation status, error: %s", e)
