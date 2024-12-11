@@ -1,4 +1,4 @@
-""" Module for verifying the counter signed receipt signature """
+"""Module for verifying the counter signed receipt signature"""
 
 import re
 import argparse
@@ -17,9 +17,7 @@ from pycose.keys.keyops import VerifyOp
 from pycose.keys import CoseKey
 from pycose.headers import KID
 
-from datatrails_scitt_samples.cose_receipt_verification import (
-    verify_receipt_mmriver
-)
+from datatrails_scitt_samples.cose_receipt_verification import verify_receipt_mmriver
 from datatrails_scitt_samples.scripts.fileaccess import open_event_json
 from datatrails_scitt_samples.datatrails.eventpreimage import get_event
 from datatrails_scitt_samples.datatrails.v3eventhash import v3leaf_hash, v3event_hash
@@ -48,7 +46,9 @@ def read_cbor_file(cbor_file: str) -> bytes:
     return cose_object
 
 
-def verify_transparent_statement(transparent_statement: Sign1Message, leaf: bytes) -> bool:
+def verify_transparent_statement(
+    transparent_statement: Sign1Message, leaf: bytes
+) -> bool:
     """
     verifies the counter signed receipt signature in a TS
     """
@@ -59,7 +59,7 @@ def verify_transparent_statement(transparent_statement: Sign1Message, leaf: byte
     except (ValueError, AttributeError, KeyError):
         print("failed to extract receipt from Transparent Statement", file=sys.stderr)
         return False
-    
+
     return verify_receipt_mmriver(receipt_bytes, leaf)
 
 
@@ -77,14 +77,12 @@ def main():
     )
     options = parser.add_argument_group("Node (Leaf) Hash")
     options.add_argument(
-        "--leaf",
-        type=str,
-        help="hex encoded leaf hash to verify against")
+        "--leaf", type=str, help="hex encoded leaf hash to verify against"
+    )
 
     options.add_argument(
-        "--entryid",
-        type=str,
-        help="the SCRAPI entry id of the statement")
+        "--entryid", type=str, help="the SCRAPI entry id of the statement"
+    )
 
     parser.add_argument(
         "--event-json-file",

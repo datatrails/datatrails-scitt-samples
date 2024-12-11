@@ -14,6 +14,7 @@ import cbor2
 from datatrails_scitt_samples.errors import ResponseContentError
 from datatrails_scitt_samples.datatrails.servicecontext import ServiceContext
 
+
 def decode_cbor_data(data: bytes):
     try:
         return cbor2.loads(data)
@@ -76,7 +77,7 @@ def get_operation_status(ctx: ServiceContext, operation_id: str) -> dict:
 
     response.raise_for_status()
     if response.status_code == 202:
-        return {"Status":"running"}
+        return {"Status": "running"}
     return decode_cbor_data(response.content)
 
 
@@ -98,7 +99,7 @@ def wait_for_entry_id(
 
             # pylint: disable=fixme
             # TODO: ensure get_operation_status handles error cases from the rest request
-            if (operation_status["Status"] == "succeeded"):
+            if operation_status["Status"] == "succeeded":
                 return operation_status["EntryID"]
 
         except requests.HTTPError as e:
