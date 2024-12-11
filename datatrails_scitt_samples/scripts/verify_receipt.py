@@ -1,26 +1,15 @@
 """Module for verifying the counter signed receipt signature"""
 
-import re
 import argparse
 import sys
 import json
 
-import requests
-
-from jwcrypto import jwk
-
 from pycose.messages import Sign1Message
-from pycose.keys.curves import P384
-from pycose.keys.keyparam import KpKty, EC2KpX, EC2KpY, KpKeyOps, EC2KpCurve
-from pycose.keys.keytype import KtyEC2
-from pycose.keys.keyops import VerifyOp
-from pycose.keys import CoseKey
-from pycose.headers import KID
 
 from datatrails_scitt_samples.cose_receipt_verification import verify_receipt_mmriver
 from datatrails_scitt_samples.scripts.fileaccess import open_event_json
 from datatrails_scitt_samples.datatrails.eventpreimage import get_event
-from datatrails_scitt_samples.datatrails.v3eventhash import v3leaf_hash, v3event_hash
+from datatrails_scitt_samples.datatrails.v3eventhash import v3leaf_hash
 from datatrails_scitt_samples.datatrails.entryid import entryid_to_identity
 
 from datatrails_scitt_samples.datatrails.servicecontext import ServiceContext
