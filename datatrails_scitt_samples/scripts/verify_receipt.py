@@ -14,8 +14,6 @@ from datatrails_scitt_samples.datatrails.entryid import entryid_to_identity
 
 from datatrails_scitt_samples.datatrails.servicecontext import ServiceContext
 
-HEADER_LABEL_DID = 391
-
 
 def read_cbor_file(cbor_file: str) -> Sign1Message:
     """
