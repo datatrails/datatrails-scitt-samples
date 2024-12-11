@@ -3,6 +3,7 @@ DataTrails Transparency Service and optionally returning
 a Transparent Statement"""
 
 import sys
+import json
 import argparse
 from pycose.messages import Sign1Message
 
@@ -103,17 +104,20 @@ def main(args=None):
     op_id = submit_statement_from_file(ctx, args.signed_statement_file)
     ctx.info("Successfully submitted with Operation ID %s", op_id)
 
+    # Always wait for registration to complete
+    ctx.info("Waiting for registration to complete")
+    # Wait for the registration to complete
+    try:
+        entry_id = wait_for_entry_id(ctx, op_id)
+    except TimeoutError as e:
+        ctx.error(e)
+        sys.exit(1)
+    ctx.info("Fully Registered with Entry ID %s", entry_id)
+
+    result = {"entryid": entry_id}
+
     # If the client wants the Transparent Statement or receipt, wait for registration to complete
     if args.verify or args.output_file != "":
-        ctx.info("Waiting for registration to complete")
-        # Wait for the registration to complete
-        try:
-            entry_id = wait_for_entry_id(ctx, op_id)
-        except TimeoutError as e:
-            ctx.error(e)
-            sys.exit(1)
-        ctx.info("Fully Registered with Entry ID %s", entry_id)
-
         leaf = get_leaf_hash(ctx, entry_id)
         # Notice: the leaf hash corresponds to the leaf hash visible in the UI
         ctx.info("Leaf Hash: %s", leaf.hex())
@@ -128,6 +132,7 @@ def main(args=None):
         if not verify_receipt_mmriver(receipt, leaf):
             ctx.info("Receipt verification failed")
             sys.exit(1)
+        result["leaf"] = leaf.hex()
 
     if args.output_file == "":
         return
@@ -140,6 +145,8 @@ def main(args=None):
     # Attach the receipt
     attach_receipt(receipt, args.signed_statement_file, args.output_file)
     ctx.info(f"File saved successfully {args.output_file}")
+
+    print(json.dumps(result))
 
 
 if __name__ == "__main__":

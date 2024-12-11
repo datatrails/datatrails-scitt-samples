@@ -60,7 +60,7 @@ def submit_statement_from_file(
     # Read the binary data from the file
     # Read the binary data from the file
     with open(statement_file_path, "rb") as data_file:
-        ctx.info("statement_file_path opened: %s", statement_file_path)
+        ctx.debug("statement_file_path opened: %s", statement_file_path)
         return submit_statement(ctx, data_file.read())
 
 
@@ -90,7 +90,7 @@ def wait_for_entry_id(
 
     poll_attempts: int = int(ctx.cfg.poll_timeout / ctx.cfg.poll_interval)
 
-    ctx.info("starting to poll for operation status 'succeeded'")
+    ctx.debug("starting to poll for operation status 'succeeded'")
 
     for _ in range(poll_attempts):
         try:
