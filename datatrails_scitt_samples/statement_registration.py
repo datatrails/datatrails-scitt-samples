@@ -14,6 +14,7 @@ import cbor2
 from datatrails_scitt_samples.errors import ResponseContentError
 from datatrails_scitt_samples.datatrails.servicecontext import ServiceContext
 
+
 def decode_cbor_data(data: bytes):
     try:
         return cbor2.loads(data)
@@ -60,7 +61,7 @@ def submit_statement_from_file(
     # Read the binary data from the file
     # Read the binary data from the file
     with open(statement_file_path, "rb") as data_file:
-        ctx.info("statement_file_path opened: %s", statement_file_path)
+        ctx.debug("statement_file_path opened: %s", statement_file_path)
         return submit_statement(ctx, data_file.read())
 
 
@@ -76,7 +77,7 @@ def get_operation_status(ctx: ServiceContext, operation_id: str) -> dict:
 
     response.raise_for_status()
     if response.status_code == 202:
-        return {"Status":"running"}
+        return {"Status": "running"}
     return decode_cbor_data(response.content)
 
 
@@ -90,7 +91,7 @@ def wait_for_entry_id(
 
     poll_attempts: int = int(ctx.cfg.poll_timeout / ctx.cfg.poll_interval)
 
-    ctx.info("starting to poll for operation status 'succeeded'")
+    ctx.debug("starting to poll for operation status 'succeeded'")
 
     for _ in range(poll_attempts):
         try:
@@ -98,8 +99,10 @@ def wait_for_entry_id(
 
             # pylint: disable=fixme
             # TODO: ensure get_operation_status handles error cases from the rest request
-            if (operation_status["Status"] == "succeeded"):
+            if operation_status["Status"] == "succeeded":
                 return operation_status["EntryID"]
+            if operation_status["Status"] == "failed":
+                raise ValueError(f"operation {operation_id} failed")
 
         except requests.HTTPError as e:
             ctx.debug("failed getting operation status, error: %s", e)
