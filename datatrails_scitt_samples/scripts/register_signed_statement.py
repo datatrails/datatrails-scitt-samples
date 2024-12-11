@@ -135,6 +135,7 @@ def main(args=None):
         result["leaf"] = leaf.hex()
 
     if args.output_file == "":
+        print(json.dumps(result))
         return
 
     if args.output_receipt_file != "":
