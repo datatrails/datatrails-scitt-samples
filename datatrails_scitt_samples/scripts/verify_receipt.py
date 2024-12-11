@@ -28,7 +28,7 @@ from datatrails_scitt_samples.datatrails.servicecontext import ServiceContext
 HEADER_LABEL_DID = 391
 
 
-def read_cbor_file(cbor_file: str) -> bytes:
+def read_cbor_file(cbor_file: str) -> Sign1Message:
     """
     opens the receipt from the receipt file.
     """
@@ -136,8 +136,8 @@ def main():
 
     if args.receipt_file:
         with open(args.receipt_file, "rb") as file:
-            contents = file.read()
-            verified = verify_transparent_statement(contents, leaf)
+            receipt_bytes = file.read()
+            verified = verify_receipt_mmriver(receipt_bytes, leaf)
     else:
         # Note this logic works because only the transparent statement arg
         # has a default. Don't change that without changing this!
