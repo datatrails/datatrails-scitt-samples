@@ -104,6 +104,8 @@ def wait_for_entry_id(
             # TODO: ensure get_operation_status handles error cases from the rest request
             if operation_status["Status"] == "succeeded":
                 return operation_status["EntryID"]
+            if operation_status["Status"] == "failed":
+                raise ValueError(f"operation {operation_id} failed")
 
         except requests.HTTPError as e:
             ctx.debug("failed getting operation status, error: %s", e)
