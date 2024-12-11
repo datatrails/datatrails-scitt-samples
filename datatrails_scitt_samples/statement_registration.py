@@ -78,9 +78,6 @@ def get_operation_status(ctx: ServiceContext, operation_id: str) -> dict:
     response.raise_for_status()
     if response.status_code == 202:
         return {"Status": "running"}
-    if not response.content:
-        ctx.info(f"no content and status code {response.status_code} != 202, assuming running")
-        return {"Status": "running"}
     return decode_cbor_data(response.content)
 
 
