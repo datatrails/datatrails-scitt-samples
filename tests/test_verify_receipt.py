@@ -75,7 +75,7 @@ class TestVerifyReciept(unittest.TestCase):
                 "--issuer",
                 "https://github.com/datatrails/datatrails-scitt-samples",
                 "--output-file",
-                f"{self.test_dir}/signed-statement.cbor",
+                os.path.join(self.test_dir, "signed-statement.cbor"),
             ]
         )
         self.assertTrue(os.path.exists(f"{self.test_dir}/signed-statement.cbor"))
@@ -86,19 +86,23 @@ class TestVerifyReciept(unittest.TestCase):
             register_signed_statement(
                 [
                     "--signed-statement-file",
-                    f"{self.test_dir}/signed-statement.cbor",
+                    os.path.join(self.test_dir, "signed-statement.cbor"),
                     "--output-file",
-                    f"{self.test_dir}/transparent-statement.cbor",
+                    os.path.join(self.test_dir, "transparent-statement.cbor"),
                     "--output-receipt-file",
-                    f"{self.test_dir}/statement-receipt.cbor",
+                    os.path.join(self.test_dir, "statement-receipt.cbor"),
                 ]
             )
 
         result = json.loads(output.getvalue())
         self.assertTrue("leaf" in result)
         self.assertTrue("entryid" in result)
-        self.assertTrue(os.path.exists(f"{self.test_dir}/statement-receipt.cbor"))
-        self.assertTrue(os.path.exists(f"{self.test_dir}/transparent-statement.cbor"))
+        self.assertTrue(
+            os.path.exists(os.path.join(self.test_dir, "statement-receipt.cbor"))
+        )
+        self.assertTrue(
+            os.path.exists(os.path.join(self.test_dir, "transparent-statement.cbor"))
+        )
 
         entryid = result["entryid"]
         identity = entryid_to_identity(entryid)
@@ -119,7 +123,7 @@ class TestVerifyReciept(unittest.TestCase):
             verified = verify_receipt(
                 [
                     "--transparent-statement-file",
-                    f"{self.test_dir}/transparent-statement.cbor",
+                    os.path.join(self.test_dir, "transparent-statement.cbor"),
                     "--event-json-file",
                     event_json_file,
                 ]
@@ -136,7 +140,7 @@ class TestVerifyReciept(unittest.TestCase):
             verified = verify_receipt(
                 [
                     "--transparent-statement-file",
-                    f"{self.test_dir}/transparent-statement.cbor",
+                    os.path.join(self.test_dir, "transparent-statement.cbor"),
                     "--event-json-file",
                     event_json_file,
                 ]
@@ -174,7 +178,7 @@ class TestVerifyReciept(unittest.TestCase):
                 "--issuer",
                 "https://github.com/datatrails/datatrails-scitt-samples",
                 "--output-file",
-                f"{self.test_dir}/signed-statement.cbor",
+                os.path.join(self.test_dir, "signed-statement.cbor"),
             ]
         )
         self.assertTrue(os.path.exists(f"{self.test_dir}/signed-statement.cbor"))
@@ -185,19 +189,23 @@ class TestVerifyReciept(unittest.TestCase):
             register_signed_statement(
                 [
                     "--signed-statement-file",
-                    f"{self.test_dir}/signed-statement.cbor",
+                    os.path.join(self.test_dir, "signed-statement.cbor"),
                     "--output-file",
-                    f"{self.test_dir}/transparent-statement.cbor",
+                    os.path.join(self.test_dir, "transparent-statement.cbor"),
                     "--output-receipt-file",
-                    f"{self.test_dir}/statement-receipt.cbor",
+                    os.path.join(self.test_dir, "statement-receipt.cbor"),
                 ]
             )
 
         result = json.loads(output.getvalue())
         self.assertTrue("leaf" in result)
         self.assertTrue("entryid" in result)
-        self.assertTrue(os.path.exists(f"{self.test_dir}/statement-receipt.cbor"))
-        self.assertTrue(os.path.exists(f"{self.test_dir}/transparent-statement.cbor"))
+        self.assertTrue(
+            os.path.exists(os.path.join(self.test_dir, "statement-receipt.cbor"))
+        )
+        self.assertTrue(
+            os.path.exists(os.path.join(self.test_dir, "transparent-statement.cbor"))
+        )
 
         # Verify the leaf value directly
         verified = 1
@@ -206,7 +214,7 @@ class TestVerifyReciept(unittest.TestCase):
             verified = verify_receipt(
                 [
                     "--transparent-statement-file",
-                    f"{self.test_dir}/transparent-statement.cbor",
+                    os.path.join(self.test_dir, "transparent-statement.cbor"),
                     "--leaf",
                     result["leaf"],
                 ]
@@ -255,19 +263,23 @@ class TestVerifyReciept(unittest.TestCase):
             register_signed_statement(
                 [
                     "--signed-statement-file",
-                    f"{self.test_dir}/signed-statement.cbor",
+                    os.path.join(self.test_dir, "signed-statement.cbor"),
                     "--output-file",
-                    f"{self.test_dir}/transparent-statement.cbor",
+                    os.path.join(self.test_dir, "transparent-statement.cbor"),
                     "--output-receipt-file",
-                    f"{self.test_dir}/statement-receipt.cbor",
+                    os.path.join(self.test_dir, "statement-receipt.cbor"),
                 ]
             )
 
         result = json.loads(output.getvalue())
         self.assertTrue("leaf" in result)
         self.assertTrue("entryid" in result)
-        self.assertTrue(os.path.exists(f"{self.test_dir}/statement-receipt.cbor"))
-        self.assertTrue(os.path.exists(f"{self.test_dir}/transparent-statement.cbor"))
+        self.assertTrue(
+            os.path.exists(os.path.join(self.test_dir, "statement-receipt.cbor"))
+        )
+        self.assertTrue(
+            os.path.exists(os.path.join(self.test_dir, "transparent-statement.cbor"))
+        )
 
         # Verify the leaf value directly
         verified = 1
@@ -336,8 +348,12 @@ class TestVerifyReciept(unittest.TestCase):
         result = json.loads(output.getvalue())
         self.assertTrue("leaf" in result)
         self.assertTrue("entryid" in result)
-        self.assertTrue(os.path.exists(f"{self.test_dir}/statement-receipt.cbor"))
-        self.assertTrue(os.path.exists(f"{self.test_dir}/transparent-statement.cbor"))
+        self.assertTrue(
+            os.path.exists(os.path.join(self.test_dir, "statement-receipt.cbor"))
+        )
+        self.assertTrue(
+            os.path.exists(os.path.join(self.test_dir, "transparent-statement.cbor"))
+        )
 
         # Verify the leaf value directly
         verified = 1
@@ -395,19 +411,23 @@ class TestVerifyReciept(unittest.TestCase):
             register_signed_statement(
                 [
                     "--signed-statement-file",
-                    f"{self.test_dir}/signed-statement.cbor",
+                    os.path.join(self.test_dir, "signed-statement.cbor"),
                     "--output-file",
-                    f"{self.test_dir}/transparent-statement.cbor",
+                    os.path.join(self.test_dir, "transparent-statement.cbor"),
                     "--output-receipt-file",
-                    f"{self.test_dir}/statement-receipt.cbor",
+                    os.path.join(self.test_dir, "statement-receipt.cbor"),
                 ]
             )
 
         result = json.loads(output.getvalue())
         self.assertTrue("leaf" in result)
         self.assertTrue("entryid" in result)
-        self.assertTrue(os.path.exists(f"{self.test_dir}/statement-receipt.cbor"))
-        self.assertTrue(os.path.exists(f"{self.test_dir}/transparent-statement.cbor"))
+        self.assertTrue(
+            os.path.exists(os.path.join(self.test_dir, "statement-receipt.cbor"))
+        )
+        self.assertTrue(
+            os.path.exists(os.path.join(self.test_dir, "transparent-statement.cbor"))
+        )
 
         # Verify the leaf value directly
         verified = 1
@@ -416,7 +436,7 @@ class TestVerifyReciept(unittest.TestCase):
             verified = verify_receipt(
                 [
                     "--receipt-file",
-                    f"{self.test_dir}/statement-receipt.cbor",
+                    os.path.join(self.test_dir, "statement-receipt.cbor"),
                     "--entryid",
                     result["entryid"],
                 ]

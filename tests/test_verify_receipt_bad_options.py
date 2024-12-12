@@ -34,7 +34,7 @@ class TestVerifyReciept(unittest.TestCase):
         verified = verify_receipt(
             [
                 "--transparent-statement-file",
-                f"{self.test_dir}/transparent-statement.cbor",
+                os.path.join(self.test_dir, "transparent-statement.cbor"),
                 "--leaf",
                 "this is not hex",
             ]
@@ -48,7 +48,7 @@ class TestVerifyReciept(unittest.TestCase):
         verified = verify_receipt(
             [
                 "--transparent-statement-file",
-                f"{self.test_dir}/transparent-statement.cbor",
+                os.path.join(self.test_dir, "transparent-statement.cbor"),
                 "--event-json-file",
                 self.bad_json_file,
             ]
@@ -62,7 +62,7 @@ class TestVerifyReciept(unittest.TestCase):
         verified = verify_receipt(
             [
                 "--transparent-statement-file",
-                f"{self.test_dir}/transparent-statement.cbor",
+                os.path.join(self.test_dir, "transparent-statement.cbor"),
                 "--entryid",
                 "this is not found",
             ]
