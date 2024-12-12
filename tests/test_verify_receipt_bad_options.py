@@ -2,8 +2,6 @@
 Negative test cases for verify_receipt
 """
 
-maxDiff = None
-
 import os
 import unittest
 import shutil
@@ -12,6 +10,8 @@ import tempfile
 from datatrails_scitt_samples.scripts.verify_receipt import (
     main as verify_receipt,
 )
+
+maxDiff = None
 
 
 class TestVerifyReciept(unittest.TestCase):
