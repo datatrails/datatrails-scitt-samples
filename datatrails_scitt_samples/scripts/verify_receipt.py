@@ -4,6 +4,8 @@ import argparse
 import sys
 import json
 
+from requests import HTTPError
+
 from pycose.messages import Sign1Message
 
 from datatrails_scitt_samples.cose_receipt_verification import verify_receipt_mmriver
@@ -50,7 +52,7 @@ def verify_transparent_statement(
     return verify_receipt_mmriver(receipt_bytes, leaf)
 
 
-def main():
+def main(args=None) -> int:
     """Verifies a counter signed receipt signature"""
 
     parser = argparse.ArgumentParser(
@@ -91,7 +93,7 @@ def main():
         default="transparent-statement.cbor",
     )
 
-    args = parser.parse_args()
+    args = parser.parse_args(args or sys.argv[1:])
 
     # Note: the context is only used if --entryid is
     # used to obtain the leaf hash directly from datatrails
@@ -101,25 +103,36 @@ def main():
     ctx = ServiceContext.from_env("verify-receipt", **cfg_overrides)
 
     if not (args.leaf or args.event_json_file or args.entryid):
-        print("either --leaf or --event-json-file is required", file=sys.stderr)
-        sys.exit(1)
+        ctx.error("either --leaf or --event-json-file is required")
+        return 1
 
     leaf = None
     if args.leaf:
-        leaf = bytes.fromhex(args.leaf)
+        try:
+            leaf = bytes.fromhex(args.leaf)
+        except ValueError:
+            ctx.error("failed to parse leaf hash")
+            return 1
+
     elif args.event_json_file:
-        event = json.loads(open_event_json(args.event_json_file))
+        try:
+            event = json.loads(open_event_json(args.event_json_file))
+        except ValueError:
+            ctx.error("failed to parse event json")
+            return 1
         leaf = v3leaf_hash(event)
-        print(leaf.hex())
     elif args.entryid:
         identity = entryid_to_identity(args.entryid)
-        event = get_event(ctx, identity, True)
+        try:
+            event = get_event(ctx, identity, True)
+        except HTTPError as e:
+            ctx.error("failed to obtain event: %s", e)
+            return 1
         leaf = v3leaf_hash(event)
-        print(leaf.hex())
 
     if leaf is None:
-        print("failed to obtain leaf hash", file=sys.stderr)
-        sys.exit(1)
+        ctx.error("failed to obtain leaf hash")
+        return False
 
     if args.receipt_file:
         with open(args.receipt_file, "rb") as file:
@@ -131,11 +144,13 @@ def main():
         transparent_statement = read_cbor_file(args.transparent_statement_file)
         verified = verify_transparent_statement(transparent_statement, leaf)
 
-    if verified:
-        print("signature verification succeeded")
-    else:
-        print("signature verification failed")
+    if not verified:
+        print("verification failed")
+        return 1
+
+    print("verification succeeded")
+    return 0
 
 
 if __name__ == "__main__":
-    main()
+    sys.exit(main())

@@ -61,8 +61,8 @@ tasks:
         source {{ .VENV_DIR }}/bin/activate
         trap deactivate EXIT
 
-        ruff format {{ .PACKAGE_NAME }} tests
         black {{ .PACKAGE_NAME }} tests
+        ruff check {{ .PACKAGE_NAME }} tests --fix
 
   test:
     desc: Run simple tests

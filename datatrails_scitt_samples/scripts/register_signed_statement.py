@@ -45,7 +45,7 @@ def attach_receipt(
         file.write(ts)
 
 
-def main(args=None):
+def main(args=None) -> int:
     """Creates a Transparent Statement"""
 
     parser = argparse.ArgumentParser(description="Register a signed statement.")
@@ -111,7 +111,7 @@ def main(args=None):
         entry_id = wait_for_entry_id(ctx, op_id)
     except TimeoutError as e:
         ctx.error(e)
-        sys.exit(1)
+        return 1
     ctx.info("Fully Registered with Entry ID %s", entry_id)
 
     result = {"entryid": entry_id}
@@ -131,12 +131,12 @@ def main(args=None):
         receipt = get_receipt(ctx, entry_id)
         if not verify_receipt_mmriver(receipt, leaf):
             ctx.info("Receipt verification failed")
-            sys.exit(1)
+            return 1
         result["leaf"] = leaf.hex()
 
     if args.output_file == "":
         print(json.dumps(result))
-        return
+        return 0
 
     if args.output_receipt_file != "":
         with open(args.output_receipt_file, "wb") as file:
@@ -148,7 +148,8 @@ def main(args=None):
     ctx.info(f"File saved successfully {args.output_file}")
 
     print(json.dumps(result))
+    return 0
 
 
 if __name__ == "__main__":
-    main()
+    sys.exit(main())
