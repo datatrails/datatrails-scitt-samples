@@ -52,7 +52,7 @@ def verify_transparent_statement(
     return verify_receipt_mmriver(receipt_bytes, leaf)
 
 
-def main(args=None) -> bool:
+def main(args=None) -> int:
     """Verifies a counter signed receipt signature"""
 
     parser = argparse.ArgumentParser(
@@ -104,7 +104,7 @@ def main(args=None) -> bool:
 
     if not (args.leaf or args.event_json_file or args.entryid):
         ctx.error("either --leaf or --event-json-file is required")
-        return False
+        return 1
 
     leaf = None
     if args.leaf:
@@ -112,14 +112,14 @@ def main(args=None) -> bool:
             leaf = bytes.fromhex(args.leaf)
         except ValueError:
             ctx.error("failed to parse leaf hash")
-            return False
+            return 1
 
     elif args.event_json_file:
         try:
             event = json.loads(open_event_json(args.event_json_file))
         except ValueError:
             ctx.error("failed to parse event json")
-            return False
+            return 1
         leaf = v3leaf_hash(event)
     elif args.entryid:
         identity = entryid_to_identity(args.entryid)
@@ -127,7 +127,7 @@ def main(args=None) -> bool:
             event = get_event(ctx, identity, True)
         except HTTPError as e:
             ctx.error("failed to obtain event: %s", e)
-            return False
+            return 1
         leaf = v3leaf_hash(event)
 
     if leaf is None:
@@ -144,14 +144,13 @@ def main(args=None) -> bool:
         transparent_statement = read_cbor_file(args.transparent_statement_file)
         verified = verify_transparent_statement(transparent_statement, leaf)
 
-    if verified:
-        print("verification succeeded")
-        return True
-    print("verification failed")
-    return False
+    if not verified:
+        print("verification failed")
+        return 1
+
+    print("verification succeeded")
+    return 0
 
 
 if __name__ == "__main__":
-    if not main():
-        sys.exit(1)
-    sys.exit(0)
+    sys.exit(main())

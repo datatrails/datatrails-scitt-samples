@@ -39,7 +39,7 @@ class TestVerifyReciept(unittest.TestCase):
                 "this is not hex",
             ]
         )
-        self.assertFalse(verified)
+        self.assertEqual(verified, 1)
 
     def test_verify_receipt_event_file_not_json(self):
         """Cover various bad input cases"""
@@ -53,7 +53,7 @@ class TestVerifyReciept(unittest.TestCase):
                 self.bad_json_file,
             ]
         )
-        self.assertFalse(verified)
+        self.assertEqual(verified, 1)
 
     def test_verify_receipt_bad_entryid(self):
         """Cover various bad input cases"""
@@ -67,7 +67,7 @@ class TestVerifyReciept(unittest.TestCase):
                 "this is not found",
             ]
         )
-        self.assertFalse(verified)
+        self.assertEqual(verified, 1)
 
 
 if __name__ == "__main__":

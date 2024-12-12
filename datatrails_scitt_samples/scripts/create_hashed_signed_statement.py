@@ -10,7 +10,7 @@ from datatrails_scitt_samples.scripts.fileaccess import read_file, open_signing_
 from hashlib import sha256
 
 
-def main(args=None):
+def main(args=None) -> int:
     """Creates a signed statement"""
 
     parser = argparse.ArgumentParser(description="Create a signed statement.")
@@ -120,6 +120,8 @@ def main(args=None):
     with open(args.output_file, "wb") as output_file:
         output_file.write(signed_statement)
 
+    return 0
+
 
 if __name__ == "__main__":
-    main()
+    sys.exit(main())

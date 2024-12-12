@@ -112,7 +112,8 @@ class TestVerifyReciept(unittest.TestCase):
         # First verify the event as is
 
         # Verify the leaf value directly
-        verified = False
+
+        verified = 1
         output = io.StringIO()
         with redirect_stdout(output):
             verified = verify_receipt(
@@ -124,7 +125,7 @@ class TestVerifyReciept(unittest.TestCase):
                 ]
             )
         self.assertEqual(output.getvalue().strip(), "verification succeeded")
-        self.assertTrue(verified)
+        self.assertEqual(verified, 0)
 
         event["event_attributes"]["test_verify_failed_for_tampered_event"] = "tampered"
         with open(event_json_file, "w") as file:
@@ -141,7 +142,7 @@ class TestVerifyReciept(unittest.TestCase):
                 ]
             )
         self.assertEqual(output.getvalue().strip(), "verification failed")
-        self.assertFalse(verified)
+        self.assertEqual(verified, 1)
 
     @unittest.skipUnless(
         os.getenv("DATATRAILS_CLIENT_SECRET") != "",
@@ -199,7 +200,7 @@ class TestVerifyReciept(unittest.TestCase):
         self.assertTrue(os.path.exists(f"{self.test_dir}/transparent-statement.cbor"))
 
         # Verify the leaf value directly
-        verified = False
+        verified = 1
         output = io.StringIO()
         with redirect_stdout(output):
             verified = verify_receipt(
@@ -211,7 +212,7 @@ class TestVerifyReciept(unittest.TestCase):
                 ]
             )
         self.assertEqual(output.getvalue().strip(), "verification succeeded")
-        self.assertTrue(verified)
+        self.assertEqual(verified, 0)
 
     @unittest.skipUnless(
         os.getenv("DATATRAILS_CLIENT_SECRET") != "",
@@ -269,7 +270,7 @@ class TestVerifyReciept(unittest.TestCase):
         self.assertTrue(os.path.exists(f"{self.test_dir}/transparent-statement.cbor"))
 
         # Verify the leaf value directly
-        verified = False
+        verified = 1
         output = io.StringIO()
         with redirect_stdout(output):
             verified = verify_receipt(
@@ -281,7 +282,7 @@ class TestVerifyReciept(unittest.TestCase):
                 ]
             )
         self.assertEqual(output.getvalue().strip(), "verification succeeded")
-        self.assertTrue(verified)
+        self.assertEqual(verified, 0)
 
     @unittest.skipUnless(
         os.getenv("DATATRAILS_CLIENT_SECRET") != "",
@@ -339,7 +340,7 @@ class TestVerifyReciept(unittest.TestCase):
         self.assertTrue(os.path.exists(f"{self.test_dir}/transparent-statement.cbor"))
 
         # Verify the leaf value directly
-        verified = False
+        verified = 1
         output = io.StringIO()
         with redirect_stdout(output):
             verified = verify_receipt(
@@ -351,7 +352,7 @@ class TestVerifyReciept(unittest.TestCase):
                 ]
             )
         self.assertEqual(output.getvalue().strip(), "verification succeeded")
-        self.assertTrue(verified)
+        self.assertEqual(verified, 0)
 
     @unittest.skipUnless(
         os.getenv("DATATRAILS_CLIENT_SECRET") != "",
@@ -409,7 +410,7 @@ class TestVerifyReciept(unittest.TestCase):
         self.assertTrue(os.path.exists(f"{self.test_dir}/transparent-statement.cbor"))
 
         # Verify the leaf value directly
-        verified = False
+        verified = 1
         output = io.StringIO()
         with redirect_stdout(output):
             verified = verify_receipt(
@@ -421,7 +422,7 @@ class TestVerifyReciept(unittest.TestCase):
                 ]
             )
         self.assertEqual(output.getvalue().strip(), "verification succeeded")
-        self.assertTrue(verified)
+        self.assertEqual(verified, 0)
 
 
 if __name__ == "__main__":

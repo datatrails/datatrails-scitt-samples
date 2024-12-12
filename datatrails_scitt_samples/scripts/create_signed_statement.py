@@ -9,7 +9,7 @@ from datatrails_scitt_samples.statement_creation import create_signed_statement
 from datatrails_scitt_samples.statement_creation import OPTION_USE_DRAFT_04_LABELS
 
 
-def main(args=None):
+def main(args=None) -> int:
     """Creates a signed statement"""
 
     parser = argparse.ArgumentParser(description="Create a signed statement.")
@@ -124,6 +124,8 @@ def main(args=None):
     with open(args.output_file, "wb") as output_file:
         output_file.write(signed_statement)
 
+    return 0
+
 
 if __name__ == "__main__":
-    main()
+    sys.exit(main())

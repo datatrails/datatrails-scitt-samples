@@ -7,7 +7,7 @@ from datatrails_scitt_samples.datatrails.servicecontext import ServiceContext
 from datatrails_scitt_samples.statement_registration import wait_for_entry_id
 
 
-def main():
+def main() -> int:
     """Polls for the signed statement to be registered"""
 
     parser = argparse.ArgumentParser(
@@ -46,8 +46,10 @@ def main():
         print(entry_id)
     except TimeoutError as e:
         print(e, file=sys.stderr)
-        sys.exit(1)
+        return 1
+
+    return 0
 
 
 if __name__ == "__main__":
-    main()
+    sys.exit(main())
