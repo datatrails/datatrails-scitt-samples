@@ -2,6 +2,8 @@
 Negative test cases for verify_receipt
 """
 
+maxDiff = None
+
 import os
 import unittest
 import shutil
