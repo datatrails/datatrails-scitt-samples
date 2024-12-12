@@ -3,23 +3,10 @@ Negative test cases for verify_receipt
 """
 
 import os
-import json
-import io
 import unittest
 import shutil
 import tempfile
-import unittest
-from contextlib import redirect_stdout
 
-from datatrails_scitt_samples.scripts.generate_example_key import (
-    main as generate_example_key,
-)
-from datatrails_scitt_samples.scripts.create_hashed_signed_statement import (
-    main as create_hashed_signed_statement,
-)
-from datatrails_scitt_samples.scripts.register_signed_statement import (
-    main as register_signed_statement,
-)
 from datatrails_scitt_samples.scripts.verify_receipt import (
     main as verify_receipt,
 )

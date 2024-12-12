@@ -8,7 +8,6 @@ import io
 import unittest
 import shutil
 import tempfile
-import unittest
 from contextlib import redirect_stdout
 
 from datatrails_scitt_samples.datatrails.servicecontext import ServiceContext
